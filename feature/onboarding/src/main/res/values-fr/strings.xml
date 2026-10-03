@@ -24,9 +24,9 @@
 
     <!-- AccountChoiceScreen -->
     <string name="onboarding_account_choice_title">Bienvenue sur Kitsune</string>
-    <string name="onboarding_account_choice_subtitle">Première visite, ou changement de téléphone ?</string>
-    <string name="onboarding_account_choice_new">Créer un nouveau compte</string>
-    <string name="onboarding_account_choice_recover">Récupérer mon ancien compte</string>
+    <string name="onboarding_account_choice_subtitle">Première fois ici, ou restauration d’une sauvegarde d’un autre téléphone ?</string>
+    <string name="onboarding_account_choice_new">Commencer</string>
+    <string name="onboarding_account_choice_recover">Restaurer une sauvegarde</string>
 
     <!-- RecoverAccountScreen -->
     <string name="onboarding_recover_decrypting">Déchiffrement et vérification…</string>

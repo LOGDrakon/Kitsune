@@ -59,10 +59,24 @@ class MarketplaceViewModel @Inject constructor(
 
     private var currentFilter = MarketplaceFilter()
 
+    /** Whether the marketplace is switched on (Settings → Marketplace). */
+    val enabled: StateFlow<Boolean> = backendClient.enabled
+
+    /** The server the marketplace talks to, shown so nobody uses it without knowing where it is. */
+    val serverUrl: StateFlow<String> = backendClient.serverUrl
+
+    val authState = backendClient.authState
+
+    fun enableMarketplace() {
+        backendClient.setEnabled(true)
+        loadListings()
+    }
+
     init { loadListings() }
 
     fun loadListings(filter: MarketplaceFilter = currentFilter) {
         currentFilter = filter
+        if (!backendClient.isEnabled()) return
         viewModelScope.launch {
             _uiState.value = MarketplaceUiState.Loading
             try {

@@ -85,7 +85,29 @@ fun DiscoverTab(
     var search by rememberSaveable { mutableStateOf("") }
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val enabled by viewModel.enabled.collectAsStateWithLifecycle()
+    val serverUrl by viewModel.serverUrl.collectAsStateWithLifecycle()
+    val authState by viewModel.authState.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
+
+    if (!enabled) {
+        KitsunePage(title = "Découvrir") { padding ->
+            Column(
+                Modifier.fillMaxSize().padding(padding).padding(horizontal = KitsuneTheme.spacing.gutter)
+            ) {
+                PageTitle(text = "Découvrir", subtitle = "Personnages et univers publiés par la communauté")
+                KitsuneEmptyState(
+                    icon = Icons.Outlined.Explore,
+                    title = "Marketplace désactivée",
+                    body = "Activez-la pour parcourir et partager des personnages et des univers. Seul ce que " +
+                        "vous publiez y est envoyé ; vos conversations ne quittent jamais votre téléphone.",
+                    actionLabel = "Activer la marketplace",
+                    onAction = viewModel::enableMarketplace
+                )
+            }
+        }
+        return
+    }
     val condensed = rememberCondensedTitle(listState)
 
     val type = when (typeSegment) {
@@ -121,6 +143,15 @@ fun DiscoverTab(
                             text = "Découvrir",
                             subtitle = "Personnages et univers publiés par la communauté"
                         )
+                        // Said once, before the first request creates an anonymous account there.
+                        if (authState == com.kitsune.core.backend.KitsuneBackendClient.AuthState.UNAUTHENTICATED) {
+                            Text(
+                                "Serveur : ${serverUrl.removePrefix("https://")} — parcourir crée un compte anonyme.",
+                                style = KitsuneTheme.type.meta,
+                                color = KitsuneTheme.colors.textDim,
+                                modifier = Modifier.padding(bottom = KitsuneTheme.spacing.sm)
+                            )
+                        }
                         KitsuneSearchField(
                             value = search,
                             onValueChange = { search = it },
