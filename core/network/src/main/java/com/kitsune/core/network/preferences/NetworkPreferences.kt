@@ -1,49 +1,85 @@
 package com.kitsune.core.network.preferences
 
+import com.kitsune.core.network.provider.ModelRef
+import com.kitsune.core.network.provider.ProviderStore
 import com.kitsune.core.security.storage.SecureStorage
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * Which model serves which operation, and the creative temperature.
+ *
+ * Every stored model is a [ModelRef] (`"<providerId>::<modelId>"`). When an operation has no
+ * selection of its own it inherits the chat model; when nothing at all has been chosen yet, the
+ * default provider's suggested models (see [com.kitsune.core.network.provider.ProviderPreset]) are
+ * used, so a freshly added OpenRouter key works without visiting the model screen.
+ */
 @Singleton
-class NetworkPreferences @Inject constructor(private val secureStorage: SecureStorage) {
+class NetworkPreferences @Inject constructor(
+    private val secureStorage: SecureStorage,
+    private val providerStore: ProviderStore
+) {
 
     fun getDefaultChatModelId(): String =
-        secureStorage.getString(SecureStorage.KEY_DEFAULT_CHAT_MODEL_ID)?.takeIf { it.isNotBlank() } ?: DEFAULT_CHAT_MODEL_ID
+        secureStorage.getString(SecureStorage.KEY_DEFAULT_CHAT_MODEL_ID)?.takeIf { it.isNotBlank() }
+            ?: suggested { it.suggestedChatModel }
+            ?: ""
 
     fun setDefaultChatModelId(modelId: String) {
         secureStorage.putString(SecureStorage.KEY_DEFAULT_CHAT_MODEL_ID, modelId.trim())
     }
 
+    /** Pro mode's model — a stronger model the user picks for the turns that matter. Falls back to
+     * the chat model until one is chosen. */
     fun getDefaultChatProModelId(): String =
-        secureStorage.getString(SecureStorage.KEY_DEFAULT_CHAT_PRO_MODEL_ID)?.takeIf { it.isNotBlank() } ?: DEFAULT_CHAT_PRO_MODEL_ID
+        secureStorage.getString(SecureStorage.KEY_DEFAULT_CHAT_PRO_MODEL_ID)?.takeIf { it.isNotBlank() }
+            ?: getDefaultChatModelId()
 
     fun setDefaultChatProModelId(modelId: String) {
         secureStorage.putString(SecureStorage.KEY_DEFAULT_CHAT_PRO_MODEL_ID, modelId.trim())
     }
 
-    /** Returns the model configured for [operation], falling back to a default when no
-     * operation-specific preference has been set. The default is [DEFAULT_EMBEDDING_MODEL_ID] for
-     * [LlmOperation.EMBEDDING] and the default chat/image model for everything else — falling back
-     * to a *chat* model for an unset embedding preference was a real bug (a chat model can never
-     * serve `/embeddings`; see [com.kitsune.core.network.catalog.ModelInfo.isEmbeddingCapable]). */
+    /** Whether an operation has a selection of its own (as opposed to inheriting a default). */
+    fun hasOwnModel(operation: LlmOperation): Boolean = when (operation) {
+        LlmOperation.CHAT -> secureStorage.getString(SecureStorage.KEY_DEFAULT_CHAT_MODEL_ID).isNullOrBlank().not()
+        LlmOperation.CHAT_PRO -> secureStorage.getString(SecureStorage.KEY_DEFAULT_CHAT_PRO_MODEL_ID).isNullOrBlank().not()
+        else -> secureStorage.getString(operation.storageKey).isNullOrBlank().not()
+    }
+
+    /**
+     * The model for [operation]. Embedding and image generation never inherit the chat model — a
+     * chat model can serve neither `/embeddings` nor image generation — so they fall back to the
+     * provider's suggestion, or to an empty string meaning "not configured" (the feature then
+     * reports it instead of failing obscurely).
+     */
     fun getModelForOperation(operation: LlmOperation): String = when (operation) {
-        LlmOperation.IMAGE_GENERATION -> getDefaultImageModelId()
+        LlmOperation.CHAT -> getDefaultChatModelId()
         LlmOperation.CHAT_PRO -> getDefaultChatProModelId()
-        LlmOperation.EMBEDDING -> secureStorage.getString(operation.storageKey)?.takeIf { it.isNotBlank() }
-            ?: DEFAULT_EMBEDDING_MODEL_ID
-        else -> secureStorage.getString(operation.storageKey)?.takeIf { it.isNotBlank() }
-            ?: getDefaultChatModelId()
+        LlmOperation.IMAGE_GENERATION -> getDefaultImageModelId()
+        LlmOperation.EMBEDDING -> stored(operation) ?: suggested { it.suggestedEmbeddingModel } ?: ""
+        else -> stored(operation) ?: getDefaultChatModelId()
     }
 
     fun setModelForOperation(operation: LlmOperation, modelId: String) {
         when (operation) {
+            LlmOperation.CHAT -> setDefaultChatModelId(modelId)
             LlmOperation.IMAGE_GENERATION -> setDefaultImageModelId(modelId)
             LlmOperation.CHAT_PRO -> setDefaultChatProModelId(modelId)
             else -> secureStorage.putString(operation.storageKey, modelId.trim())
         }
     }
 
-    /** Whether the user has toggled Pro chat mode on (better model, 2 credits/turn instead of 1). */
+    /** Clears an operation's own selection so it inherits the default again. */
+    fun clearModelForOperation(operation: LlmOperation) {
+        when (operation) {
+            LlmOperation.CHAT -> secureStorage.remove(SecureStorage.KEY_DEFAULT_CHAT_MODEL_ID)
+            LlmOperation.CHAT_PRO -> secureStorage.remove(SecureStorage.KEY_DEFAULT_CHAT_PRO_MODEL_ID)
+            LlmOperation.IMAGE_GENERATION -> secureStorage.remove(SecureStorage.KEY_DEFAULT_IMAGE_MODEL_ID)
+            else -> secureStorage.remove(operation.storageKey)
+        }
+    }
+
+    /** Whether the user has toggled Pro chat mode on (stronger model, longer replies, more memory). */
     fun isProModeEnabled(): Boolean = secureStorage.getInt(SecureStorage.KEY_CHAT_MODE_PRO_ENABLED, 0) == 1
 
     fun setProModeEnabled(enabled: Boolean) {
@@ -51,18 +87,17 @@ class NetworkPreferences @Inject constructor(private val secureStorage: SecureSt
     }
 
     fun getDefaultImageModelId(): String =
-        secureStorage.getString(SecureStorage.KEY_DEFAULT_IMAGE_MODEL_ID)?.takeIf { it.isNotBlank() } ?: DEFAULT_IMAGE_MODEL_ID
+        secureStorage.getString(SecureStorage.KEY_DEFAULT_IMAGE_MODEL_ID)?.takeIf { it.isNotBlank() }
+            ?: suggested { it.suggestedImageModel }
+            ?: ""
 
     fun setDefaultImageModelId(modelId: String) {
         secureStorage.putString(SecureStorage.KEY_DEFAULT_IMAGE_MODEL_ID, modelId.trim())
     }
 
-    /** The genuinely different second model GenerateImageUseCase retries with on failure — kept
-     * distinct from [getDefaultImageModelId] (the primary) so the retry has a real chance of
-     * succeeding when the primary model itself is down, rather than retrying the same model twice.
-     * Server-enforced as one of two allowed image models (BUG-099, see BUGS.md). */
-    fun getDefaultImageFallbackModelId(): String =
-        secureStorage.getString(SecureStorage.KEY_DEFAULT_IMAGE_FALLBACK_MODEL_ID)?.takeIf { it.isNotBlank() } ?: getDefaultImageModelId()
+    /** A second image model tried when the first fails, or null when none is set. */
+    fun getDefaultImageFallbackModelId(): String? =
+        secureStorage.getString(SecureStorage.KEY_DEFAULT_IMAGE_FALLBACK_MODEL_ID)?.takeIf { it.isNotBlank() }
 
     fun setDefaultImageFallbackModelId(modelId: String) {
         secureStorage.putString(SecureStorage.KEY_DEFAULT_IMAGE_FALLBACK_MODEL_ID, modelId.trim())
@@ -76,52 +111,16 @@ class NetworkPreferences @Inject constructor(private val secureStorage: SecureSt
         secureStorage.putInt(SecureStorage.KEY_DEFAULT_TEMPERATURE_X100, (temperature * 100).toInt())
     }
 
-    fun applyBackendModelConfig(config: com.kitsune.core.backend.model.ModelConfigResponse) {
-        setDefaultChatModelId(config.chat)
-        setDefaultChatProModelId(config.chatPro)
-        setDefaultImageModelId(config.imageGeneration)
-        setDefaultImageFallbackModelId(config.imageGenerationFallback)
-        setModelForOperation(LlmOperation.SUMMARY, config.summary)
-        setModelForOperation(LlmOperation.LORE, config.lore)
-        setModelForOperation(LlmOperation.QUICK_GENERATION, config.quickGeneration)
-        setModelForOperation(LlmOperation.VISUAL_SHEET, config.visualSheet)
-        setModelForOperation(LlmOperation.IMAGE_DESCRIPTION, config.imageDescription)
-        setModelForOperation(LlmOperation.EMBEDDING, config.embedding)
-        setModelForOperation(LlmOperation.TRANSLATION, config.translation)
-        setModelForOperation(LlmOperation.INSPIRATION, config.inspiration)
-        // Memory pipeline sizes (maxContextTokens, rawWindowSize(Pro), loreEntries(Pro)) are
-        // applied straight into MemorySettingsHolder by KitsuneApp.kt, not persisted here — no
-        // reader ever consumed a locally-persisted copy of them.
+    private fun stored(operation: LlmOperation): String? =
+        secureStorage.getString(operation.storageKey)?.takeIf { it.isNotBlank() }
+
+    /** The default provider's suggested model for a role, as a [ModelRef]. */
+    private fun suggested(pick: (com.kitsune.core.network.provider.ProviderPreset) -> String?): String? {
+        val provider = providerStore.default() ?: return null
+        return pick(provider.preset)?.let { ModelRef.of(provider.id, it) }
     }
 
     companion object {
-        // DEFAULT_BASE_URL (https://api.mammouth.ai/) was removed with the provider migration: it had
-        // no readers left, and the app no longer talks to any provider directly — every AI call and
-        // the model catalog itself go through our backend, which now proxies to OpenRouter.
-
-        /**
-         * Fallbacks used only until `/config/models` has been fetched once, so they must be models
-         * that actually resolve. These are OpenRouter's own `vendor/slug` ids — the previous
-         * `provider:model` form (and the bare Mammouth-era ids before that) no longer resolve
-         * anywhere.
-         *
-         * Kept in step with `application.conf`'s `kitsune.models` defaults on the backend.
-         */
-        // Dated snapshot ids are exactly that — a snapshot. OpenRouter retired `-0731` (confirmed
-        // live 2026-08-18: it now 400s with "does not exist"), so this stays on the undated alias,
-        // matching the backend's own default (KitsuneBackend's application.conf).
-        const val DEFAULT_CHAT_MODEL_ID = "deepseek/deepseek-v4-flash"
-        const val DEFAULT_CHAT_PRO_MODEL_ID = "deepseek/deepseek-v4-pro-0813"
-        /** An actual image-*generating* model, served by OpenRouter's dedicated Images API (see the
-         * backend's `OpenRouterImageGenerator`) — a plain chat model routed there would simply fail
-         * rather than answer with a text description and no image. */
-        const val DEFAULT_IMAGE_MODEL_ID = "google/gemini-2.5-flash-image"
-        /** `openai/text-embedding-3-small` specifically: it's the model the app's stored 1536-dim
-         * vectors were generated with (semantic memory, see `core:memory/semantic`) — switching it
-         * would invalidate every existing embedding, silently making retrieval return nonsense
-         * rather than fail loudly. Kept in step with the backend's own default (same file/comment as
-         * [DEFAULT_CHAT_MODEL_ID]'s reference). */
-        const val DEFAULT_EMBEDDING_MODEL_ID = "openai/text-embedding-3-small"
         const val DEFAULT_TEMPERATURE = 0.9
     }
 }

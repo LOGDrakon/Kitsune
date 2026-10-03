@@ -28,8 +28,9 @@ android {
     }
 
     testOptions {
-        // GenerateQuickPersonaUseCase/GenerateWorldElementUseCase log via android.util.Log, which
-        // throws in a plain JVM unit test unless stubbed — same fix as feature:universe.
+        // GenerateQuickPersonaUseCase/GenerateWorldElementUseCase log via android.util.Log, and
+        // LlmHttpClient decodes via android.util.Base64 — both throw in a plain JVM unit test unless
+        // stubbed.
         unitTests.isReturnDefaultValues = true
     }
 }
@@ -37,7 +38,6 @@ android {
 dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:security"))
-    implementation(project(":core:backend"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.kotlinx.coroutines.android)

@@ -7,7 +7,7 @@ interface ChatCompletionRepository {
      * if [modelId] itself fails. If [fallbackModelId] is null, falls back to the most economical
      * chat-capable model from the catalog.
      *
-     * [operationType] is sent as `X-Operation-Type` header to the backend for telemetry.
+     * [operationType] labels the call in debug logs only.
      *
      * [maxTokens] overrides the default completion token limit. Use lower values for
      * structured JSON generation to save cost and speed up responses.
@@ -16,8 +16,8 @@ interface ChatCompletionRepository {
      * automatic continuation requests. Disable for structured JSON generation where the
      * salvage parser can handle truncation.
      *
-     * [chatMode] is sent as `X-Chat-Mode` header ("STANDARD" or "PRO") — the backend uses it to
-     * bill 1 vs 2 credits and, for "PRO", to route to the curated Pro model regardless of [modelId].
+     * [modelId] is a [com.kitsune.core.network.provider.ModelRef]: it names the provider as well as
+     * the model. Image generation does not go through here — see [ImageGenerationRepository].
      */
     suspend fun complete(
         modelId: String,
@@ -37,11 +37,7 @@ interface ChatCompletionRepository {
         fallbackModelId: String? = null,
         operationType: String = "CHAT",
         maxTokens: Int = DEFAULT_MAX_TOKENS,
-        allowContinuation: Boolean = true,
-        chatMode: String = "STANDARD",
-        /** Niveau de génération d'image, envoyé en `X-Image-Quality`. Le serveur en déduit le modèle
-         *  ET le tarif : demander "HD" facture le tarif HD. */
-        imageQuality: String = "STANDARD"
+        allowContinuation: Boolean = true
     ): Result<ChatCompletionResult>
 
     companion object {

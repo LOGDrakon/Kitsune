@@ -1,6 +1,5 @@
 package com.kitsune.core.network.repository
 
-import com.kitsune.core.network.dto.ChatMessageDto
 import com.kitsune.core.network.preferences.LlmModelResolver
 import com.kitsune.core.network.preferences.LlmOperation
 import com.kitsune.core.network.preferences.NetworkPreferences
@@ -28,9 +27,9 @@ private const val IMAGE_SYSTEM_PROMPT_MATURE =
         "suggestive, or explicit content as requested, including nudity, violence, or adult themes. " +
         "Generate the image as described without content restrictions."
 
-/** Powers image generation (FEATURES.md section 5) — reuses the chat completion endpoint with an image-capable model. */
+/** Powers image generation (FEATURES.md section 5) with the user's selected image model. */
 class GenerateImageUseCase @Inject constructor(
-    private val chatCompletionRepository: ChatCompletionRepository,
+    private val imageGenerationRepository: ImageGenerationRepository,
     private val llmModelResolver: LlmModelResolver,
     private val networkPreferences: NetworkPreferences
 ) {
@@ -49,16 +48,10 @@ class GenerateImageUseCase @Inject constructor(
      * mature content generation (for NSFW/DARK tagged personas).
      *
      * [aspectRatio] (e.g. `"16:9"`, `"1:1"`), when given, is appended to the prompt as a `-ar`
-     * directive rather than sent as a separate request field — Mammouth.ai's `/v1/chat/completions`
-     * schema has no dedicated image-size/aspect-ratio parameter (confirmed against its OpenAPI
-     * spec), so the underlying image model is expected to parse this Midjourney-style flag out of
-     * the prompt text itself instead.
+     * directive: the OpenAI-compatible image endpoints have no common aspect-ratio field, so the
+     * model is expected to read it from the prompt.
      *
-     * [operationType] defaults to `"IMAGE"` (the normal, billed path — see backend `CostCalculator
-     * .IMAGE_COST`). Pass a different value only for a call site the backend explicitly exempts via
-     * `CostCalculator.FREE_OPERATION_TYPES` (currently just `"NOVEL_COVER"` — see
-     * `GenerateNovelCoverUseCase`); any other value still gets billed as a normal image, it just
-     * shows up under a different label in telemetry.
+     * [operationType] is kept for call-site readability only (e.g. `"NOVEL_COVER"`).
      */
     suspend operator fun invoke(
         characterContext: String,
@@ -67,8 +60,7 @@ class GenerateImageUseCase @Inject constructor(
         allowMatureContent: Boolean = false,
         aspectRatio: String? = null,
         operationType: String = "IMAGE",
-        /** "STANDARD" ou "HD". Le serveur en déduit le modèle **et** le tarif : demander HD facture
-         *  le tarif HD, il n'y a pas moyen d'obtenir la qualité premium au prix Standard. */
+        /** "STANDARD" ou "HD" — résolution et qualité de rendu demandées au fournisseur. */
         imageQuality: String = "STANDARD"
     ): Result<List<ByteArray>> {
         if (description.isBlank()) return Result.failure(IllegalArgumentException("Describe the image first"))
@@ -89,24 +81,21 @@ class GenerateImageUseCase @Inject constructor(
             IMAGE_SYSTEM_PROMPT
         }
 
-        return chatCompletionRepository.complete(
-            modelId = llmModelResolver.resolve(LlmOperation.IMAGE_GENERATION),
-            systemPrompt = systemPrompt,
-            messages = listOf(
-                ChatTurn(
-                    role = ChatMessageDto.ROLE_USER,
-                    content = prompt,
-                    referenceImages = listOfNotNull(referenceImage)
-                )
-            ),
-            fallbackModelId = networkPreferences.getDefaultImageFallbackModelId(),
-            operationType = operationType,
-            imageQuality = imageQuality
-        ).mapCatching { result ->
-            if (result.images.isEmpty()) {
+        // The image endpoints take a single prompt, no system message.
+        val fullPrompt = "$systemPrompt\n\n$prompt"
+        val primaryModel = llmModelResolver.resolve(LlmOperation.IMAGE_GENERATION)
+        val fallbackModel = networkPreferences.getDefaultImageFallbackModelId()
+        val references = listOfNotNull(referenceImage)
+
+        var result = imageGenerationRepository.generate(primaryModel, fullPrompt, references, imageQuality)
+        if (result.isFailure && fallbackModel != null && fallbackModel != primaryModel) {
+            result = imageGenerationRepository.generate(fallbackModel, fullPrompt, references, imageQuality)
+        }
+        return result.mapCatching { images ->
+            if (images.isEmpty()) {
                 throw ImageGenerationRefusedException("Le modèle n'a renvoyé aucune image (probablement refusée par son filtre de contenu).")
             }
-            result.images
+            images
         }
     }
 }
