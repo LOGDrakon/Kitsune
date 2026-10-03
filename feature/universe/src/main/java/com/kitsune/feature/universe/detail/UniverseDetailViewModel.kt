@@ -490,6 +490,7 @@ class UniverseDetailViewModel @Inject constructor(
         ).joinToString("\n")
     }
 
+    /** Returns true when the server put the listing in its review queue rather than publishing it. */
     suspend fun publishToMarketplace(
         universe: UniverseEntity,
         factions: List<FactionEntity>,
@@ -497,7 +498,7 @@ class UniverseDetailViewModel @Inject constructor(
         npcs: List<NpcEntity>,
         personas: List<PersonaEntity>,
         description: String
-    ) {
+    ): Boolean {
         // Same rule as PersonaDetailViewModel: a universe downloaded from the marketplace
         // (sourceListingId set at import time) can never be republished as if it were the user's
         // own creation — the UI hides the toggle for this case too, this is the backstop.
@@ -569,8 +570,8 @@ class UniverseDetailViewModel @Inject constructor(
             imageBase64List = imageBase64List
         )
 
-        backendClient.createListing(request).fold(
-            onSuccess = { /* Published successfully */ },
+        return backendClient.createListing(request).fold(
+            onSuccess = { it.inReview },
             onFailure = { throw it }
         )
     }

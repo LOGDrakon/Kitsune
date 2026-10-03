@@ -347,14 +347,15 @@ class PersonaDetailViewModel @Inject constructor(
         _error.value = message
     }
 
-    suspend fun publishToMarketplace(persona: PersonaEntity, description: String) {
+    /** Returns true when the server put the listing in its review queue rather than publishing it. */
+    suspend fun publishToMarketplace(persona: PersonaEntity, description: String): Boolean {
         // A persona downloaded from the marketplace (sourceListingId set at import time, see
         // MarketplaceViewModel.importPersona/importUniverse) must never be republishable as if it
         // were the user's own creation — the UI hides the toggle for this case too (see
         // PersonaDetailScreen), this is the defense-in-depth backstop.
         check(persona.sourceListingId == null) { "Ce persona provient du marketplace et ne peut pas être republié." }
 
-        val ready = _uiState.value as? PersonaDetailUiState.Ready ?: return
+        val ready = _uiState.value as? PersonaDetailUiState.Ready ?: return false
 
         val avatarBytes = persona.avatarImageId?.let { encryptedImageStore.load(it) }
         val avatarBase64 = avatarBytes?.let { bytes ->
@@ -404,8 +405,8 @@ class PersonaDetailViewModel @Inject constructor(
             imageBase64List = imageBase64List
         )
 
-        backendClient.createListing(request).fold(
-            onSuccess = {},
+        return backendClient.createListing(request).fold(
+            onSuccess = { it.inReview },
             onFailure = { throw it }
         )
     }

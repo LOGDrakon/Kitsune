@@ -433,7 +433,7 @@ fun UniverseDetailScreen(
                                 isDialogPublishing = true
                                 scope.launch {
                                     try {
-                                        viewModel.publishToMarketplace(
+                                        val inReview = viewModel.publishToMarketplace(
                                             universe = state.universe,
                                             factions = state.factions,
                                             locations = state.locations,
@@ -441,7 +441,9 @@ fun UniverseDetailScreen(
                                             personas = state.personas,
                                             description = publishDescription.ifBlank { state.universe.description }
                                         )
-                                        publishResult = context.getString(R.string.universe_detail_publish_success)
+                                        publishResult = context.getString(
+                                            if (inReview) R.string.marketplace_publish_in_review else R.string.universe_detail_publish_success
+                                        )
                                         publishError = false
                                         isPublic = true
                                     } catch (e: Exception) {

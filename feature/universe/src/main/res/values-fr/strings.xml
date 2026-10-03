@@ -142,4 +142,5 @@
     <string name="universe_detail_error_title">Erreur</string>
     <string name="universe_detail_error_ok">OK</string>
     <string name="universe_detail_generate_portrait_content_description">Générer une image</string>
+    <string name="marketplace_publish_in_review">Envoyé en validation : vos premières publications sont vérifiées par les modérateurs du serveur avant d’apparaître.</string>
 </resources>

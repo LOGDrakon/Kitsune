@@ -136,7 +136,12 @@ data class MarketplaceNpcData(
 )
 
 @Serializable
-data class ListingIdResponse(val listingId: String)
+data class ListingIdResponse(
+    val listingId: String,
+    /** True when the server put the listing in its review queue instead of publishing it — new
+     *  creators' first listings, or listings its optional pre-screen flagged. */
+    val inReview: Boolean = false
+)
 
 @Serializable
 data class MarketplaceListResponse(
@@ -175,7 +180,6 @@ data class UsernameResponse(val username: String?, val available: Boolean = true
 data class UserProfileResponse(
     val userId: String,
     val username: String?,
-    val tier: String,
     val banned: Boolean,
     val frozen: Boolean,
     val banReason: String? = null

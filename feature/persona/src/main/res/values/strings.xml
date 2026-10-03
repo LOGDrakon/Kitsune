@@ -248,4 +248,5 @@
     <string name="card_import_not_a_card">This file carries no character card.</string>
     <string name="card_export_success">Card exported.</string>
     <string name="card_export_needs_avatar">This persona needs an avatar: a card is an image carrying its data.</string>
+    <string name="marketplace_publish_in_review">Sent for review: your first publications are checked by the server’s moderators before they appear.</string>
 </resources>

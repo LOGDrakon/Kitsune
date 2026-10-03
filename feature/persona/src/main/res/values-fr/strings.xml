@@ -248,4 +248,5 @@
     <string name="card_import_not_a_card">Ce fichier ne contient aucune carte de personnage.</string>
     <string name="card_export_success">Carte exportée.</string>
     <string name="card_export_needs_avatar">Ce persona a besoin d\'un avatar : une carte est une image qui porte ses données.</string>
+    <string name="marketplace_publish_in_review">Envoyé en validation : vos premières publications sont vérifiées par les modérateurs du serveur avant d’apparaître.</string>
 </resources>

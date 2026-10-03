@@ -256,8 +256,15 @@ if (showDeleteConfirm) {
                                         isPublishing = true
                                         scope.launch {
                                             try {
-                                                viewModel.publishToMarketplace(persona, persona.shortDescription)
+                                                val inReview = viewModel.publishToMarketplace(persona, persona.shortDescription)
                                                 isPublic = true
+                                                if (inReview) {
+                                                    android.widget.Toast.makeText(
+                                                        context,
+                                                        context.getString(R.string.marketplace_publish_in_review),
+                                                        android.widget.Toast.LENGTH_LONG
+                                                    ).show()
+                                                }
                                             } catch (e: Exception) {
                                                 viewModel.setError(context.getString(R.string.persona_detail_error_publish_format, e.message ?: ""))
                                             }
