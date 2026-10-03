@@ -60,7 +60,7 @@ class BuildBugReportUseCase @Inject constructor(
      * user directly instead). When [chatId] is null, produces a report with no conversation
      * transcript (either a general report, or a "signaler un problème" report where the user chose
      * not to attach the conversation). [jobId] optionally attaches a failed persona/universe
-     * generation job's structured context (type, prompt, failure category, whether a credit was
+     * generation job's structured context (type, prompt, failure category
      * consumed, raw technical error) — see "cliquer sur la bande d'une génération échouée" flow in
      * `feature:persona`/`feature:universe`.
      *

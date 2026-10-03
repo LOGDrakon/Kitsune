@@ -84,7 +84,7 @@ class GenerateEntrySceneUseCase @Inject constructor(
             Result.success(draft)
         } catch (e: Exception) {
             // The LLM DID respond successfully here — this failure is purely on the app's parsing
-            // side, after the backend already billed the credit for this call. Never log the raw
+            // side, after the provider already charged for this call. Never log the raw
             // generated content itself (persona/scenario text) — only its length, consistent with
             // this app's security-first, nothing-sensitive-in-logs policy (compliance audit
             // 2026-08-04, mirroring BUGS.md BUG-064 finding #9's server-side equivalent).

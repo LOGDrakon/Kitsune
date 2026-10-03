@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
  *
  * Chub, SillyTavern, Agnai and RisuAI all read the same file: a PNG carrying a `tEXt` chunk whose
  * value is base64-encoded JSON. Hundreds of thousands of cards exist. A new Kitsune user currently
- * faces an empty library and has to spend Ofudas to create their first character; being able to open
+ * faces an empty library and has to generate their first character; being able to open
  * a card they already have turns that into a non-question — and it costs nothing, happens offline,
  * and never touches a server, which is exactly the promise the rest of the app makes.
  *

@@ -16,7 +16,6 @@
     <string name="listing_type_universe_badge">यूनिवर्स</string>
     <string name="listing_by_creator_format">%1$s द्वारा</string>
     <string name="anonymous_creator_name">अज्ञात</string>
-    <string name="description_ellipsis">…</string>
 
     <!-- MarketplaceScreen.kt - Listing detail screen -->
     <string name="listing_detail_title">विवरण</string>

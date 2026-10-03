@@ -2,7 +2,6 @@
 <resources>
     <!-- Announcement dialog -->
     <string name="designsystem_announcement_dismiss">I understand</string>
-    <string name="designsystem_announcement_reward">🎁 +%1$d free credits when you close this</string>
     <string name="designsystem_user_message_dismiss">Got it</string>
 
     <!-- AI quick generate -->
@@ -16,21 +15,19 @@
 
     <!-- Welcome dialog -->
     <string name="designsystem_welcome_title">Welcome to Kitsune!</string>
-    <string name="designsystem_welcome_page1_title">Respect for your privacy</string>
-    <string name="designsystem_welcome_page1_desc">Kitsune is committed to respecting your privacy. We don\'t collect or store your conversations on our servers — they\'re encrypted on your device and only sent to our AI providers in real time to generate a response. Each provider applies its own retention period, detailed in our privacy policy.</string>
+    <string name="designsystem_welcome_page1_title">Your keys, your stories</string>
+    <string name="designsystem_welcome_page1_desc">Kitsune has no AI server of its own. Add the API key of the provider you choose — OpenRouter, Mammouth, OpenAI or any compatible service — and your messages go straight from your phone to that provider, at their prices and under their retention rules.</string>
     <string name="designsystem_welcome_page2_title">Local conversations</string>
-    <string name="designsystem_welcome_page2_desc">All your conversations are stored LOCALLY. If you uninstall Kitsune without exporting your data first, there will be no way to recover your data.</string>
+    <string name="designsystem_welcome_page2_desc">All your conversations are stored LOCALLY and encrypted. If you uninstall Kitsune without exporting a backup first (Settings → Backup), there will be no way to recover them.</string>
     <string name="designsystem_welcome_page3_title">Immersive experience</string>
-    <string name="designsystem_welcome_page3_desc">Kitsune focuses on immersion. You will have the opportunity to see for yourself, but Kitsune has a series of unique technologies to make your experience as immersive as possible. In case of a problem, it will always be possible to create an anonymous bug report.</string>
+    <string name="designsystem_welcome_page3_desc">Kitsune focuses on immersion: long-term memory, lore tracking, a story director, novel mode. In case of a problem you can always produce an anonymised bug report and share it.</string>
     <string name="designsystem_welcome_page_personal_info_title">Personalize your story</string>
-    <string name="designsystem_welcome_page_personal_info_desc">In Settings, you can enter your first name, last name, age and other details so personas address you personally in the story. This information is used only to personalize your own conversations (sent as context to the AI to generate responses about you) — it\'s never logged, stored, or retained by us beyond your device.</string>
+    <string name="designsystem_welcome_page_personal_info_desc">In Settings, you can enter your first name, age and other details so characters address you personally. This information stays on your phone and is only sent to your AI provider as context for your own conversations.</string>
     <string name="designsystem_welcome_page_personal_info_action">Enter my information</string>
-    <string name="designsystem_welcome_page4_title">Independent development</string>
-    <string name="designsystem_welcome_page4_desc">I develop Kitsune alone, in my spare time. I try to keep prices low and competitive compared to other AI roleplay apps. I welcome all your suggestions via the \"Improve Kitsune\" tab and you can vote for your favorite proposals. If you have the means and wish to support me on the Kitsune AI adventure, you can make a donation via the app and Google Play.</string>
+    <string name="designsystem_welcome_page4_title">Free and open source</string>
+    <string name="designsystem_welcome_page4_desc">Kitsune sells nothing: no subscription, no in-app purchase, no ads. Its code is open source (GPL v3). Ideas are welcome on GitHub or through the marketplace proposals, and donations help keep the community marketplace server running.</string>
     <string name="designsystem_welcome_prev">Previous</string>
     <string name="designsystem_welcome_next">Next</string>
-    <string name="designsystem_welcome_start">Get started</string>
-    <string name="designsystem_welcome_skip">Skip</string>
     <string name="designsystem_welcome_start_persona">Create my first character</string>
     <string name="designsystem_welcome_later">Later</string>
 
@@ -38,15 +35,27 @@
     <string name="designsystem_guide_title">Kitsune Guide</string>
     <string name="designsystem_guide_back">Back</string>
     <string name="designsystem_guide_about_title">About Kitsune</string>
-    <string name="designsystem_guide_about_body">Kitsune is a role-playing and AI-assisted storytelling application, developed with passion by a single independent developer.</string>
+    <string name="designsystem_guide_about_body">Kitsune is an open-source role-playing and AI-assisted storytelling app. You bring your own AI provider; everything else stays on your phone.</string>
     <string name="designsystem_guide_privacy_title">Privacy and security</string>
-    <string name="designsystem_guide_privacy_body">• All your data is stored locally on your device, encrypted\n• No content is sent to third-party servers without your consent\n• Conversations are transmitted securely (HTTPS/TLS) to our AI providers solely to generate a reply — never stored or logged on our side, though each provider applies its own retention period (see our privacy policy)\n• You have full control over your data</string>
+    <string name="designsystem_guide_privacy_body">• All your data is stored locally on your device, encrypted
+• Messages go directly from your phone to the AI provider you configured, over HTTPS — Kitsune has no server in between
+• The optional marketplace only ever receives what you choose to publish
+• No telemetry, no analytics, no ads</string>
     <string name="designsystem_guide_features_title">Main features</string>
     <string name="designsystem_guide_features_body">• Create custom personas and universes\n• Immersive AI conversations\n• Memory system for coherent stories\n• Marketplace to share and discover content\n• Proposal system to improve the app</string>
     <string name="designsystem_guide_support_title">Support the development</string>
-    <string name="designsystem_guide_support_body">Kitsune is free and will remain so. However, development requires time and resources. You can support the project in several ways:\n\n• Buy Ofudas in the store\n• Make a donation via the \'Support\' section\n• Suggest improvements and vote\n• Share the app with your friends</string>
+    <string name="designsystem_guide_support_body">Kitsune is free software and sells nothing. You can support it by:
+
+• Making a donation (Settings → Support)
+• Suggesting improvements and voting on proposals
+• Contributing code or translations on GitHub
+• Sharing the app with your friends</string>
     <string name="designsystem_guide_contact_title">Contact and feedback</string>
-    <string name="designsystem_guide_contact_body">Your feedback is essential to improve Kitsune. Feel free to:\n\n• Use the \'Improve Kitsune\' section to suggest ideas\n• Report bugs via the help menu\n• Share your experiences with the community</string>
+    <string name="designsystem_guide_contact_body">Your feedback is essential to improve Kitsune. Feel free to:
+
+• Open an issue or a discussion on GitHub
+• Suggest ideas through the marketplace proposals
+• Share an anonymised bug report from Settings</string>
     <string name="designsystem_guide_start_button">Start using Kitsune</string>
 
     <!-- Image cropper -->

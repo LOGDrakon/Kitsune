@@ -82,7 +82,7 @@ object Routes {
     const val CREATOR_LISTINGS_PATTERN = "creator-listings/{creatorId}"
 
     // -----------------------------------------------------------------------------------------
-    // Tab 4 — Profil. Who the user is in the community, plus everything about their Ofudas.
+    // Tab 4 — Profil. Who the user is in the marketplace community.
     //
     const val PROVIDERS = "providers"
     const val MODELS = "models"

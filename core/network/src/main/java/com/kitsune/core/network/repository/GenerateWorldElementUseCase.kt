@@ -295,7 +295,7 @@ class GenerateWorldElementUseCase @Inject constructor(
             Result.success(parsed)
         } catch (e: Exception) {
             // The LLM DID respond successfully — this failure is purely on the app's parsing side,
-            // after the backend already billed the credit for this call. Never log the raw generated
+            // after the provider already charged for this call. Never log the raw generated
             // world/universe content itself — only its length (compliance audit 2026-08-04).
             Log.e(TAG, "generate: response received but failed to parse (operationType=$operationType, contentLength=${result.content.length})", e)
             Result.failure(GenerationParsingException("Réponse de l'IA invalide : ${e.message}", e))

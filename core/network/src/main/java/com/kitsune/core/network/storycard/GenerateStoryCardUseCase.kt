@@ -116,7 +116,7 @@ class GenerateStoryCardUseCase @Inject constructor(
             allowContinuation = false
         )
         val result = completion.getOrElse { e ->
-            // Failed before or during the call itself, so no credit was billed — see
+            // Failed before or during the call itself, so the provider charged nothing — see
             // GenerationFailureCategory.
             Log.e(TAG, "invoke: LLM call failed: ${e::class.simpleName}: ${e.message}", e)
             return Result.failure(e)
@@ -139,7 +139,7 @@ class GenerateStoryCardUseCase @Inject constructor(
             Log.d(TAG, "invoke: parsed card successfully (preset=${draft.presetId})")
             Result.success(draft)
         } catch (e: Exception) {
-            // The model did answer, so the credit is already spent; this is our parsing failing.
+            // The model did answer, so the call is already paid for; this is our parsing failing.
             // Never log the generated content itself, only its length.
             Log.e(TAG, "invoke: response received but failed to parse (contentLength=${result.content.length})", e)
             Result.failure(GenerationParsingException("Réponse de l'IA invalide : ${e.message}", e))

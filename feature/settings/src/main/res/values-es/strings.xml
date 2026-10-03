@@ -5,7 +5,6 @@
     <string name="action_save">Guardar</string>
     <string name="action_close">Cerrar</string>
     <string name="action_back">Atrás</string>
-    <string name="error_generic">Error</string>
 
     <!-- SettingsScreen: top bar & language -->
     <string name="settings_title">Ajustes</string>
@@ -14,11 +13,9 @@
 
     <!-- SettingsScreen: "Improve Kitsune" entry (also used as ProposalsScreen title) -->
     <string name="improve_kitsune_title">Mejora Kitsune</string>
-    <string name="improve_kitsune_subtitle">Propón y vota mejoras</string>
 
     <!-- SettingsScreen: entrada "Mis mensajes" + MessagesScreen.kt -->
     <string name="messages_title">Mis mensajes</string>
-    <string name="messages_subtitle">Mensajes del equipo de moderación</string>
     <string name="messages_empty">Sin mensajes.</string>
     <string name="messages_unread_content_description">No leído</string>
 
@@ -32,13 +29,10 @@
     <string name="creativity_section_title">Creatividad</string>
 
     <!-- SettingsScreen: enlace a la página pública de transparencia sobre la recopilación de datos -->
-    <string name="data_transparency_label">Transparencia sobre la recopilación de tus datos</string>
-    <string name="data_transparency_description">Ver exactamente qué datos se recopilan, por nosotros o por los servicios que utilizamos</string>
 
     <!-- SettingsScreen: user profile section -->
     <string name="profile_section_title">Perfil de usuario</string>
     <string name="profile_section_description">Se usa para que los personajes se dirijan a ti correctamente.</string>
-    <string name="profile_section_confidentiality_notice">Esta información no se recopila ni se almacena en nuestros servidores. Sin embargo, se envía a la IA con cada mensaje: es lo que permite que los personajes te llamen por tu nombre. Déjala vacía si prefieres que no salga de tu dispositivo.</string>
     <string name="profile_first_name_label">Nombre</string>
     <string name="profile_last_name_label">Apellido</string>
     <string name="profile_pronoun_label">Pronombre</string>
@@ -49,13 +43,6 @@
     <string name="profile_sexual_orientation_placeholder">Ej.: heterosexual, gay, lesbiana, bisexual, pansexual, asexual...</string>
 
     <!-- SettingsScreen: credits & store section -->
-    <string name="credits_section_title">Créditos y tienda</string>
-    <string name="credits_balance_label">Saldo de créditos</string>
-    <string name="credits_balance_available">%1$d créditos disponibles</string>
-    <string name="buy_credits_label">Comprar créditos</string>
-    <string name="buy_credits_description">Paquetes de créditos, suscripción Kitsune+, propinas</string>
-    <string name="cosmetics_label">Cosméticos</string>
-    <string name="cosmetics_description">Temas, animaciones, fondos animados, sonidos ambientales</string>
 
     <!-- SettingsScreen: username -->
     <string name="username_label">Nombre de usuario</string>
@@ -115,10 +102,6 @@
     <string name="error_pins_do_not_match">Los dos códigos no coinciden.</string>
 
     <!-- SettingsViewModel: security/panic PIN error messages -->
-    <string name="error_security_mode_change_failed">El cambio falló (%1$s) — el modo de seguridad actual no se modificó.</string>
-    <string name="error_wrong_pin">Código PIN incorrecto.</string>
-    <string name="error_missing_new_pin">Error interno: falta el nuevo código.</string>
-    <string name="error_panic_pin_too_short">El código debe contener al menos %1$d dígitos.</string>
 
     <!-- ProposalsScreen -->
     <string name="create_proposal_content_description">Crear una propuesta</string>

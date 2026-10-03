@@ -48,7 +48,7 @@ private val KNOWN_KEYS = listOf(
     "name", "description", "personality", "scenario", "firstMessage", "exampleDialogues",
     "physicalTraits", "artStyle", "colorPalette", "defaultOutfit", "tags",
     // Intériorité dramatique (2026-08-22) — produite dans le MÊME appel que le reste de la fiche,
-    // exactement comme la fiche visuelle et les tags : aucun crédit supplémentaire.
+    // exactement comme la fiche visuelle et les tags : aucun appel supplémentaire.
     "desire", "fear", "flaw", "moralLine", "secret"
 )
 
@@ -171,7 +171,7 @@ class GenerateQuickPersonaUseCase @Inject constructor(
         val result = completion.getOrElse { e ->
             // Failed before/during the LLM call itself (network error, insufficient credits, content
             // policy) — propagated as-is so the caller (GenerationWorker) can classify it correctly;
-            // none of these bill a credit (see GenerationFailureCategory's doc comment).
+            // none of these got an answer to pay for.
             Log.e(TAG, "generateOnce: LLM call failed: ${e::class.simpleName}: ${e.message}", e)
             return Result.failure(e)
         }
@@ -208,7 +208,7 @@ class GenerateQuickPersonaUseCase @Inject constructor(
             Result.success(draft)
         } catch (e: Exception) {
             // The LLM DID respond successfully here — this failure is purely on the app's parsing
-            // side, after the backend already billed the credit for this call. Never log the raw
+            // side, after the provider already charged for this call. Never log the raw
             // generated persona content itself — only its length (compliance audit 2026-08-04).
             Log.e(TAG, "generateOnce: response received but failed to parse (contentLength=${result.content.length})", e)
             Result.failure(GenerationParsingException("Réponse de l'IA invalide : ${e.message}", e))

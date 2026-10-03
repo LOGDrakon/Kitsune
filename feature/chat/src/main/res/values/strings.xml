@@ -13,7 +13,6 @@
     <string name="content_desc_back">Back</string>
     <string name="new_conversation_label">New conversation</string>
     <string name="chat_list_empty_title">No conversations yet</string>
-    <string name="error_conversation_not_found">Conversation not found</string>
     <string name="scene_tools_label">Scene tools</string>
     <string name="image_gen_title">Generate an image</string>
     <string name="story_memory_title">Story memory</string>
@@ -37,9 +36,6 @@
     <string name="chat_menu_novel_mode">Novel mode</string>
     <string name="novel_export_action">Export as PDF</string>
     <string name="novel_export_success">Novel exported successfully</string>
-    <string name="novel_export_locked_title">Illustrated Novel Export</string>
-    <string name="novel_export_locked_message">Exporting this story as an offline-readable PDF — chapters, illustrated cover, lore appendix — requires the \"Illustrated Novel Export\" cosmetic from the Store.</string>
-    <string name="novel_export_locked_action">View in Store</string>
     <string name="chat_menu_replay_briefing">Replay briefing</string>
     <string name="chat_menu_report_issue">Report an issue</string>
     <string name="chat_bug_report_dialog_title">Report an issue</string>
@@ -47,10 +43,7 @@
     <string name="chat_bug_report_description_label">What happened?</string>
     <string name="chat_bug_report_attach_conversation_label">Attach this conversation to the report</string>
     <string name="chat_bug_report_targeted_excerpt_note">The relevant passage and its context will be attached automatically — no need to include the whole conversation.</string>
-    <string name="chat_bug_report_content_policy_notice">The part of your conversation flagged by our content filter will be included in this report so we can investigate. Your first and last name are automatically redacted, exactly as shown below.</string>
-    <string name="chat_bug_report_content_policy_preview_label">Flagged excerpt (as it will be sent):</string>
     <string name="chat_bug_report_send_button">Send</string>
-    <string name="chat_insert_asterisk_button">*</string>
     <string name="chat_next_reply_suggestions_button">💡</string>
     <string name="chat_next_reply_suggestions_loading">Thinking of a few options…</string>
     <string name="chat_input_placeholder_editing">Edit message…</string>
@@ -63,27 +56,6 @@
     <string name="chat_generate_opening_scene_button">Generate an opening scene</string>
     <string name="chat_reveal_hint">▲ Swipe up (or tap here) to see earlier messages</string>
     <string name="content_desc_scroll_to_bottom">Scroll to bottom</string>
-    <string name="chat_pricing_info_title">How Ofuda pricing works</string>
-    <string name="chat_pricing_info_text">Each message you send costs Ofudas, Kitsune\'s in-app currency — the cost depends on the chat mode you pick at the top of the screen.</string>
-    <string name="chat_pricing_info_standard_label">Standard mode: 1 Ofuda per message</string>
-    <string name="chat_pricing_info_pro_label">Pro mode (better model, larger memory): 2 Ofudas per message</string>
-    <string name="chat_insufficient_credits_title">Not enough Ofudas</string>
-    <string name="chat_insufficient_credits_text">You don\'t have enough Ofudas to continue this conversation (current balance: %1$d, %2$d required). Buy more to keep the story going.</string>
-    <string name="chat_pro_unavailable_title">Pro mode unavailable</string>
-    <string name="chat_pro_unavailable_text">The server refused this Pro turn, so the conversation has been switched back to Standard. Your message was not charged.</string>
-    <string name="chat_buy_ofudas_button">Buy more Ofudas</string>
-    <string name="chat_first_chat_bonus_title">It\'s a gift!</string>
-    <string name="chat_first_chat_bonus_text">So your first story doesn\'t get cut short, here are 5 extra Ofudas — on the house.</string>
-    <string name="chat_first_chat_bonus_button">Continue the story</string>
-    <string name="chat_content_policy_violation_title">Content not allowed</string>
-    <string name="chat_content_policy_violation_text">Your content contains illegal acts that we do not condone, even if fictional. If you believe this is a mistake, you can report an issue and send us a report.</string>
-    <string name="chat_content_policy_violation_category_line">Detected category: %1$s</string>
-    <string name="chat_content_policy_category_minor_sexual">Sexual content involving a minor</string>
-    <string name="chat_content_policy_category_non_consensual_sexual">Non-consensual sexual content</string>
-    <string name="chat_content_policy_category_non_consensual_instructional">Instructions for a non-consensual act</string>
-    <string name="chat_content_policy_category_illegal_instructions">Instructions for an illegal activity</string>
-    <string name="chat_content_policy_category_hate_incitement">Hate incitement</string>
-    <string name="chat_content_policy_violation_report_button">Report an issue</string>
     <string name="chat_background_picker_title">Conversation background</string>
     <string name="chat_background_picker_description">Choose an image from this conversation, from a persona (or the universe), or from your device’s storage.</string>
     <string name="chat_background_picker_storage_option">Storage</string>
@@ -118,17 +90,6 @@
     <!-- ============================================================
          ChatViewModel.kt (error / in-chat system messages shown to the user)
          ============================================================ -->
-    <string name="chat_vm_npc_generation_failed">NPC generation failed.</string>
-    <string name="chat_vm_safeword_activated">— Safe word activated: the scene has been paused. —</string>
-    <string name="chat_vm_message_blocked_by_filter">This message was blocked by the content filter.</string>
-    <string name="chat_vm_response_blocked_by_filter">— Response blocked by the content filter. —</string>
-    <string name="chat_vm_only_last_user_message_editable">Only the last user message can be edited.</string>
-    <string name="chat_vm_message_no_longer_last">This message is no longer the last user message.</string>
-    <string name="chat_vm_model_empty_response">The model returned nothing — try again.</string>
-    <string name="chat_vm_single_joined_scene">%1$s is now part of the scene.</string>
-    <string name="chat_vm_multiple_joined_scene">%1$s are now part of the scene.</string>
-    <string name="chat_vm_gallery_section_this_conversation">This conversation</string>
-    <string name="chat_vm_gallery_section_universe">Universe</string>
 
     <!-- ============================================================
          director/DirectorToolsDialog.kt
@@ -207,23 +168,10 @@
     <string name="image_gen_saved_confirmation">Saved ✓</string>
     <string name="image_gen_persona_gallery_button">Persona’s gallery</string>
     <string name="image_gen_send_to_chat_button">Send to chat</string>
-    <string name="image_gen_aspect_auto">Auto</string>
-    <string name="image_gen_aspect_square">Square (1:1)</string>
-    <string name="image_gen_aspect_portrait_9_16">Portrait (9:16)</string>
-    <string name="image_gen_aspect_landscape_16_9">Landscape (16:9)</string>
-    <string name="image_gen_aspect_portrait_3_4">Portrait (3:4)</string>
-    <string name="image_gen_aspect_landscape_4_3">Landscape (4:3)</string>
 
     <!-- ============================================================
          imagegen/ImageGenerationViewModel.kt
          ============================================================ -->
-    <string name="error_persona_not_found">Persona not found</string>
-    <string name="error_no_characters_in_scene">No characters found in this scene</string>
-    <string name="error_scene_description_failed">Scene description error</string>
-    <string name="error_image_refused_by_filter">This image was declined by the model’s content filter. You can try a suggestive version instead.</string>
-    <string name="error_image_generation_failed">Image generation error</string>
-    <string name="error_sfw_fallback_also_refused">Even the suggestive version was declined: %1$s</string>
-    <string name="error_prompt_softening_failed">Prompt softening error</string>
 
     <!-- ============================================================
          list/ChatListScreen.kt
@@ -272,13 +220,10 @@
          memory/StoryMemoryViewModel.kt
          ============================================================ -->
     <string name="error_unknown">Unknown error</string>
-    <string name="error_save_failed">Save error</string>
-    <string name="error_delete_failed">Delete error</string>
 
     <!-- ============================================================
          novel/NovelModeScreen.kt
          ============================================================ -->
-    <string name="novel_mode_user_label">You:</string>
 
     <!-- ============================================================
          timeline/TimelineScreen.kt
@@ -291,16 +236,6 @@
     <string name="timeline_delete">Delete</string>
     <string name="timeline_snippets">Snippets</string>
     <string name="timeline_script_doctor">Where is the story going?</string>
-    <string name="timeline_menu_label">Timeline</string>
-    <string name="timeline_mood_tender">Tender</string>
-    <string name="timeline_mood_romantic">Romantic</string>
-    <string name="timeline_mood_dramatic">Dramatic</string>
-    <string name="timeline_mood_humorous">Humorous</string>
-    <string name="timeline_mood_dark">Dark</string>
-    <string name="timeline_mood_tense">Tense</string>
-    <string name="timeline_mood_melancholic">Melancholic</string>
-    <string name="timeline_mood_exciting">Exciting</string>
-    <string name="timeline_mood_neutral">Neutral</string>
     <string name="timeline_type_first_meeting">First meeting</string>
     <string name="timeline_type_confession">Confession</string>
     <string name="timeline_type_breakup">Breakup</string>
@@ -310,17 +245,13 @@
     <string name="timeline_type_conflict">Conflict</string>
     <string name="timeline_type_reconciliation">Reconciliation</string>
     <string name="timeline_type_custom">Custom</string>
-    <string name="timeline_snippets_label">Snippets</string>
-    <string name="timeline_delete_confirm_title">Delete this moment?</string>
-    <string name="timeline_delete_confirm_text">This key moment will be permanently deleted.</string>
-    <string name="timeline_auto_detected_label">Auto-detected</string>
-    <string name="timeline_script_doctor_cost">Cost: 1 Ofuda</string>
+    <string name="timeline_script_doctor_cost">Uses one call to your story model.</string>
 
     <!-- Story card (2026-08-23) -->
     <string name="story_card_title">What kind of story do you want?</string>
     <string name="story_card_subtitle">This shapes how the AI writes for the whole conversation. You can change it later from the menu.</string>
     <string name="story_card_describe_title">Or describe it yourself</string>
-    <string name="story_card_describe_hint">Costs 1 Ofuda. Sets up the story and writes its opening scene.</string>
+    <string name="story_card_describe_hint">Sets up the story and writes its opening scene.</string>
     <string name="story_card_describe_placeholder">e.g. She is my rival at work and neither of us will admit anything</string>
     <string name="story_card_skip">Skip</string>
     <string name="story_card_generate">Set up my story</string>

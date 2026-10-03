@@ -18,7 +18,6 @@
     <string name="listing_type_universe_badge">Universe</string>
     <string name="listing_by_creator_format">by %1$s</string>
     <string name="anonymous_creator_name">Anonymous</string>
-    <string name="description_ellipsis">…</string>
     <string name="follow_creator_button">Follow</string>
     <string name="unfollow_creator_button">Following</string>
     <string name="my_follows_title">My follows</string>

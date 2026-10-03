@@ -41,9 +41,6 @@ class NovelModeViewModel @Inject constructor(
     private val _personaName = MutableStateFlow("")
     val personaName: StateFlow<String> = _personaName
 
-    /** Always true: the PDF export used to be a paid cosmetic and is now simply part of the app. Kept
-     * as a flow so the screen's existing wiring stays unchanged. */
-    val isExportUnlocked: StateFlow<Boolean> = MutableStateFlow(true).asStateFlow()
 
     private val _exportState = MutableStateFlow<PdfExportState>(PdfExportState.Idle)
     val exportState: StateFlow<PdfExportState> = _exportState.asStateFlow()

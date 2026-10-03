@@ -65,7 +65,6 @@
 
     <!-- detail/PersonaDetailScreen.kt — dialogs -->
     <string name="persona_detail_generate_image_label">Generate an image</string>
-    <string name="persona_detail_generate_image_placeholder">Describe the image to generate…</string>
     <string name="persona_detail_delete_confirm_title">Delete %1$s?</string>
     <string name="persona_detail_delete_confirm_message">This action is permanent and will also delete its conversations.</string>
     <string name="persona_detail_avatar_dialog_title">Profile picture</string>

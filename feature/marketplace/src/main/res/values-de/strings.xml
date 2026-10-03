@@ -16,7 +16,6 @@
     <string name="listing_type_universe_badge">Universum</string>
     <string name="listing_by_creator_format">von %1$s</string>
     <string name="anonymous_creator_name">Anonym</string>
-    <string name="description_ellipsis">…</string>
 
     <!-- MarketplaceScreen.kt - Listing detail screen -->
     <string name="listing_detail_title">Details</string>

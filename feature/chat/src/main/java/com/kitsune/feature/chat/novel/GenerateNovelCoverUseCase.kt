@@ -8,10 +8,7 @@ import javax.inject.Inject
 private const val COVER_ASPECT_RATIO = "3:4"
 private const val MAX_SUMMARY_CHARS_IN_PROMPT = 600
 
-/** Backend `CostCalculator.FREE_OPERATION_TYPES` exemption — the "Export Roman Illustré" cosmetic's
- * paywall already promises a "couverture illustrée" as part of its one-time real-money price, so
- * billing Ofuda credits again for the cover art on top would be a bait-and-switch (explicit product
- * decision, 2026-08-03). */
+/** Labels the call in debug logs. */
 private const val OPERATION_TYPE = "NOVEL_COVER"
 
 /**

@@ -16,7 +16,6 @@
     <string name="listing_type_universe_badge">世界観</string>
     <string name="listing_by_creator_format">%1$s より</string>
     <string name="anonymous_creator_name">匿名</string>
-    <string name="description_ellipsis">…</string>
 
     <!-- MarketplaceScreen.kt - Listing detail screen -->
     <string name="listing_detail_title">詳細</string>

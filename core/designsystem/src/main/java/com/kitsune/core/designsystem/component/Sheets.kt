@@ -39,7 +39,7 @@ import com.kitsune.core.designsystem.KitsuneTheme
  * Modals: one bottom sheet, one dialog, one action list.
  *
  * v1 reached for `AlertDialog` for everything — confirmations, pickers, paywalls, "welcome", the daily
- * bonus, error details — so a dialog could mean anything from "nice, here are 3 free Ofudas" to "this
+ * bonus, error details — so a dialog could mean anything from "welcome!" to "this
  * will permanently delete your story", with identical framing. v2 splits it:
  *
  * - [KitsuneSheet] for **choices and detail** — anything the user is browsing or picking from.

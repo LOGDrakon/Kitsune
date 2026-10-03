@@ -27,7 +27,7 @@ private const val MAX_IMPORTED_LORE = 100
  *
  * ## Why this matters more than it looks
  *
- * A new user opens Kitsune to an empty library and has to spend Ofudas before anything exists. With
+ * A new user opens Kitsune to an empty library and has to generate something before anything exists. With
  * this, they open a file they already own and arrive with the characters they have been playing for
  * months — free, offline, and without a byte leaving the device, which is the same promise the rest
  * of the app makes rather than an exception to it.

@@ -3,18 +3,6 @@
     <string name="app_name">Kitsune</string>
 
     <!-- Home -->
-    <string name="settings">Settings</string>
-    <string name="content_desc_open_store">Store</string>
-    <string name="marketplace">Marketplace</string>
-    <string name="chats">Chats</string>
-    <string name="personas">Personas</string>
-    <string name="universes">Universes</string>
-    <string name="create_persona">Create a persona</string>
-    <string name="create_universe">Create a universe</string>
-    <string name="home_create_manually_title">Describe it myself</string>
-    <string name="home_create_manually_subtitle">Write your own description and let the AI generate it</string>
-    <string name="home_create_inspiration_title">Out of inspiration?</string>
-    <string name="home_create_inspiration_subtitle">A few questions to help you find an idea</string>
 
     <!-- Inspiration wizard ("I don't know what to create") -->
     <string name="inspiration_wizard_title_persona">Looking for inspiration</string>
@@ -32,102 +20,17 @@
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>
-    <string name="improve_kitsune">Improve Kitsune</string>
-    <string name="improve_kitsune_desc">Suggest and vote for improvements</string>
-    <string name="user_profile">User Profile</string>
-    <string name="user_profile_desc">Used so personas address you correctly.</string>
-    <string name="first_name">First name</string>
-    <string name="last_name">Last name</string>
-    <string name="pronoun">Pronoun</string>
-    <string name="pronoun_hint">e.g. she, he, they</string>
-    <string name="age_optional">Age (optional)</string>
-    <string name="physical_desc">Physical description (optional)</string>
-    <string name="sexual_orientation">Sexual orientation (optional)</string>
-    <string name="sexual_orientation_hint">e.g. heterosexual, gay, lesbian, bisexual, pansexual, asexualâ€¦</string>
-    <string name="credits_store">Credits &amp; Store</string>
-    <string name="credit_balance">%1$d credits available</string>
-    <string name="username">Username</string>
-    <string name="username_undefined">Not set</string>
-    <string name="choose_username">Choose a username</string>
-    <string name="username_hint">Your pseudonym is public on the marketplace. 3â€“30 characters: letters, digits, _ and -.</string>
-    <string name="pseudonym">Pseudonym</string>
-    <string name="saving">Savingâ€¦</string>
-    <string name="min_chars">Minimum 3 characters</string>
-    <string name="available">Available!</string>
-    <string name="already_taken">Already taken</string>
-    <string name="user_id">User ID</string>
-    <string name="copied">Copied!</string>
-    <string name="copy_id">Copy ID</string>
-    <string name="buy_credits">Buy credits</string>
-    <string name="buy_credits_desc">Credit packs, Kitsune+ subscription, tips</string>
-    <string name="cosmetics">Cosmetics</string>
-    <string name="cosmetics_desc">Themes, animations, animated backgrounds, ambient sounds</string>
-    <string name="moderation">Moderation</string>
-    <string name="safe_word">Safe word</string>
-    <string name="safe_word_hint">e.g. red apple</string>
-    <string name="safe_word_desc">Type this word in a conversation to immediately stop a scene.</string>
-    <string name="security">Security</string>
-    <string name="auto_lock_minutes">Auto-lock (minutes)</string>
-    <string name="screenshot_protection">Screenshot protection</string>
-    <string name="screenshot_protection_desc">This change takes effect on the next app launch.</string>
-    <string name="vault_lock">Vault lock</string>
-    <string name="vault_lock_desc">At least one of the two factors must always remain active.</string>
-    <string name="panic_pin_desc">Panic PIN: entered instead of your real code, opens a fake vault instead of the real one.</string>
-    <string name="configure_panic_pin">Configure panic PIN</string>
     <string name="panic_pin_saved">Panic PIN saved.</string>
-    <string name="security_updated">Security mode updated.</string>
-    <string name="privacy">Privacy</string>
-    <string name="discreet_mode">Permanent discreet mode</string>
-    <string name="discreet_mode_desc">Enables the discreet theme (low contrast, reduced font) permanently. Takes effect immediately when returning home. Disable to go back to the normal theme.</string>
-    <string name="assistance">Support</string>
-    <string name="advanced_tracing">Advanced tracing for bug reports</string>
-    <string name="advanced_tracing_desc">Records in-memory events (never on disk, never transmitted) to produce a more detailed report. Enable just before reproducing a problem, then generate the report below.</string>
-    <string name="bug_report_desc">Generates an anonymous report (no API keys, no safe words, no personal identifiers) to copy and attach to a bug report.</string>
-    <string name="generate_bug_report">Generate a bug report</string>
-    <string name="save">Save</string>
     <string name="cancel">Cancel</string>
 
     <!-- Store -->
-    <string name="store_title">Store</string>
-    <string name="credits_label">%1$d credits</string>
-    <string name="credit_packs">Credit packs</string>
-    <string name="support_developer">Support the developer</string>
-    <string name="subscription">Subscription</string>
-    <string name="kitsune_plus">Kitsune+</string>
-    <string name="kitsune_plus_desc">+20% credits bonus, 50 free credits/month, early access</string>
-    <string name="per_month">/month</string>
-    <string name="purchase_success">Purchase successful! Credits added.</string>
-    <string name="product_not_found">Product not found on Google Play</string>
-    <string name="claim_free_credits">Claim your free credits</string>
-    <string name="claim_20_credits">Claim 20 credits</string>
-    <string name="maybe_later">Maybe later</string>
 
     <!-- Cosmetics -->
-    <string name="cosmetics_title">Cosmetics</string>
-    <string name="unavailable">Unavailable</string>
-    <string name="apply">Apply</string>
-    <string name="remove">Remove</string>
-    <string name="owned">Owned</string>
-    <string name="applied">Applied</string>
-    <string name="cat_themes">Conversation themes</string>
-    <string name="cat_animations">Message animations</string>
-    <string name="cat_backgrounds">Animated backgrounds</string>
-    <string name="cat_sounds">Ambient sounds</string>
-    <string name="cat_packs">Thematic packs</string>
-    <string name="cat_icons">App icons</string>
 
     <!-- Welcome -->
-    <string name="welcome_skip">Skip</string>
-    <string name="welcome_prev">Previous</string>
-    <string name="welcome_next">Next</string>
-    <string name="welcome_start">Get started</string>
 
     <!-- Chat -->
     <string name="back">Back</string>
-    <string name="more_options">More options</string>
-    <string name="scroll_to_bottom">Scroll to bottom</string>
-    <string name="delete">Delete</string>
-    <string name="edit">Edit</string>
 
 <!-- Account lock -->
     <string name="account_banned_title">Account banned</string>
@@ -136,11 +39,8 @@
     <string name="account_suspended_body">Your account is temporarily suspended while a verification is in progress. Contact support for more information.</string>
 
     <!-- Common -->
-    <string name="loading">Loadingâ?¦</string>
-    <string name="error_prefix">Error: %1$s</string>
     <string name="retry">Retry</string>
     <!-- Daily login bonus (HomeScreen) -->
-    <string name="daily_bonus_action">Nice, thanks!</string>
     <!-- Inspiration wizard: exploration mode (2026-08-24) -->
     <string name="inspiration_wizard_mode_title">How would you like to find your idea?</string>
     <string name="inspiration_wizard_mode_interview_title">Answer a few questions</string>
@@ -159,7 +59,6 @@
     <string name="inspiration_wizard_sketch_refine">Closer, but…</string>
     <string name="inspiration_wizard_sketch_build">Take this one</string>
     <string name="inspiration_wizard_sketch_last_round">Last round — pick the one you want to build.</string>
-    <string name="my_stories">My stories</string>
     <string name="shell_needs_provider">Add your AI provider’s API key to start writing stories.</string>
     <string name="shell_needs_provider_action">Add</string>
 </resources>

@@ -28,19 +28,16 @@ import kotlinx.coroutines.launch
 @Composable
 fun NovelModeScreen(
     onBack: () -> Unit,
-    onOpenStore: () -> Unit = {},
     viewModel: NovelModeViewModel = hiltViewModel()
 ) {
     val messages by viewModel.messages.collectAsStateWithLifecycle()
     val personaName by viewModel.personaName.collectAsStateWithLifecycle()
-    val isExportUnlocked by viewModel.isExportUnlocked.collectAsStateWithLifecycle()
     val exportState by viewModel.exportState.collectAsStateWithLifecycle()
 
     val scrollState = rememberScrollState()
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
-    var showLockedDialog by remember { mutableStateOf(false) }
 
     val exportLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.CreateDocument("application/pdf")
@@ -64,22 +61,6 @@ fun NovelModeScreen(
         }
     }
 
-    if (showLockedDialog) {
-        AlertDialog(
-            onDismissRequest = { showLockedDialog = false },
-            title = { Text(stringResource(R.string.novel_export_locked_title)) },
-            text = { Text(stringResource(R.string.novel_export_locked_message)) },
-            confirmButton = {
-                TextButton(onClick = { showLockedDialog = false; onOpenStore() }) {
-                    Text(stringResource(R.string.novel_export_locked_action))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showLockedDialog = false }) { Text(stringResource(R.string.action_cancel)) }
-            }
-        )
-    }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -92,12 +73,8 @@ fun NovelModeScreen(
                 actions = {
                     IconButton(
                         onClick = {
-                            if (isExportUnlocked) {
-                                if (exportState != PdfExportState.Exporting) {
-                                    exportLauncher.launch("${personaName.ifBlank { "roman" }}.pdf")
-                                }
-                            } else {
-                                showLockedDialog = true
+                            if (exportState != PdfExportState.Exporting) {
+                                exportLauncher.launch("${personaName.ifBlank { "roman" }}.pdf")
                             }
                         }
                     ) {
@@ -105,7 +82,7 @@ fun NovelModeScreen(
                             CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
                         } else {
                             Icon(
-                                if (isExportUnlocked) Icons.Default.PictureAsPdf else Icons.Default.Lock,
+                                Icons.Default.PictureAsPdf,
                                 contentDescription = stringResource(R.string.novel_export_action)
                             )
                         }

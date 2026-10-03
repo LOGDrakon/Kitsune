@@ -2,7 +2,6 @@
 <resources>
     <!-- Announcement dialog -->
     <string name="designsystem_announcement_dismiss">J\'ai compris</string>
-    <string name="designsystem_announcement_reward">🎁 +%1$d crédits offerts en fermant cette annonce</string>
     <string name="designsystem_user_message_dismiss">Compris</string>
 
     <!-- AI quick generate -->
@@ -16,21 +15,19 @@
 
     <!-- Welcome dialog -->
     <string name="designsystem_welcome_title">Bienvenue sur Kitsune !</string>
-    <string name="designsystem_welcome_page1_title">Respect de votre vie privée</string>
-    <string name="designsystem_welcome_page1_desc">Kitsune met un point d\'honneur au respect de votre vie privée. Nous ne stockons ni ne conservons vos conversations sur nos serveurs — elles sont chiffrées sur votre appareil et transmises uniquement à nos fournisseurs d\'IA en temps réel, pour générer une réponse. Chaque fournisseur applique sa propre durée de conservation, détaillée dans notre politique de confidentialité.</string>
+    <string name="designsystem_welcome_page1_title">Vos clés, vos histoires</string>
+    <string name="designsystem_welcome_page1_desc">Kitsune n’a pas de serveur d’IA à lui. Ajoutez la clé API du fournisseur de votre choix — OpenRouter, Mammouth, OpenAI ou tout service compatible — et vos messages partent directement de votre téléphone vers ce fournisseur, à ses tarifs et selon ses règles de conservation.</string>
     <string name="designsystem_welcome_page2_title">Conversations en local</string>
-    <string name="designsystem_welcome_page2_desc">Toutes vos conversations sont en LOCAL. Si vous désinstallez Kitsune sans exporter les données au préalable, il n\'existera aucun moyen de récupérer vos données.</string>
+    <string name="designsystem_welcome_page2_desc">Toutes vos conversations sont stockées LOCALEMENT et chiffrées. Si vous désinstallez Kitsune sans avoir exporté de sauvegarde (Réglages → Sauvegarde), il n’y aura aucun moyen de les récupérer.</string>
     <string name="designsystem_welcome_page3_title">Expérience immersive</string>
-    <string name="designsystem_welcome_page3_desc">Kitsune met l\'accent sur l\'immersif. Vous aurez l\'occasion de le constater mais Kitsune a une série de technologies uniques en son genre pour rendre votre expérience la plus immersive possible. En cas de problème il sera toujours possible de créer un rapport de bug anonyme.</string>
+    <string name="designsystem_welcome_page3_desc">Kitsune mise sur l’immersion : mémoire à long terme, suivi du lore, directeur de scène, mode roman. En cas de problème, vous pouvez toujours générer un rapport de bug anonymisé et le partager.</string>
     <string name="designsystem_welcome_page_personal_info_title">Personnalisez votre histoire</string>
-    <string name="designsystem_welcome_page_personal_info_desc">Dans les Paramètres, vous pouvez renseigner votre prénom, votre nom, votre âge et d\'autres détails pour que les personas s\'adressent à vous personnellement dans l\'histoire. Ces informations ne servent qu\'à personnaliser vos propres conversations (transmises en contexte à l\'IA pour générer des réponses vous concernant) — elles ne sont jamais journalisées, stockées ou conservées par nous au-delà de votre appareil.</string>
+    <string name="designsystem_welcome_page_personal_info_desc">Dans les Réglages, vous pouvez renseigner votre prénom, votre âge et d’autres détails pour que les personnages s’adressent à vous. Ces informations restent sur votre téléphone et ne sont envoyées qu’à votre fournisseur d’IA, comme contexte de vos propres conversations.</string>
     <string name="designsystem_welcome_page_personal_info_action">Renseigner mes informations</string>
-    <string name="designsystem_welcome_page4_title">Développement indépendant</string>
-    <string name="designsystem_welcome_page4_desc">Je développe Kitsune seul, sur mon temps libre. J\'essaie de maintenir des prix bas et compétitifs par rapport aux autres applications de RP IA. Je prends toutes vos suggestions via l\'onglet \"Améliorez Kitsune\" et vous pouvez voter pour les propositions que vous préférez. Si vous en avez les moyens et que vous souhaitez m\'accompagner dans l\'aventure Kitsune AI vous pouvez me faire un don via l\'application et Google Play.</string>
+    <string name="designsystem_welcome_page4_title">Libre et open source</string>
+    <string name="designsystem_welcome_page4_desc">Kitsune ne vend rien : pas d’abonnement, pas d’achat intégré, pas de publicité. Son code est open source (GPL v3). Les idées sont bienvenues sur GitHub ou via les propositions de la marketplace, et les dons aident à faire tourner le serveur de la marketplace communautaire.</string>
     <string name="designsystem_welcome_prev">Précédent</string>
     <string name="designsystem_welcome_next">Suivant</string>
-    <string name="designsystem_welcome_start">Commencer</string>
-    <string name="designsystem_welcome_skip">Passer</string>
     <string name="designsystem_welcome_start_persona">Créer mon premier personnage</string>
     <string name="designsystem_welcome_later">Plus tard</string>
 
@@ -38,15 +35,27 @@
     <string name="designsystem_guide_title">Guide de Kitsune</string>
     <string name="designsystem_guide_back">Retour</string>
     <string name="designsystem_guide_about_title">À propos de Kitsune</string>
-    <string name="designsystem_guide_about_body">Kitsune est une application de jeu de rôle et de narration assistée par IA, développée avec passion par un seul développeur indépendant.</string>
+    <string name="designsystem_guide_about_body">Kitsune est une application open source de jeu de rôle et de narration assistée par IA. Vous apportez votre propre fournisseur d’IA ; tout le reste reste sur votre téléphone.</string>
     <string name="designsystem_guide_privacy_title">Confidentialité et sécurité</string>
-    <string name="designsystem_guide_privacy_body">• Toutes vos données sont stockées localement sur votre appareil, chiffrées\n• Aucun contenu n\'est envoyé à des serveurs tiers sans votre consentement\n• Les conversations sont transmises de façon sécurisée (HTTPS/TLS) à nos fournisseurs d\'IA uniquement pour générer une réponse — jamais stockées ni journalisées de notre côté, mais chaque fournisseur applique sa propre durée de conservation (voir notre politique de confidentialité)\n• Vous avez un contrôle total sur vos données</string>
+    <string name="designsystem_guide_privacy_body">• Toutes vos données sont stockées localement sur votre appareil, chiffrées
+• Les messages partent directement de votre téléphone vers le fournisseur d’IA configuré, en HTTPS — Kitsune n’a aucun serveur entre les deux
+• La marketplace, facultative, ne reçoit que ce que vous choisissez de publier
+• Aucune télémétrie, aucune statistique, aucune publicité</string>
     <string name="designsystem_guide_features_title">Fonctionnalités principales</string>
     <string name="designsystem_guide_features_body">• Création de personas et d\'univers personnalisés\n• Conversations immersives avec l\'IA\n• Système de mémoire pour des histoires cohérentes\n• Marketplace pour partager et découvrir du contenu\n• Système de propositions pour améliorer l\'application</string>
     <string name="designsystem_guide_support_title">Soutenir le développement</string>
-    <string name="designsystem_guide_support_body">Kitsune est gratuit et le restera. Cependant, le développement nécessite du temps et des ressources. Vous pouvez soutenir le projet de plusieurs façons :\n\n• Acheter des Ofudas dans la boutique\n• Faire un don via la section \'Soutenir\'\n• Proposer des améliorations et voter\n• Partager l\'application avec vos amis</string>
+    <string name="designsystem_guide_support_body">Kitsune est un logiciel libre et ne vend rien. Vous pouvez le soutenir en :
+
+• Faisant un don (Réglages → Assistance)
+• Proposant des améliorations et en votant
+• Contribuant au code ou aux traductions sur GitHub
+• Partageant l’application autour de vous</string>
     <string name="designsystem_guide_contact_title">Contact et retours</string>
-    <string name="designsystem_guide_contact_body">Vos retours sont essentiels pour améliorer Kitsune. N\'hésitez pas à :\n\n• Utiliser la section \'Améliorez Kitsune\' pour proposer des idées\n• Signaler des bugs via le menu d\'aide\n• Partager vos expériences avec la communauté</string>
+    <string name="designsystem_guide_contact_body">Vos retours sont essentiels pour améliorer Kitsune. N’hésitez pas à :
+
+• Ouvrir une issue ou une discussion sur GitHub
+• Proposer des idées via les propositions de la marketplace
+• Partager un rapport de bug anonymisé depuis les Réglages</string>
     <string name="designsystem_guide_start_button">Commencer à utiliser Kitsune</string>
 
     <!-- Image cropper -->

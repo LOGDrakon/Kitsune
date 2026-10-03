@@ -11,7 +11,6 @@
     <string name="content_desc_back">Retour</string>
     <string name="new_conversation_label">Nouvelle conversation</string>
     <string name="chat_list_empty_title">Aucune conversation pour l\'instant</string>
-    <string name="error_conversation_not_found">Conversation introuvable</string>
     <string name="scene_tools_label">Outils de scène</string>
     <string name="image_gen_title">Générer une image</string>
     <string name="story_memory_title">Mémoire de l\'histoire</string>
@@ -33,9 +32,6 @@
     <string name="chat_menu_novel_mode">Mode roman</string>
     <string name="novel_export_action">Exporter en PDF</string>
     <string name="novel_export_success">Roman exporté avec succès</string>
-    <string name="novel_export_locked_title">Export Roman Illustré</string>
-    <string name="novel_export_locked_message">Exporter cette histoire en document PDF lisible hors-ligne — chapitres, couverture illustrée, résumé de lore — nécessite le cosmétique «Export Roman Illustré» de la Boutique.</string>
-    <string name="novel_export_locked_action">Voir dans la Boutique</string>
     <string name="chat_menu_replay_briefing">Relire le briefing</string>
     <string name="chat_menu_report_issue">Signaler un problème</string>
     <string name="chat_bug_report_dialog_title">Signaler un problème</string>
@@ -43,10 +39,7 @@
     <string name="chat_bug_report_description_label">Que s\'est-il passé ?</string>
     <string name="chat_bug_report_attach_conversation_label">Joindre cette conversation au rapport</string>
     <string name="chat_bug_report_targeted_excerpt_note">Le passage concerné et son contexte seront joints automatiquement — inutile d\'attacher toute la conversation.</string>
-    <string name="chat_bug_report_content_policy_notice">La partie de votre conversation détectée par notre filtre de contenu sera incluse dans ce rapport afin que nous puissions l\'examiner. Votre prénom et votre nom sont automatiquement masqués, comme indiqué ci-dessous.</string>
-    <string name="chat_bug_report_content_policy_preview_label">Passage signalé (tel qu\'il sera envoyé) :</string>
     <string name="chat_bug_report_send_button">Envoyer</string>
-    <string name="chat_insert_asterisk_button">*</string>
     <string name="chat_next_reply_suggestions_button">💡</string>
     <string name="chat_next_reply_suggestions_loading">Réflexion en cours…</string>
     <string name="chat_input_placeholder_editing">Modifier le message…</string>
@@ -59,27 +52,6 @@
     <string name="chat_generate_opening_scene_button">Générer une scène d\'ouverture</string>
     <string name="chat_reveal_hint">▲ Faites glisser vers le haut (ou touchez ici) pour voir les messages précédents</string>
     <string name="content_desc_scroll_to_bottom">Aller en bas</string>
-    <string name="chat_pricing_info_title">Comment fonctionnent les Ofudas</string>
-    <string name="chat_pricing_info_text">Chaque message envoyé coûte des Ofudas, la monnaie interne de Kitsune — le coût dépend du mode de discussion choisi en haut de l\'écran.</string>
-    <string name="chat_pricing_info_standard_label">Mode Standard : 1 Ofuda par message</string>
-    <string name="chat_pricing_info_pro_label">Mode Pro (meilleur modèle, mémoire élargie) : 2 Ofudas par message</string>
-    <string name="chat_insufficient_credits_title">Pas assez d\'Ofudas</string>
-    <string name="chat_insufficient_credits_text">Vous n\'avez plus assez d\'Ofudas pour continuer cette conversation (solde actuel : %1$d, %2$d requis). Achetez-en davantage pour poursuivre l\'histoire.</string>
-    <string name="chat_pro_unavailable_title">Mode Pro indisponible</string>
-    <string name="chat_pro_unavailable_text">Le serveur a refusé ce tour en mode Pro ; la conversation est repassée en Standard. Ton message n\'a pas été facturé.</string>
-    <string name="chat_buy_ofudas_button">Acheter plus d\'Ofudas</string>
-    <string name="chat_first_chat_bonus_title">C\'est cadeau !</string>
-    <string name="chat_first_chat_bonus_text">Pour ne pas couper votre première histoire en plein milieu, voici 5 Ofudas supplémentaires — offerts par la maison.</string>
-    <string name="chat_first_chat_bonus_button">Continuer l\'histoire</string>
-    <string name="chat_content_policy_violation_title">Contenu non autorisé</string>
-    <string name="chat_content_policy_violation_text">Votre contenu contient des actes illégaux que nous ne cautionnons pas, même si c\'est fictif. Si vous pensez que c\'est une erreur, vous pouvez signaler un problème et envoyer un rapport.</string>
-    <string name="chat_content_policy_violation_category_line">Catégorie détectée : %1$s</string>
-    <string name="chat_content_policy_category_minor_sexual">Contenu sexuel impliquant un mineur</string>
-    <string name="chat_content_policy_category_non_consensual_sexual">Contenu sexuel non consenti</string>
-    <string name="chat_content_policy_category_non_consensual_instructional">Instructions pour un acte non consenti</string>
-    <string name="chat_content_policy_category_illegal_instructions">Instructions pour une activité illégale</string>
-    <string name="chat_content_policy_category_hate_incitement">Incitation à la haine</string>
-    <string name="chat_content_policy_violation_report_button">Signaler un problème</string>
     <string name="chat_background_picker_title">Fond d\'écran de la conversation</string>
     <string name="chat_background_picker_description">Choisissez une image de cette conversation, d\'un persona (ou de l\'univers), ou depuis le stockage de l\'appareil.</string>
     <string name="chat_background_picker_storage_option">Stockage</string>
@@ -112,17 +84,6 @@
     <string name="chat_gallery_target_picker_title">Ajouter à la galerie de…</string>
 
     <!-- ChatViewModel.kt -->
-    <string name="chat_vm_npc_generation_failed">La génération du PNJ a échoué.</string>
-    <string name="chat_vm_safeword_activated">— Safe word activé : la scène a été interrompue. —</string>
-    <string name="chat_vm_message_blocked_by_filter">Ce message a été bloqué par le filtre de contenu.</string>
-    <string name="chat_vm_response_blocked_by_filter">— Réponse bloquée par le filtre de contenu. —</string>
-    <string name="chat_vm_only_last_user_message_editable">Seul le dernier message utilisateur peut être modifié.</string>
-    <string name="chat_vm_message_no_longer_last">Ce message n\'est plus le dernier message utilisateur.</string>
-    <string name="chat_vm_model_empty_response">Le modèle n\'a rien renvoyé — réessayez.</string>
-    <string name="chat_vm_single_joined_scene">%1$s fait maintenant partie de la scène.</string>
-    <string name="chat_vm_multiple_joined_scene">%1$s font maintenant partie de la scène.</string>
-    <string name="chat_vm_gallery_section_this_conversation">Cette conversation</string>
-    <string name="chat_vm_gallery_section_universe">Univers</string>
 
     <!-- director/DirectorToolsDialog.kt -->
     <string name="director_tool_scene_change">Changer de scène</string>
@@ -197,21 +158,8 @@
     <string name="image_gen_saved_confirmation">Enregistré ✓</string>
     <string name="image_gen_persona_gallery_button">Galerie du persona</string>
     <string name="image_gen_send_to_chat_button">Envoyer dans le chat</string>
-    <string name="image_gen_aspect_auto">Auto</string>
-    <string name="image_gen_aspect_square">Carré (1:1)</string>
-    <string name="image_gen_aspect_portrait_9_16">Portrait (9:16)</string>
-    <string name="image_gen_aspect_landscape_16_9">Paysage (16:9)</string>
-    <string name="image_gen_aspect_portrait_3_4">Portrait (3:4)</string>
-    <string name="image_gen_aspect_landscape_4_3">Paysage (4:3)</string>
 
     <!-- imagegen/ImageGenerationViewModel.kt -->
-    <string name="error_persona_not_found">Persona introuvable</string>
-    <string name="error_no_characters_in_scene">Aucun personnage trouvé dans cette scène</string>
-    <string name="error_scene_description_failed">Erreur de description de la scène</string>
-    <string name="error_image_refused_by_filter">Cette image a été refusée par le filtre de contenu du modèle. Vous pouvez essayer une version suggestive à la place.</string>
-    <string name="error_image_generation_failed">Erreur de génération d\'image</string>
-    <string name="error_sfw_fallback_also_refused">Même la version suggestive a été refusée : %1$s</string>
-    <string name="error_prompt_softening_failed">Erreur lors de l\'adoucissement du prompt</string>
 
     <!-- list/ChatListScreen.kt -->
     <string name="chat_list_empty_hint">Appuyez sur + pour en démarrer une.</string>
@@ -250,11 +198,8 @@
 
     <!-- memory/StoryMemoryViewModel.kt -->
     <string name="error_unknown">Erreur inconnue</string>
-    <string name="error_save_failed">Erreur de sauvegarde</string>
-    <string name="error_delete_failed">Erreur de suppression</string>
 
     <!-- novel/NovelModeScreen.kt -->
-    <string name="novel_mode_user_label">Vous :</string>
 
     <!-- timeline/TimelineScreen.kt -->
     <string name="timeline_title">Chronologie</string>
@@ -263,18 +208,8 @@
     <string name="timeline_delete">Supprimer</string>
     <string name="timeline_snippets">Extraits</string>
     <string name="timeline_script_doctor">Où va l\'histoire ?</string>
-    <string name="timeline_menu_label">Chronologie</string>
     <string name="timeline_empty_title">Aucun moment clé pour l\'instant</string>
     <string name="timeline_empty_subtitle">Les moments clés apparaîtront ici au fil de l\'histoire.</string>
-    <string name="timeline_mood_tender">Tendre</string>
-    <string name="timeline_mood_romantic">Romantique</string>
-    <string name="timeline_mood_dramatic">Dramatique</string>
-    <string name="timeline_mood_humorous">Humour</string>
-    <string name="timeline_mood_dark">Sombre</string>
-    <string name="timeline_mood_tense">Tendu</string>
-    <string name="timeline_mood_melancholic">Mélancolique</string>
-    <string name="timeline_mood_exciting">Excitant</string>
-    <string name="timeline_mood_neutral">Neutre</string>
     <string name="timeline_type_first_meeting">Première rencontre</string>
     <string name="timeline_type_confession">Confession</string>
     <string name="timeline_type_breakup">Rupture</string>
@@ -284,17 +219,13 @@
     <string name="timeline_type_conflict">Conflit</string>
     <string name="timeline_type_reconciliation">Réconciliation</string>
     <string name="timeline_type_custom">Personnalisé</string>
-    <string name="timeline_snippets_label">Extraits</string>
-    <string name="timeline_delete_confirm_title">Supprimer ce moment ?</string>
-    <string name="timeline_delete_confirm_text">Ce moment clé sera définitivement supprimé.</string>
-    <string name="timeline_auto_detected_label">Détecté automatiquement</string>
-    <string name="timeline_script_doctor_cost">Co\u00fbt : 1 Ofuda</string>
+    <string name="timeline_script_doctor_cost">Utilise un appel à votre modèle d’histoire.</string>
 
     <!-- Carte d'histoire (2026-08-23) -->
     <string name="story_card_title">Quelle histoire as-tu envie de vivre ?</string>
     <string name="story_card_subtitle">Ce choix guide l\'écriture de l\'IA pendant toute la conversation. Tu pourras le changer plus tard depuis le menu.</string>
     <string name="story_card_describe_title">Ou décris-la toi-même</string>
-    <string name="story_card_describe_hint">Coûte 1 Ofuda. Cadre l\'histoire et écrit sa scène d\'ouverture.</string>
+    <string name="story_card_describe_hint">Cadre l’histoire et écrit sa scène d’ouverture.</string>
     <string name="story_card_describe_placeholder">ex. C\'est ma rivale au travail et aucune des deux ne veut l\'admettre</string>
     <string name="story_card_skip">Passer</string>
     <string name="story_card_generate">Cadrer mon histoire</string>

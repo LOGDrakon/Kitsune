@@ -5,7 +5,6 @@
     <string name="action_save">Save</string>
     <string name="action_close">Close</string>
     <string name="action_back">Back</string>
-    <string name="error_generic">Error</string>
 
     <!-- SettingsScreen: top bar & language -->
     <string name="settings_title">Settings</string>
@@ -14,15 +13,9 @@
 
     <!-- SettingsScreen: "Improve Kitsune" entry (also used as ProposalsScreen title) -->
     <string name="improve_kitsune_title">Improve Kitsune</string>
-    <string name="improve_kitsune_subtitle">Suggest and vote for improvements</string>
 
     <!-- SettingsScreen: "Mes messages" entry + MessagesScreen.kt -->
     <string name="messages_title">My messages</string>
-    <string name="messages_subtitle">Messages from the moderation team</string>
-    <string name="settings_my_follows_title">My follows</string>
-    <string name="settings_my_follows_subtitle">Creators you follow on the marketplace</string>
-    <string name="settings_my_badges_title">My badges</string>
-    <string name="settings_my_badges_subtitle">Your creator badges and progress</string>
     <string name="messages_empty">No messages.</string>
     <string name="messages_unread_content_description">Unread</string>
 
@@ -37,13 +30,13 @@
     <string name="creativity_section_title">Creativity</string>
 
     <!-- SettingsScreen: link to the public data-collection transparency page -->
-    <string name="data_transparency_label">Data collection transparency</string>
-    <string name="data_transparency_description">See exactly what data is collected, by us or the services we use</string>
+    <string name="data_transparency_label">Privacy</string>
+    <string name="data_transparency_description">What leaves your phone, and where it goes</string>
 
     <!-- SettingsScreen: user profile section -->
     <string name="profile_section_title">User profile</string>
     <string name="profile_section_description">Used so personas address you correctly.</string>
-    <string name="profile_section_confidentiality_notice">This information is never collected or stored on our servers. It is, however, sent to the AI with each message — that is what lets characters address you by name. Leave it empty if you would rather it never left your device.</string>
+    <string name="profile_section_confidentiality_notice">This information stays on your phone. It is, however, sent to your AI provider with each message — that is what lets characters address you by name. Leave it empty if you would rather it never left your device.</string>
     <string name="profile_first_name_label">First name</string>
     <string name="profile_last_name_label">Last name</string>
     <string name="profile_pronoun_label">Pronoun</string>
@@ -54,13 +47,6 @@
     <string name="profile_sexual_orientation_placeholder">e.g. heterosexual, gay, lesbian, bisexual, pansexual, asexual…</string>
 
     <!-- SettingsScreen: Ofudas & store section -->
-    <string name="credits_section_title">Ofudas &amp; Store</string>
-    <string name="credits_balance_label">Ofuda balance</string>
-    <string name="credits_balance_available">%1$d Ofudas available</string>
-    <string name="buy_credits_label">Buy Ofudas</string>
-    <string name="buy_credits_description">Ofuda packs, Kitsune+ subscription, tips</string>
-    <string name="cosmetics_label">Cosmetics</string>
-    <string name="cosmetics_description">Themes, animations, animated backgrounds, ambient sounds</string>
 
     <!-- SettingsScreen: username -->
     <string name="username_label">Username</string>
@@ -103,7 +89,7 @@
     <string name="auto_recap_label">Auto-recap on return</string>
     <string name="auto_recap_description">Generates a short \"Previously on…\" summary when reopening a conversation after 24h of inactivity.</string>
     <string name="custom_style_label">Custom writing style</string>
-    <string name="custom_style_description">Describe how you want the AI to write (e.g. \"Write like Murakami\", \"Use poetic prose\"). Leave empty for default. Kitsune+ feature.</string>
+    <string name="custom_style_description">Describe how you want the AI to write (e.g. \"Write like Murakami\", \"Use poetic prose\"). Leave empty for the default.</string>
     <string name="custom_style_placeholder">e.g. Write like a noir detective novel</string>
 
     <!-- SettingsScreen: support section -->
@@ -138,10 +124,6 @@
     <string name="error_pins_do_not_match">The two codes do not match.</string>
 
     <!-- SettingsViewModel: security/panic PIN error messages -->
-    <string name="error_security_mode_change_failed">The change failed (%1$s) — the current security mode was not changed.</string>
-    <string name="error_wrong_pin">Incorrect PIN code.</string>
-    <string name="error_missing_new_pin">Internal error: missing new code.</string>
-    <string name="error_panic_pin_too_short">The code must contain at least %1$d digits.</string>
 
     <!-- ProposalsScreen -->
     <string name="create_proposal_content_description">Create a proposal</string>
@@ -161,8 +143,6 @@
     <string name="never_write_description">Things you never want to read, in any story. Sent to the AI with every message, and it overrides every other setting.</string>
     <string name="never_write_placeholder">e.g. no harm to animals, never make my character cry</string>
     <!-- Tone library (2026-08-24) -->
-    <string name="settings_tone_library_title">My story tones</string>
-    <string name="settings_tone_library_subtitle">Saved ways of telling stories, offered on every new conversation</string>
     <string name="ai_section_title">Artificial intelligence</string>
     <string name="ai_section_no_provider">No AI provider yet: add your API key to start writing stories.</string>
     <string name="ai_providers_row">AI providers</string>
