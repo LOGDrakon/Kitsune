@@ -84,7 +84,7 @@ KitsuneTheme.elevation.floating  // KitsuneElevation — Tokens.kt
 A Material `ColorScheme` is still built from these (`KitsuneColors.toMaterial()`) so stock M3
 components inherit the look instead of rendering Material's default purple. The notable mapping:
 `primary` is the **accent**, and `primaryContainer` is the accent's *tint* — which is what stops a
-stock `Button` from being a slab of gold.
+stock `Button` from being a slab of maroon.
 
 **Text-on-surface contrast** (WCAG AA needs 4.5:1 for body, 3:1 for large text): `text` on
 `background` is ~15:1, `textSecondary` ~8:1, `textDim` ~4.6:1. `textDim` is therefore the floor for
@@ -151,7 +151,6 @@ In `component/`. Use these; do not hand-roll a variant.
 | `Chips.kt` | `KitsuneTag` (read-only metadata), `KitsuneFilterChip`, `KitsuneFilterRow`, `KitsuneSegmented`, `KitsuneCount`, `KitsuneDot` |
 | `Avatar.kt` | `KitsuneAvatar`, `KitsuneAvatarPair`, `AvatarSize` |
 | `Sheets.kt` | `KitsuneSheet`, `KitsuneConfirmDialog`, `KitsuneActionSheet` + `SheetAction` |
-| `Ofuda.kt` | `OfudaPill`, `OfudaCost`, `OfudaPackCard`, `OfudaBalanceBlock`, `OfudaPriceTable`, `InsufficientOfudaPanel` |
 
 ### Rules worth stating
 
@@ -161,28 +160,24 @@ into the bar once it scrolls off (`rememberCondensedTitle`). A pinned 22sp bar t
 what makes an app read as a form-filling tool.
 
 **Chips are split by role, and only one of them gets the accent.** `KitsuneTag` is read-only metadata
-and is never tappable; `KitsuneFilterChip` is a toggle and is the only one that goes gold;
+and is never tappable; `KitsuneFilterChip` is a toggle and is the only one that takes the accent;
 `KitsuneSegmented` replaces `TabRow`, whose full-width indicator cuts the screen in half exactly where
 the content starts. v1 used chips for tags, filters, status, counts *and* navigation, so a screen could
 show fifteen pills of four different meanings.
 
 **Sheets for choices, dialogs for consequences.** `KitsuneSheet`/`KitsuneActionSheet` for anything the
 user is browsing or picking from; `KitsuneConfirmDialog` **only** when something is about to happen
-that cannot casually be undone. v1 used `AlertDialog` for confirmations, pickers, paywalls, the welcome
-carousel, the daily bonus *and* error details — so a dialog could mean "here are 3 free Ofudas" or
-"this will permanently delete your story", with identical framing.
+that cannot casually be undone. v1 used `AlertDialog` for confirmations, pickers, the welcome carousel
+*and* error details — so a dialog could mean "welcome!" or "this will permanently delete your story",
+with identical framing.
 
 **Empty states never dead-end.** They name the thing that is missing, say one sentence about why you
 would want one, and carry the action that creates it.
 
-**The avatar fallback is not a placeholder.** Most personas have no portrait until the user pays to
-generate one, so the no-image case is the *common* case: initials on a tint derived from the name,
+**The avatar fallback is not a placeholder.** Most personas have no portrait until the user generates
+one, so the no-image case is the *common* case: initials on a tint derived from the name,
 stable and distinguishable in a list. v1 showed a grey Material `Person` glyph in a grey circle, which
 made a fresh library look broken.
-
-**Money has three surfaces and no fourth.** `OfudaPill` (the balance, Profil tab only), `OfudaCost`
-(the price, next to the action that spends it), `OfudaPackCard` (the store). There is intentionally no
-upsell or "running low" component — see the Monetisation section of `CLAUDE.md`.
 
 ---
 
@@ -191,7 +186,7 @@ upsell or "running low" component — see the Monetisation section of `CLAUDE.md
 The token layer is global, so **every** screen already picks up the new palette, type scale and radii —
 nothing looks broken. What differs is how much *layout* work each screen has had:
 
-**Rebuilt on the component library:** the shell and all five tabs, the store and the price list, the
+**Rebuilt on the component library:** the shell and all five tabs, the AI providers and models screens, the
 chat's chrome (top bar, mode pill, composer, tools sheet) and its message bubbles, and Settings' page
 shell and section cards.
 

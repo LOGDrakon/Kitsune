@@ -4,11 +4,30 @@ Kitsune is a multi-module Gradle project: `core:*` / `feature:*` / `app`, wired 
 
 **Module dependency direction is always `feature → core`, never `feature → feature`.** Only `app` (the single-Activity host, navigation graph, and top-level DI wiring) is allowed to depend on more than one `feature` module — it composes everything at the top. This keeps every feature module independently buildable/testable and prevents screen-to-screen coupling from creeping in.
 
-## Design system and information architecture (v2)
+## Bring your own provider
 
-v2 rebuilt the app's surface and kept its infrastructure. Two documents carry the detail —
-[`DESIGN_SYSTEM.md`](DESIGN_SYSTEM.md) for the visual layer and
-`KitsuneBackend/docs/PRICING_V2.md` for the commercial one — but the two structural facts belong here.
+Kitsune has no AI backend. `core:network` talks directly to the provider(s) the user configured, all of
+which speak the OpenAI-compatible format:
+
+- `provider/ProviderStore` keeps the user's providers (preset, base URL, API key, OpenRouter routing) in
+  encrypted preferences. The first one is the default.
+- Every model selection is a `ModelRef` — `"<providerId>::<modelId>"` — so the same model id on two
+  providers stays two choices, and each operation (`LlmOperation`) can use a different provider.
+- `provider/LlmHttpClient` is the single HTTP client: chat completions, embeddings, image generation
+  (OpenRouter's `/images`, OpenAI's `/images/generations`, or chat completions with image output), model
+  listing, and OpenRouter's per-model endpoint listing.
+- `repository/ChatCompletionRepositoryImpl` carries the request fixes a hosted proxy used to apply:
+  retrying without a sampler parameter a model refuses, a trailing user turn for Mistral models,
+  recovering the reply from reasoning fields or content parts, and continuing truncated replies.
+- `catalog/ModelCatalogRepositoryImpl` merges every provider's `GET /models` (plus OpenRouter's separate
+  embeddings listing) and classifies models by output modality (`ModelCategoryClassifier`).
+
+The optional **marketplace** is the only server the app knows (`core:backend`), and it never sees a
+conversation. See [Kitsune-Server](https://github.com/LOGDrakon/Kitsune-Server).
+
+## Design system and information architecture
+
+[`DESIGN_SYSTEM.md`](DESIGN_SYSTEM.md) carries the visual layer; the two structural facts belong here.
 
 ### One shell, five destinations
 
@@ -20,15 +39,14 @@ question, and **nothing appears in two of them**:
 | Histoires | what am I in the middle of? |
 | Créer | what have I made, and what do I want to make? |
 | Découvrir | what has everyone else made? |
-| Profil | who am I here, and what do I have? |
+| Profil | who am I in the marketplace community? |
 | Réglages | how does this behave? |
 
 That invariant is the architecture, not a style preference. v1 split personas and universes across two
 tabs even though authoring a cast and authoring a world are one activity; it put a community
 marketplace as a peer of the user's own private library; and it left ten screens reachable only from
-menus nested two levels down. The consequences of fixing it were all *removals*: the store, the credit
-balance, proposals, messages, followed creators and badges left Settings for Profil, and the tone
-library left Settings for Créer.
+menus nested two levels down. The consequences of fixing it were all *removals*: proposals, messages,
+followed creators and badges left Settings for Profil, and the tone library left Settings for Créer.
 
 The tab screens are deliberately thin — they reuse the existing feature-module ViewModels and only
 rebuild the UI, which is why the rewrite touched no repository, no use case and no database code.
@@ -40,9 +58,9 @@ spacing/shape/motion scales, reached uniformly as `KitsuneTheme.colors` / `.type
 `.shape` / `.motion`. A Material `ColorScheme` is still derived from the tokens so stock Material 3
 components inherit the look rather than rendering Material's defaults.
 
-The load-bearing rule is that **the accent means one thing**: gold marks the single active or live
-element on a screen. v1 used Material's `primary` as "make this stand out", which put the brand maroon
-on every button, app bar, chip and badge — and left nothing able to mean *this one*.
+The load-bearing rule is that **the accent means one thing**: the logo's maroon marks the single active
+or live element on a screen. v1 used Material's `primary` as "make this stand out", which put it on
+every button, app bar, chip and badge — and left nothing able to mean *this one*.
 
 ## Module graph
 
@@ -53,20 +71,19 @@ on every button, app bar, chip and badge — and left nothing able to mean *this
 | `core:common` | Cross-cutting utilities (dispatcher provider, etc.) with no Android framework dependency beyond what's unavoidable. |
 | `core:security` | The vault — Keystore-backed master key, biometric auth, Argon2id app PIN, HKDF-based passphrase derivation, encrypted image storage, encrypted preferences, panic PIN / decoy system, age verification. See [Vault & security architecture](#vault--security-architecture). |
 | `core:data` | Room entities/DAOs/repositories, the SQLCipher-encrypted database itself, migrations. Exposes database open/close state as a `StateFlow` so it can be locked/unlocked in step with the vault. |
-| `core:network` | The client for Kitsune's own backend's AI proxy (Retrofit + kotlinx.serialization) — chat completions, live model catalog consumption (no static/hardcoded pricing table, always the backend's real-time OpenRouter catalog), image generation, and the persona visual-continuity system. The backend itself proxies every AI call to OpenRouter (originally Mammouth.ai, then five direct providers) — the app never talks to an upstream LLM provider directly. |
+| `core:network` | Direct client for the user's AI providers (see [Bring your own provider](#bring-your-own-provider)): chat completions, embeddings, images, live model catalogs, OpenRouter routing, and the persona visual-continuity system. |
 | `core:memory` | The four-layer long-term memory pipeline, fully decoupled from `feature:chat` behind use cases. See [Long-term memory pipeline](#long-term-memory-pipeline). |
-| `core:moderation` | Local keyword pre-filter for hard-blocked content categories, safe-word handling. |
-| `core:diagnostics` | Anonymized, redacted, end-to-end-encrypted bug report generation. |
+| `core:moderation` | Safe-word handling. (There is no keyword filtering of messages.) |
+| `core:diagnostics` | Anonymised, redacted bug report generation, handed to the share sheet. |
 | `core:designsystem` | The design system: semantic colour tokens, the serif/sans type scale, spacing/shape/motion scales, and ~30 shared components. See [`DESIGN_SYSTEM.md`](DESIGN_SYSTEM.md). |
-| `core:backend` | Retrofit client for Kitsune's own backend (accounts, credits, marketplace, badges, purchases) — not the AI provider. |
-| `core:billing` | Google Play Billing integration for real-money purchases (credit packs, subscription). |
+| `core:backend` | Client for the optional marketplace server (anonymous accounts, listings, reviews, reports, follows, badges, proposals, announcements, moderation messages). Its address is user-configurable. |
 | `core:background` | WorkManager-based jobs so long-running AI generation (personas, universes, NPCs) survives the app being closed. |
-| `core:models` | Shared UI helpers for browsing/filtering/picking AI models from the live catalog. |
-| `core:transfer` | Cross-device account transfer via QR code pairing, with its own independent encryption scheme (no dependency on Google Play Services). |
+| `core:models` | The model picker: search, provider filter, sort, context/cost filters over every configured provider's catalog. |
+| `core:transfer` | Encrypted backup files (database + images + settings), passphrase-protected with Argon2id + AES-GCM, for backup and moving to another phone. |
 
 ### `feature:*`
 
-One module per screen area — Compose screens + ViewModels, depending only on `core:*` modules: `onboarding`, `auth`, `persona`, `universe`, `chat`, `settings`, `marketplace`, `store`, `cosmetics`.
+One module per screen area — Compose screens + ViewModels, depending only on `core:*` modules: `onboarding`, `auth`, `persona`, `universe`, `chat`, `settings` (including the AI providers and models screens), `marketplace`.
 
 ### `app`
 
