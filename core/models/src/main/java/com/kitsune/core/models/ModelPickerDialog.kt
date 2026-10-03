@@ -12,11 +12,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,18 +29,29 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kitsune.core.network.catalog.ModelInfo
 
+/**
+ * Picks one model from every model of every configured provider.
+ *
+ * Catalogs are large — OpenRouter alone lists several hundred models — so the dialog leads with a
+ * search field, then provider chips (only when several providers are configured), then the sort and
+ * the context/cost filters, which all apply together.
+ */
 @Composable
 fun ModelPickerDialog(
     capability: ModelCapabilityFilter,
     onDismiss: () -> Unit,
     onModelSelected: (String) -> Unit,
     title: String? = null,
+    /** The current selection (a ModelRef), marked with a check. */
+    selectedModelId: String? = null,
     viewModel: ModelCatalogViewModel = hiltViewModel()
 ) {
     val allModels by viewModel.displayedModels.collectAsStateWithLifecycle()
@@ -43,17 +59,49 @@ fun ModelPickerDialog(
     val sortOption by viewModel.sortOption.collectAsStateWithLifecycle()
     val contextFilter by viewModel.contextFilter.collectAsStateWithLifecycle()
     val costFilter by viewModel.costFilter.collectAsStateWithLifecycle()
+    val query by viewModel.query.collectAsStateWithLifecycle()
+    val providers by viewModel.providers.collectAsStateWithLifecycle()
+    val providerFilter by viewModel.providerFilter.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val error by viewModel.error.collectAsStateWithLifecycle()
     val resolvedTitle = title ?: stringResource(capability.titleRes)
 
-    Dialog(onDismissRequest = onDismiss) {
-        Surface(shape = MaterialTheme.shapes.large) {
-            Column(modifier = Modifier.fillMaxWidth().heightIn(max = 640.dp).padding(16.dp)) {
+    Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
+        Surface(shape = MaterialTheme.shapes.large, modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.fillMaxWidth().heightIn(max = 720.dp).padding(16.dp)) {
                 Text(resolvedTitle, style = MaterialTheme.typography.titleLarge)
 
+                OutlinedTextField(
+                    value = query,
+                    onValueChange = viewModel::setQuery,
+                    placeholder = { Text(stringResource(R.string.model_picker_search_placeholder)) },
+                    leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth().padding(top = 12.dp)
+                )
+
+                if (providers.size > 1) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(top = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        FilterChip(
+                            selected = providerFilter == null,
+                            onClick = { viewModel.setProviderFilter(null) },
+                            label = { Text(stringResource(R.string.model_picker_all_providers)) }
+                        )
+                        providers.forEach { provider ->
+                            FilterChip(
+                                selected = providerFilter == provider,
+                                onClick = { viewModel.setProviderFilter(provider) },
+                                label = { Text(provider) }
+                            )
+                        }
+                    }
+                }
+
                 Row(
-                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(top = 12.dp),
+                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(top = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     ModelSortOption.entries.forEach { option ->
@@ -81,11 +129,6 @@ fun ModelPickerDialog(
                             label = { Text(stringResource(filter.labelRes)) }
                         )
                     }
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(top = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
                     ModelCostFilter.entries.forEach { filter ->
                         FilterChip(
                             selected = costFilter == filter,
@@ -114,16 +157,29 @@ fun ModelPickerDialog(
                         modifier = Modifier.padding(top = 16.dp)
                     )
 
-                    else -> LazyColumn(modifier = Modifier.padding(top = 8.dp)) {
-                        items(models, key = ModelInfo::id) { model ->
-                            ListItem(
-                                headlineContent = { Text(model.id) },
-                                supportingContent = { Text(modelSubtitle(model)) },
-                                modifier = Modifier.clickable {
-                                    onModelSelected(model.id)
-                                    onDismiss()
-                                }
-                            )
+                    else -> {
+                        Text(
+                            stringResource(R.string.model_picker_count, models.size),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                        LazyColumn(modifier = Modifier.padding(top = 4.dp)) {
+                            items(models, key = ModelInfo::id) { model ->
+                                ListItem(
+                                    headlineContent = {
+                                        Text(model.displayName, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                    },
+                                    supportingContent = { Text(modelSubtitle(model)) },
+                                    trailingContent = if (model.id == selectedModelId) {
+                                        { Icon(Icons.Filled.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary) }
+                                    } else null,
+                                    modifier = Modifier.clickable {
+                                        onModelSelected(model.id)
+                                        onDismiss()
+                                    }
+                                )
+                            }
                         }
                     }
                 }

@@ -26,11 +26,12 @@ import com.kitsune.core.security.storage.SecureStorage
 import com.kitsune.core.security.taste.StoryTasteStore
 import com.kitsune.core.security.vault.VaultKeyProvider
 import com.kitsune.core.security.vault.VaultModeChangeResult
-import com.kitsune.core.transfer.TransferOutState
-import com.kitsune.core.transfer.TransferOutUseCase
+import com.kitsune.core.network.provider.ProviderStore
+import com.kitsune.core.transfer.BackupFormat
+import com.kitsune.core.transfer.ExportBackupUseCase
+import android.net.Uri
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -40,12 +41,24 @@ import javax.inject.Inject
 
 private const val SECONDS_PER_MINUTE = 60
 private const val MIN_PIN_LENGTH = 4
-private const val MIN_TRANSFER_PIN_LENGTH = 6
 private const val BUG_REPORT_MIN_DIALOG_MS = 4000L
 
 sealed interface SecurityActionResult {
     data object Success : SecurityActionResult
     data class Error(val message: String) : SecurityActionResult
+}
+
+sealed interface BackupExportState {
+    data object Exporting : BackupExportState
+    data object Done : BackupExportState
+    data class Error(val message: String) : BackupExportState
+}
+
+sealed interface MarketplaceAccountState {
+    data object Idle : MarketplaceAccountState
+    data object Deleting : MarketplaceAccountState
+    data object Deleted : MarketplaceAccountState
+    data class Error(val message: String) : MarketplaceAccountState
 }
 
 sealed interface DeleteAccountState {
@@ -71,7 +84,8 @@ class SettingsViewModel @Inject constructor(
     private val encryptedImageStore: EncryptedImageStore,
     private val backendClient: KitsuneBackendClient,
     private val appLanguageManager: AppLanguageManager,
-    private val transferOutUseCase: TransferOutUseCase,
+    private val exportBackupUseCase: ExportBackupUseCase,
+    private val providerStore: ProviderStore,
     private val userMessageManager: UserMessageManager,
     private val creatorFollowsManager: CreatorFollowsManager
 ) : ViewModel() {
@@ -89,6 +103,20 @@ class SettingsViewModel @Inject constructor(
      * settings access (this screen) but content generation is blocked elsewhere; see BUGS.md. */
     val accountLockReason: StateFlow<AccountLockReason?> = backendClient.accountLockReason
     val banReason: StateFlow<String?> = backendClient.banReason
+
+    /** The user's AI providers, for the summary row that opens the providers screen. */
+    val providers = providerStore.providers
+
+    /** Marketplace switch and server address — see [KitsuneBackendClient]. */
+    val marketplaceEnabled: StateFlow<Boolean> = backendClient.enabled
+    val marketplaceServerUrl: StateFlow<String> = backendClient.serverUrl
+    val marketplaceAuthState = backendClient.authState
+
+    private val _marketplaceAccountState = MutableStateFlow<MarketplaceAccountState>(MarketplaceAccountState.Idle)
+    val marketplaceAccountState: StateFlow<MarketplaceAccountState> = _marketplaceAccountState.asStateFlow()
+
+    private val _backupExportState = MutableStateFlow<BackupExportState?>(null)
+    val backupExportState: StateFlow<BackupExportState?> = _backupExportState.asStateFlow()
 
     init {
         viewModelScope.launch { userMessageManager.refresh() }
@@ -119,20 +147,15 @@ class SettingsViewModel @Inject constructor(
     private val _deleteAccountState = MutableStateFlow<DeleteAccountState>(DeleteAccountState.Idle)
     val deleteAccountState: StateFlow<DeleteAccountState> = _deleteAccountState.asStateFlow()
 
-    private val _transferOutState = MutableStateFlow<TransferOutState?>(null)
-    val transferOutState: StateFlow<TransferOutState?> = _transferOutState.asStateFlow()
-
     init {
         viewModelScope.launch { _securityMode.value = vaultKeyProvider.getSecurityMode() }
-        viewModelScope.launch {
-            backendClient.creditBalance.collect { balance ->
-                _state.value = _state.value.copy(creditBalance = balance)
-            }
-        }
-        viewModelScope.launch {
-            backendClient.refreshBalance()
-            backendClient.getUserProfile().onSuccess { profile ->
-                _state.value = _state.value.copy(username = profile.username)
+        // Only an existing marketplace session is queried: opening Settings must never be what
+        // registers an account on a server.
+        if (backendClient.isEnabled() && backendClient.isAuthenticated()) {
+            viewModelScope.launch {
+                backendClient.getUserProfile().onSuccess { profile ->
+                    _state.value = _state.value.copy(username = profile.username)
+                }
             }
         }
     }
@@ -156,11 +179,9 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    /** Redacts, encrypts and sends a bug report automatically (FEATURES.md section 9). [subject]/
-     * [description] are the user's own account of the problem — replaces the old "traçage avancé"
-     * system, which returned almost no useful data in practice. Keeps [_bugReportSending] visible
-     * for at least [BUG_REPORT_MIN_DIALOG_MS] regardless of how fast the network call completes,
-     * so the privacy reassurance dialog actually gets read. */
+    /** Builds a redacted bug report and opens the share sheet with it (FEATURES.md section 9).
+     * [subject]/[description] are the user's own account of the problem. Keeps [_bugReportSending]
+     * visible for at least [BUG_REPORT_MIN_DIALOG_MS] so the privacy reassurance dialog is read. */
     fun generateBugReport(subject: String, description: String) {
         if (_bugReportSending.value) return
         viewModelScope.launch {
@@ -247,7 +268,6 @@ class SettingsViewModel @Inject constructor(
     private fun loadState(): SettingsUiState {
         val userProfile = userProfileStore.get()
         return SettingsUiState(
-            creditBalance = backendClient.creditBalance.value,
             backendUserId = backendClient.getUserId().orEmpty(),
             autoLockMinutes = (autoLockManager.timeoutSeconds / SECONDS_PER_MINUTE).coerceAtLeast(1),
             flagSecureEnabled = secureStorage.getInt(SecureStorage.KEY_FLAG_SECURE_ENABLED, 1) == 1,
@@ -353,11 +373,10 @@ class SettingsViewModel @Inject constructor(
         _deleteAccountState.value = DeleteAccountState.Idle
     }
 
-    /** Closes and deletes the local encrypted database + every encrypted image, then logs out —
-     * shared by [deleteAccountAndAllData] (which also re-registers a fresh account afterward) and
-     * the account-transfer flow's completion handler (which deliberately does NOT — the account
-     * now lives on the new device). */
-    private suspend fun wipeLocalDataAndLogout() {
+    /** Closes and deletes the local encrypted database + every encrypted image. The marketplace
+     * session is forgotten too, but the account itself is left on its server — deleting it is a
+     * separate action ([deleteMarketplaceAccount]), since it needs the network and this must not. */
+    private suspend fun wipeLocalData() {
         databaseProvider.close()
         appContext.deleteDatabase(KitsuneDatabase.DATABASE_NAME)
         decoyNotesDatabaseProvider.close()
@@ -367,96 +386,83 @@ class SettingsViewModel @Inject constructor(
     }
 
     /**
-     * Additionally resets the vault (PIN + wrapped database key + panic PIN + security mode) and
-     * the age-verification flag — used ONLY after a successful account transfer, never after
-     * [deleteAccountAndAllData] (which deliberately keeps the PIN/vault so the existing unlock
-     * flow can reopen the freshly-recreated empty database).
-     *
-     * Without this, [com.kitsune.core.security.vault.VaultKeyProvider.isInitialized] would still
-     * report true after a transfer (the PIN/wrapped key are untouched by [wipeLocalDataAndLogout]
-     * alone) — `AppEntryViewModel`'s cold-start routing checks exactly that flag, so if the app
-     * process were killed right after a transfer and relaunched, it would route to the normal LOCK
-     * screen instead of onboarding; unlocking with the old PIN there would reopen the now-empty
-     * database with no backend session, a confusing dead end. [VaultKeyProvider.initialize] safely
-     * overwrites all of this unconditionally (verified in VaultKeyProviderImpl — no "already
-     * initialized" special case), so there is nothing destructive about resetting it here.
-     */
-    private fun resetVaultAndOnboardingState() {
-        secureStorage.remove(SecureStorage.KEY_WRAPPED_DB_KEY)
-        secureStorage.remove(SecureStorage.KEY_DB_KEY_SOFTWARE)
-        secureStorage.remove(SecureStorage.KEY_VAULT_SECURITY_MODE)
-        secureStorage.remove(SecureStorage.KEY_PIN_SALT_REAL)
-        secureStorage.remove(SecureStorage.KEY_PIN_HASH_REAL)
-        secureStorage.remove(SecureStorage.KEY_PIN_SALT_PANIC)
-        secureStorage.remove(SecureStorage.KEY_PIN_HASH_PANIC)
-        secureStorage.remove(SecureStorage.KEY_DECOY_NOTES_DB_KEY)
-        secureStorage.remove(SecureStorage.KEY_AGE_VERIFIED_ADULT)
-    }
-
-    /**
-     * Deletes the server-side account (credits, purchases, marketplace listings — everything) and
-     * then wipes all local data (encrypted Room database, encrypted images). Server deletion runs
-     * first and local data is only wiped once it succeeds, so a network failure never leaves the
-     * user with a deleted account but no way to prove/undo it, nor a wiped device with an account
-     * still alive server-side. On success a fresh anonymous account is registered immediately (the
-     * user already passed age verification this session, no need to redo that screen) so the app
-     * has valid auth again — the caller is expected to then route back through [com.kitsune.core.security.model.VaultSecurityMode]'s
-     * unlock screen, which reopens (recreates) the now-empty database.
+     * Wipes every story, persona, universe and image on this device. The vault PIN is kept, so the
+     * caller routes back through the unlock screen, which recreates an empty database. AI providers
+     * and settings are kept as well: they are not stories, and losing an API key to a "delete my
+     * data" button would be a nasty surprise.
      */
     fun deleteAccountAndAllData() {
         if (_deleteAccountState.value == DeleteAccountState.InProgress) return
         viewModelScope.launch {
             _deleteAccountState.value = DeleteAccountState.InProgress
-            backendClient.deleteAccount()
-                .onSuccess {
-                    wipeLocalDataAndLogout()
-                    backendClient.registerAnonymous()
-                    _deleteAccountState.value = DeleteAccountState.Success
-                }
-                .onFailure { e ->
-                    _deleteAccountState.value = DeleteAccountState.Error(
-                        e.message ?: "La suppression a échoué — vérifiez votre connexion et réessayez."
-                    )
-                }
+            runCatching { wipeLocalData() }
+                .onSuccess { _deleteAccountState.value = DeleteAccountState.Success }
+                .onFailure { e -> _deleteAccountState.value = DeleteAccountState.Error(e.message ?: "La suppression a échoué.") }
         }
     }
 
-    private var transferOutJob: Job? = null
+    fun setMarketplaceEnabled(enabled: Boolean) = backendClient.setEnabled(enabled)
 
-    /** Cancels any in-flight transfer (upload/poll loop) and hides the dialog — safe to call at
-     * any point the UI actually exposes a cancel/dismiss button, since [TransferOutState.Completed]
-     * is deliberately never shown with one (the wipe it triggers must not be interruptible). */
-    fun dismissTransferOut() {
-        transferOutJob?.cancel()
-        transferOutJob = null
-        _transferOutState.value = null
+    /** Returns false for an unusable address, so the field can say so. */
+    fun setMarketplaceServerUrl(url: String): Boolean {
+        val ok = backendClient.setServerUrl(url)
+        if (ok) _state.value = _state.value.copy(username = null)
+        return ok
     }
 
-    /**
-     * Starts the old-phone side of an account transfer (FEATURES.md section 2): packages+encrypts
-     * local data with [pin] and uploads it, exposing progress via [transferOutState] up to a QR
-     * code the new phone scans. Once the new phone has proven the data actually works there
-     * (decrypted, CRC-verified, database re-opened) and claimed a fresh session, [TransferOutState.Completed]
-     * fires and this device wipes its own local data — same effect as [deleteAccountAndAllData]'s
-     * wipe, but WITHOUT deleting the server-side account or registering a new one: the account now
-     * lives on the new device, this one goes back to a blank slate.
-     */
-    fun startAccountTransfer(pin: CharArray) {
-        if (pin.size < MIN_TRANSFER_PIN_LENGTH) {
-            _transferOutState.value = TransferOutState.Error("Le code doit contenir au moins $MIN_TRANSFER_PIN_LENGTH chiffres.")
-            return
+    fun resetMarketplaceServerUrl() {
+        backendClient.resetServerUrl()
+        _state.value = _state.value.copy(username = null)
+    }
+
+    fun isDefaultMarketplaceServer(): Boolean = backendClient.isDefaultServer()
+
+    /** Deletes the account on the current marketplace server: listings, reviews, follows. Local data
+     * is untouched — it never lived there. */
+    fun deleteMarketplaceAccount() {
+        if (_marketplaceAccountState.value == MarketplaceAccountState.Deleting) return
+        viewModelScope.launch {
+            _marketplaceAccountState.value = MarketplaceAccountState.Deleting
+            _marketplaceAccountState.value = backendClient.deleteAccount().fold(
+                onSuccess = {
+                    _state.value = _state.value.copy(username = null)
+                    MarketplaceAccountState.Deleted
+                },
+                onFailure = { MarketplaceAccountState.Error(it.message ?: "La suppression a échoué.") }
+            )
         }
-        transferOutJob = viewModelScope.launch {
-            transferOutUseCase.run(pin).collect { state ->
-                // Wipe BEFORE publishing Completed — the UI navigates away as soon as it observes
-                // Completed, which (via NavBackStackEntry scoping) can cancel this ViewModel's
-                // scope; the wipe must be finished by then, not still running underneath it.
-                if (state is TransferOutState.Completed) {
-                    wipeLocalDataAndLogout()
-                    resetVaultAndOnboardingState()
-                }
-                _transferOutState.value = state
-            }
+    }
+
+    fun dismissMarketplaceAccountState() {
+        _marketplaceAccountState.value = MarketplaceAccountState.Idle
+    }
+
+    /** Validates the passphrase before the file picker opens, so the user never creates an empty
+     * file for nothing. Returns an error message, or null when the passphrase is acceptable. */
+    fun validateBackupPassphrase(passphrase: String, confirm: String): String? = when {
+        passphrase.length < BackupFormat.MIN_PASSPHRASE_LENGTH ->
+            "La phrase secrète doit contenir au moins ${BackupFormat.MIN_PASSPHRASE_LENGTH} caractères."
+        passphrase != confirm -> "Les deux phrases ne correspondent pas."
+        else -> null
+    }
+
+    /** Writes an encrypted backup of everything local to [uri] (FEATURES.md section 2). */
+    fun exportBackup(passphrase: CharArray, uri: Uri) {
+        if (_backupExportState.value == BackupExportState.Exporting) return
+        viewModelScope.launch {
+            _backupExportState.value = BackupExportState.Exporting
+            _backupExportState.value = runCatching {
+                val output = appContext.contentResolver.openOutputStream(uri) ?: error("Impossible d’écrire ce fichier.")
+                output.use { exportBackupUseCase(passphrase, it) }
+            }.fold(
+                onSuccess = { BackupExportState.Done },
+                onFailure = { BackupExportState.Error(it.message ?: "L’export a échoué.") }
+            )
+            passphrase.fill(' ')
         }
+    }
+
+    fun dismissBackupExport() {
+        _backupExportState.value = null
     }
 }

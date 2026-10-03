@@ -15,8 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 /** Icon + stacked value/label, e.g. for the followers/downloads/rating/listings stat row on a
- * creator profile. Generalizes `OfudaAmount`'s icon+text visual pattern (core:designsystem's
- * currency chip) for non-currency stats. */
+ * creator profile. */
 @Composable
 fun StatChip(
     icon: ImageVector,

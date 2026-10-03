@@ -14,10 +14,10 @@ data class AuthResponse(
 data class RegisterRequest(val deviceId: String? = null)
 
 @Serializable
-data class GoogleLoginRequest(val googleIdToken: String, val displayName: String? = null)
-
-@Serializable
 data class RefreshRequest(val refreshToken: String)
 
 @Serializable
 data class ErrorResponse(val error: String)
+
+@Serializable
+data class DeleteAccountResponse(val success: Boolean)

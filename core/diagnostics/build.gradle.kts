@@ -28,7 +28,6 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:network"))
     implementation(project(":core:security"))
-    implementation(project(":core:backend"))
 
     implementation(libs.kotlinx.coroutines.android)
 

@@ -1,5 +1,6 @@
 package com.kitsune.app.navigation
 
+import com.kitsune.app.R
 import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
@@ -15,7 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoStories
 import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Redeem
+import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.AutoStories
 import androidx.compose.material.icons.outlined.Explore
@@ -30,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -76,13 +78,12 @@ fun KitsuneShell(
 ) {
     var tab by rememberSaveable { mutableStateOf(HomeTab.Stories.id) }
     val current = HomeTab.fromId(tab)
-    val dailyGrant by viewModel.pendingDailyGrant.collectAsStateWithLifecycle()
+    val needsProvider by viewModel.needsProvider.collectAsStateWithLifecycle()
 
-    // The one launch modal v2 keeps. It is genuine onboarding (a five-page carousel explaining the
-    // vault, the memory system and how Ofudas work), not a prompt to accept something or buy
-    // something — v1 stacked this behind up to three more dialogs before the user saw their library.
-    // The preference key is shared with `TransferInUseCase`, which marks it seen on a device
-    // migration so a returning user is not re-onboarded; it must stay "welcome_shown"/"kitsune_prefs".
+    // The one launch modal. It is genuine onboarding (a carousel explaining the vault, the memory
+    // system and the bring-your-own-key model), not a prompt to accept or buy something.
+    // The preference key is shared with `ImportBackupUseCase`, which marks it seen on a restore so a
+    // returning user is not re-onboarded; it must stay "welcome_shown"/"kitsune_prefs".
     val context = LocalContext.current
     val welcomePrefs = remember {
         context.getSharedPreferences("kitsune_prefs", Context.MODE_PRIVATE)
@@ -144,16 +145,15 @@ fun KitsuneShell(
     )
 
     Column(Modifier.fillMaxSize()) {
-        // The daily-grant notice, where v1 had a launch dialog. Dismissible, never blocking, and it
-        // sits above the tab content rather than over it so it cannot hide what the user came for.
-        val grant = dailyGrant
-        if (grant != null && grant > 0) {
+        // Nothing can be written without an AI provider, so until one is configured the shell says so
+        // on every tab — quietly, above the content, never as a dialog.
+        if (needsProvider) {
             KitsuneNotice(
-                text = "+$grant Ofudas offerts aujourd'hui.",
-                icon = Icons.Filled.Redeem,
-                tone = NoticeTone.Success,
-                action = "OK",
-                onAction = viewModel::acknowledgeDailyGrant,
+                text = stringResource(R.string.shell_needs_provider),
+                icon = Icons.Filled.Key,
+                tone = NoticeTone.Warn,
+                action = stringResource(R.string.shell_needs_provider_action),
+                onAction = { navController.navigate(Routes.providers()) },
                 modifier = Modifier.padding(
                     start = KitsuneTheme.spacing.gutter,
                     end = KitsuneTheme.spacing.gutter,
@@ -201,8 +201,7 @@ fun KitsuneShell(
                     )
 
                     HomeTab.Profile -> ProfileTab(
-                        onOpenStore = { navController.navigate(Routes.store()) },
-                        onOpenPrices = { navController.navigate(Routes.prices()) },
+                        onOpenSettings = { tab = HomeTab.Settings.id },
                         onOpenBadges = { navController.navigate(Routes.myBadges()) },
                         onOpenFollows = { navController.navigate(Routes.myFollows()) },
                         onOpenMessages = { navController.navigate(Routes.messages()) },
@@ -216,7 +215,8 @@ fun KitsuneShell(
                         onBack = {},
                         showBack = false,
                         onAccountDeleted = { navController.navigate(Routes.LOCK) { popUpTo(0) } },
-                        onAccountTransferred = { navController.navigate(Routes.ACCOUNT_CHOICE) { popUpTo(0) } }
+                        onOpenProviders = { navController.navigate(Routes.providers()) },
+                        onOpenModels = { navController.navigate(Routes.models()) }
                     )
                 }
             }

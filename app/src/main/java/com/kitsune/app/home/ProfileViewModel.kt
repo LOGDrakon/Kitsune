@@ -14,14 +14,13 @@ import javax.inject.Inject
 /**
  * Everything the Profile tab shows, in one place.
  *
- * v1 had no profile: the user's identity (username), their creator standing (badges, listings,
- * followers), their subscription state and their credit balance were spread across Settings, a
- * "Mes badges" screen, a "Mes abonnements" screen and a shopping-cart icon. There was nowhere to
- * answer "who am I in this app and what do I have".
+ * The profile is the user's marketplace identity: username, creator standing (badges, listings,
+ * followers), follows, moderation messages and idea proposals. Everything else about them lives on
+ * this phone and needs no profile.
  *
- * Every field here is loaded defensively: this tab must render for a brand-new anonymous account
- * with no username, no listings and no network, so a failed call leaves a null and the screen simply
- * omits that block rather than showing an error.
+ * Every field is loaded defensively: this tab must render with the marketplace switched off, with no
+ * account yet, and with no network — a failed call leaves a null and the screen omits that block.
+ * Opening it never registers an account: that happens on first real marketplace use.
  */
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
@@ -43,8 +42,8 @@ class ProfileViewModel @Inject constructor(
     private val _state = MutableStateFlow(State())
     val state: StateFlow<State> = _state.asStateFlow()
 
-    val creditBalance: StateFlow<Int> = backendClient.creditBalance
-    val dailyFreeRemaining: StateFlow<Int> = backendClient.dailyFreeCreditsRemaining
+    val marketplaceEnabled: StateFlow<Boolean> = backendClient.enabled
+    val authState = backendClient.authState
 
     /** The user's own creator id, needed to open their public listings page. Null offline. */
     val userId: String? get() = backendClient.getUserId()
@@ -54,9 +53,11 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun refresh() {
+        if (!backendClient.isEnabled() || !backendClient.isAuthenticated()) {
+            _state.value = State(loading = false)
+            return
+        }
         viewModelScope.launch {
-            backendClient.refreshBalance()
-
             val username = backendClient.getUserProfile().getOrNull()?.username
             val ownId = backendClient.getUserId()
             val creator = ownId?.let { backendClient.getCreatorProfile(it).getOrNull() }

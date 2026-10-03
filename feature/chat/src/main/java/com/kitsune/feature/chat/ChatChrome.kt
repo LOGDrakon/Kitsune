@@ -55,16 +55,12 @@ import com.kitsune.core.designsystem.discreetBlur
 /**
  * The chat's chrome: the bar above the story, and the mode pill inside it.
  *
- * Three things changed from v1, all of them about getting out of the way of the prose:
+ * Two things changed from v1, both about getting out of the way of the prose:
  *
- * 1. **The Ofuda balance is gone from this bar.** It was one of four places v1 showed a shrinking
- *    number, and by far the worst of them: watching a counter tick down while reading a scene is the
- *    single most effective way to make an app feel like a meter. The balance now lives on the Profile
- *    tab; the *price* of anything that spends still appears next to the thing that spends it.
- * 2. **The Standard/Pro switch moved into this bar**, as one compact pill. v1 gave it a whole 34dp row
+ * 1. **The Standard/Pro switch moved into this bar**, as one compact pill. v1 gave it a whole 34dp row
  *    of its own under the app bar, permanently, on every conversation — a strip of chrome between the
  *    title and the story that existed to host one control the user touches rarely.
- * 3. **One overflow affordance**, opening a bottom sheet rather than a 15-item dropdown pinned to the
+ * 2. **One overflow affordance**, opening a bottom sheet rather than a 15-item dropdown pinned to the
  *    top-right corner (see `ChatScreen`'s tools sheet).
  */
 @Composable
@@ -74,7 +70,6 @@ internal fun ChatTopBar(
     subtitle: String,
     avatarBytes: ByteArray?,
     isPro: Boolean,
-    canAffordPro: Boolean,
     onTogglePro: (Boolean) -> Unit,
     onBack: () -> Unit,
     onOpenTools: () -> Unit,
@@ -135,7 +130,6 @@ internal fun ChatTopBar(
             }
             ChatModePill(
                 isPro = isPro,
-                canAffordPro = canAffordPro,
                 onToggle = onTogglePro
             )
             Spacer(Modifier.width(KitsuneTheme.spacing.xs))
@@ -158,34 +152,24 @@ internal fun ChatTopBar(
  * weighted, so the bar was always advertising an upsell. A single pill states what is on now, and
  * carries the accent only while Pro is active — the same "accent means one live thing" rule as the rest of
  * the app.
- *
- * [canAffordPro] gates turning Pro *on* only; someone already in Pro can always drop back to Standard
- * even if their balance has since fallen below the Pro price.
  */
 @Composable
 private fun ChatModePill(
     isPro: Boolean,
-    canAffordPro: Boolean,
     onToggle: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val colors = KitsuneTheme.colors
-    val blocked = !isPro && !canAffordPro
     val container by animateColorAsState(
         targetValue = if (isPro) colors.accentContainer else Color.Transparent,
         label = "modePillBg"
     )
     val content by animateColorAsState(
-        targetValue = when {
-            isPro -> colors.accent
-            blocked -> colors.textFaint
-            else -> colors.textSecondary
-        },
+        targetValue = if (isPro) colors.accent else colors.textSecondary,
         label = "modePillFg"
     )
     Surface(
         onClick = { onToggle(!isPro) },
-        enabled = !blocked,
         shape = KitsuneTheme.shape.pill,
         color = container,
         modifier = modifier

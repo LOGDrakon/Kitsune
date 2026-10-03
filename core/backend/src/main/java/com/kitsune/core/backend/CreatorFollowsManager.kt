@@ -23,7 +23,7 @@ class CreatorFollowsManager @Inject constructor(
     val newListingsCount: StateFlow<Int> = _newListingsCount.asStateFlow()
 
     suspend fun refresh() = withContext(dispatcherProvider.io) {
-        if (!backendClient.isAuthenticated()) return@withContext
+        if (!backendClient.isEnabled() || !backendClient.isAuthenticated()) return@withContext
         backendClient.getNewFollowedListingsCount()
             .onSuccess { count -> _newListingsCount.value = count }
             .onFailure { }

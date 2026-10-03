@@ -63,7 +63,7 @@ data class KitsuneShapes(
     val lg: CornerBasedShape = RoundedCornerShape(20.dp),
     /** Top-rounded only, for bottom sheets. */
     val sheet: CornerBasedShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
-    /** Fully rounded: primary buttons, tabs, the Ofuda pill. */
+    /** Fully rounded: primary buttons, tabs, pills. */
     val pill: CornerBasedShape = RoundedCornerShape(percent = 50),
     /** A message bubble from the AI — square on the side it "grows" from. */
     val bubbleIncoming: CornerBasedShape = RoundedCornerShape(topStart = 4.dp, topEnd = 16.dp, bottomEnd = 16.dp, bottomStart = 16.dp),

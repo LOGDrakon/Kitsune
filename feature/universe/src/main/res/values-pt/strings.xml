@@ -18,14 +18,9 @@
 
     <!-- UniverseListScreen.kt — diálogo de detalhes de uma geração com falha -->
     <string name="generation_failure_dialog_title">Geração falhou</string>
-    <string name="generation_failure_category_content_policy">Bloqueado pelo filtro de conteúdo (conteúdo que possivelmente envolve um menor ou atos não consensuais)</string>
-    <string name="generation_failure_category_insufficient_credits">Ofudas insuficientes</string>
     <string name="generation_failure_category_parsing_failed">A IA respondeu, mas a resposta não pôde ser interpretada</string>
     <string name="generation_failure_category_technical">Erro técnico (rede, servidor…)</string>
     <string name="generation_failure_category_unknown">Motivo desconhecido</string>
-    <string name="generation_failure_credit_consumed">Um Ofuda foi consumido nesta tentativa, apesar da falha.</string>
-    <string name="generation_failure_credit_not_consumed">Nenhum Ofuda foi consumido nesta tentativa.</string>
-    <string name="generation_failure_credit_unknown">Não foi possível determinar se um Ofuda foi consumido nesta tentativa.</string>
     <string name="generation_failure_retry_button">Tentar novamente</string>
     <string name="generation_failure_report_button">Reportar um problema</string>
     <string name="generation_failure_delete_button">Excluir</string>

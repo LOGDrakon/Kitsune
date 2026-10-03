@@ -2,7 +2,6 @@ package com.kitsune.feature.onboarding
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kitsune.core.backend.KitsuneBackendClient
 import com.kitsune.core.security.onboarding.AgeVerificationStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,8 +29,7 @@ sealed interface RegistrationState {
 
 @HiltViewModel
 class AgeVerificationViewModel @Inject constructor(
-    private val ageVerificationStore: AgeVerificationStore,
-    private val backendClient: KitsuneBackendClient
+    private val ageVerificationStore: AgeVerificationStore
 ) : ViewModel() {
 
     private val _registrationState = MutableStateFlow<RegistrationState>(RegistrationState.Idle)
@@ -52,12 +50,9 @@ class AgeVerificationViewModel @Inject constructor(
 
         return if (age >= MINIMUM_AGE_YEARS) {
             ageVerificationStore.markVerifiedAdult()
-            _registrationState.value = RegistrationState.Registering
-            viewModelScope.launch {
-                backendClient.registerAnonymous()
-                    .onSuccess { _registrationState.value = RegistrationState.Done }
-                    .onFailure { _registrationState.value = RegistrationState.Error(it.message ?: "Registration failed") }
-            }
+            // No account to create: the app works without any server. A marketplace account is
+            // registered only when the marketplace is first used (KitsuneBackendClient.ensureRegistered).
+            _registrationState.value = RegistrationState.Done
             AgeVerificationOutcome.Adult
         } else {
             AgeVerificationOutcome.Underage

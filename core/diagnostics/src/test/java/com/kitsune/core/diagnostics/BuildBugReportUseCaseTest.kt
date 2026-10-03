@@ -122,7 +122,7 @@ class BuildBugReportUseCaseTest {
     }
 
     @Test
-    fun `attaches a failed generation job's category and credit-consumed status`() = runTest {
+    fun `attaches a failed generation job's category`() = runTest {
         every { userProfileStore.get() } returns UserProfile()
         coEvery { generationJobRepository.getById("job-1") } returns GenerationJobEntity(
             id = "job-1",
@@ -140,27 +140,6 @@ class BuildBugReportUseCaseTest {
 
         assertTrue(report.contains("## Génération échouée"))
         assertTrue(report.contains("a grumpy pirate"))
-        assertTrue(report.contains("filtre de contenu"))
-        assertTrue(report.contains("Crédit consommé pour cette tentative : Non"))
-    }
-
-    @Test
-    fun `marks credit as consumed for a parsing failure since the LLM already answered`() = runTest {
-        every { userProfileStore.get() } returns UserProfile()
-        coEvery { generationJobRepository.getById("job-2") } returns GenerationJobEntity(
-            id = "job-2",
-            type = GenerationJobType.UNIVERSE,
-            state = GenerationJobState.FAILED,
-            description = "a floating city",
-            proposalCount = 1,
-            errorMessage = "Réponse de l'IA invalide : missing field 'name'",
-            errorCategory = "PARSING_FAILED",
-            createdAt = 0L,
-            completedAt = 1000L
-        )
-
-        val report = useCase(subject = "Subject", description = "Description", jobId = "job-2")
-
-        assertTrue(report.contains("Crédit consommé pour cette tentative : Oui"))
+        assertTrue(report.contains("modération du fournisseur"))
     }
 }

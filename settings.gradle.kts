@@ -24,7 +24,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "KitsuneV2"
+rootProject.name = "Kitsune"
 
 include(":app")
 include(":core:common")
@@ -43,9 +43,6 @@ include(":feature:settings")
 include(":feature:chat")
 include(":core:models")
 include(":core:backend")
-include(":core:billing")
 include(":feature:universe")
-include(":feature:store")
 include(":feature:marketplace")
-include(":feature:cosmetics")
 include(":core:transfer")

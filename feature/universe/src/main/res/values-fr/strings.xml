@@ -18,14 +18,11 @@
 
     <!-- UniverseListScreen.kt — dialogue de détail d'une génération échouée -->
     <string name="generation_failure_dialog_title">Génération échouée</string>
-    <string name="generation_failure_category_content_policy">Bloqué par le filtre de contenu (contenu impliquant potentiellement un mineur ou des actes non consensuels)</string>
-    <string name="generation_failure_category_insufficient_credits">Ofudas insuffisants</string>
+    <string name="generation_failure_category_content_policy">Refusé par la modération de votre fournisseur. Essayez un autre modèle ou fournisseur.</string>
+    <string name="generation_failure_category_insufficient_credits">Votre fournisseur indique que votre compte n’a plus de crédit.</string>
     <string name="generation_failure_category_parsing_failed">L\'IA a répondu, mais sa réponse n\'a pas pu être comprise</string>
     <string name="generation_failure_category_technical">Erreur technique (réseau, serveur…)</string>
     <string name="generation_failure_category_unknown">Raison inconnue</string>
-    <string name="generation_failure_credit_consumed">Un Ofuda a été consommé pour cette tentative, malgré l\'échec.</string>
-    <string name="generation_failure_credit_not_consumed">Aucun Ofuda n\'a été consommé pour cette tentative.</string>
-    <string name="generation_failure_credit_unknown">Impossible de déterminer si un Ofuda a été consommé pour cette tentative.</string>
     <string name="generation_failure_retry_button">Réessayer</string>
     <string name="generation_failure_report_button">Signaler un problème</string>
     <string name="generation_failure_delete_button">Supprimer</string>
@@ -42,10 +39,6 @@
     <string name="universe_create_proposal_hint">Chaque proposition est un univers complet et différent (avec factions, lieux et PNJ) — vous pourrez les parcourir et en garder une ou plusieurs.</string>
     <string name="universe_create_tags_label">Tags</string>
     <string name="universe_tags_add_placeholder">Ajouter un tag…</string>
-    <string name="universe_create_cost_confirm_title">Générer l\'univers ?</string>
-    <string name="universe_create_cost_confirm_text">Cela coûtera %1$d Ofuda(s).</string>
-    <string name="universe_create_first_free_title">Ce coup ci c\'est cadeau !</string>
-    <string name="universe_create_first_free_text">Votre première création de persona ou d\'univers est offerte, sans compter vos Ofudas.</string>
     <string name="universe_create_manual_section_title">Ou créer un univers manuellement</string>
     <string name="universe_create_genre_label">Genre</string>
     <string name="universe_create_genre_placeholder">Ex : fantasy médiévale, cyberpunk, post-apocalyptique...</string>
@@ -73,8 +66,6 @@
     <string name="universe_create_error_empty_result">Le résultat de la génération est vide.</string>
     <string name="universe_create_error_generation_failed">La génération a échoué.</string>
     <string name="universe_create_error_name_required">Le nom de l\'univers est obligatoire.</string>
-    <string name="universe_limit_reached_title">Limite d\'univers atteinte</string>
-    <string name="universe_limit_reached_text">Les comptes gratuits sont limités à %1$d univers. Abonnez-vous à Kitsune+ dans la Boutique pour un nombre illimité d\'univers (leur création consomme toujours des Ofudas).</string>
     <string name="universe_create_error_scheduling_failed">La planification de la génération a échoué.</string>
 
     <!-- UniverseChatCreationScreen.kt / UniverseChatCreationViewModel.kt -->

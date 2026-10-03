@@ -18,14 +18,9 @@
 
     <!-- UniverseListScreen.kt — detailvenster voor een mislukte generatie -->
     <string name="generation_failure_dialog_title">Generatie mislukt</string>
-    <string name="generation_failure_category_content_policy">Geblokkeerd door het contentfilter (inhoud die mogelijk een minderjarige of niet-consensuele handelingen betreft)</string>
-    <string name="generation_failure_category_insufficient_credits">Onvoldoende Ofuda\'s</string>
     <string name="generation_failure_category_parsing_failed">De AI heeft geantwoord, maar het antwoord kon niet worden begrepen</string>
     <string name="generation_failure_category_technical">Technische fout (netwerk, server…)</string>
     <string name="generation_failure_category_unknown">Onbekende reden</string>
-    <string name="generation_failure_credit_consumed">Er is een Ofuda verbruikt voor deze poging, ondanks het mislukken.</string>
-    <string name="generation_failure_credit_not_consumed">Er is geen Ofuda verbruikt voor deze poging.</string>
-    <string name="generation_failure_credit_unknown">Het kon niet worden vastgesteld of er een Ofuda is verbruikt voor deze poging.</string>
     <string name="generation_failure_retry_button">Opnieuw proberen</string>
     <string name="generation_failure_report_button">Probleem melden</string>
     <string name="generation_failure_delete_button">Verwijderen</string>

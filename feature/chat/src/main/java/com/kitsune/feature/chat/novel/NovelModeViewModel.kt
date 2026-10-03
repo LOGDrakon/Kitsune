@@ -3,7 +3,6 @@ package com.kitsune.feature.chat.novel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kitsune.core.backend.KitsuneBackendClient
 import com.kitsune.core.data.local.entities.MessageEntity
 import com.kitsune.core.data.repository.ChatRepository
 import com.kitsune.core.data.repository.MessageRepository
@@ -18,8 +17,6 @@ import kotlinx.coroutines.launch
 import java.io.OutputStream
 import javax.inject.Inject
 
-private const val EXPORT_COSMETIC_ID = "export_novel_pdf"
-
 sealed class PdfExportState {
     data object Idle : PdfExportState()
     data object Exporting : PdfExportState()
@@ -33,7 +30,6 @@ class NovelModeViewModel @Inject constructor(
     private val chatRepository: ChatRepository,
     private val messageRepository: MessageRepository,
     private val personaRepository: PersonaRepository,
-    private val backendClient: KitsuneBackendClient,
     private val exportNovelPdfUseCase: ExportNovelPdfUseCase
 ) : ViewModel() {
 
@@ -45,8 +41,9 @@ class NovelModeViewModel @Inject constructor(
     private val _personaName = MutableStateFlow("")
     val personaName: StateFlow<String> = _personaName
 
-    private val _isExportUnlocked = MutableStateFlow(false)
-    val isExportUnlocked: StateFlow<Boolean> = _isExportUnlocked.asStateFlow()
+    /** Always true: the PDF export used to be a paid cosmetic and is now simply part of the app. Kept
+     * as a flow so the screen's existing wiring stays unchanged. */
+    val isExportUnlocked: StateFlow<Boolean> = MutableStateFlow(true).asStateFlow()
 
     private val _exportState = MutableStateFlow<PdfExportState>(PdfExportState.Idle)
     val exportState: StateFlow<PdfExportState> = _exportState.asStateFlow()
@@ -58,11 +55,6 @@ class NovelModeViewModel @Inject constructor(
             if (personaId != null) {
                 val persona = personaRepository.getById(personaId)
                 _personaName.value = persona?.name ?: ""
-            }
-        }
-        viewModelScope.launch {
-            backendClient.getOwnedCosmetics().onSuccess { owned ->
-                _isExportUnlocked.value = EXPORT_COSMETIC_ID in owned.cosmeticIds
             }
         }
     }

@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,25 +29,60 @@ class ModelCatalogViewModel @Inject constructor(
     private val _sortOption = MutableStateFlow(ModelSortOption.QUALITY)
     private val _contextFilter = MutableStateFlow(ModelContextFilter.ANY)
     private val _costFilter = MutableStateFlow(ModelCostFilter.ANY)
+    private val _query = MutableStateFlow("")
+    private val _providerFilter = MutableStateFlow<String?>(null)
 
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
     val error: StateFlow<String?> = _error.asStateFlow()
     val sortOption: StateFlow<ModelSortOption> = _sortOption.asStateFlow()
     val contextFilter: StateFlow<ModelContextFilter> = _contextFilter.asStateFlow()
     val costFilter: StateFlow<ModelCostFilter> = _costFilter.asStateFlow()
+    val query: StateFlow<String> = _query.asStateFlow()
+    val providerFilter: StateFlow<String?> = _providerFilter.asStateFlow()
 
-    /** Both filters apply simultaneously (combined filtering), on top of the chosen sort. */
+    /** Distinct provider labels in the catalog, for the provider chips (shown only when there are
+     * several). */
+    val providers: StateFlow<List<String>> = _models
+        .map { models -> models.map { it.provider }.distinct() }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    /** Every filter applies simultaneously (combined filtering), on top of the chosen sort. The
+     * search matches the display name, the bare model id and the provider label. */
     val displayedModels: StateFlow<List<ModelInfo>> = combine(
-        _models,
-        _sortOption,
-        _contextFilter,
-        _costFilter
-    ) { models, sort, contextFilter, costFilter ->
-        var filtered = models
-        contextFilter.minTokens?.let { filtered = filtered.withMinContext(it) }
-        costFilter.maxCostPerMillionTokens?.let { filtered = filtered.withMaxCostPerMillionTokens(it) }
-        sort(filtered, sort)
+        combine(_models, _sortOption, _contextFilter, _costFilter) { models, sort, context, cost ->
+            Filters(models, sort, context, cost)
+        },
+        _query,
+        _providerFilter
+    ) { f, query, provider ->
+        var filtered = f.models
+        f.context.minTokens?.let { filtered = filtered.withMinContext(it) }
+        f.cost.maxCostPerMillionTokens?.let { filtered = filtered.withMaxCostPerMillionTokens(it) }
+        provider?.let { wanted -> filtered = filtered.filter { it.provider == wanted } }
+        val q = query.trim()
+        if (q.isNotEmpty()) {
+            filtered = filtered.filter {
+                it.displayName.contains(q, ignoreCase = true) || it.modelId.contains(q, ignoreCase = true) ||
+                    it.provider.contains(q, ignoreCase = true)
+            }
+        }
+        sort(filtered, f.sort)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    private data class Filters(
+        val models: List<ModelInfo>,
+        val sort: ModelSortOption,
+        val context: ModelContextFilter,
+        val cost: ModelCostFilter
+    )
+
+    fun setQuery(value: String) {
+        _query.value = value
+    }
+
+    fun setProviderFilter(provider: String?) {
+        _providerFilter.value = provider
+    }
 
     init {
         refresh()

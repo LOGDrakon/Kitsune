@@ -79,7 +79,6 @@ dependencies {
     implementation(project(":core:background"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:backend"))
-    implementation(project(":core:billing"))
     implementation(project(":core:network"))
     implementation(project(":feature:onboarding"))
     implementation(project(":feature:auth"))
@@ -87,11 +86,8 @@ dependencies {
     implementation(project(":feature:settings"))
     implementation(project(":feature:chat"))
     implementation(project(":feature:universe"))
-    implementation(project(":feature:store"))
     implementation(project(":feature:marketplace"))
-    implementation(project(":feature:cosmetics"))
 
-    implementation("com.android.billingclient:billing-ktx:7.1.1")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

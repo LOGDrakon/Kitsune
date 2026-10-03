@@ -22,10 +22,6 @@
     <string name="persona_create_visual_style_label">Style visuel (optionnel)</string>
     <string name="persona_create_proposal_count_label">Nombre de propositions</string>
     <string name="persona_create_proposal_count_hint">Vous pourrez parcourir les %1$d fiches générées et choisir celle que vous préférez.</string>
-    <string name="persona_create_cost_confirm_title">Générer le persona ?</string>
-    <string name="persona_create_cost_confirm_text">Cela coûtera %1$d Ofuda(s).</string>
-    <string name="persona_create_first_free_title">Ce coup ci c\'est cadeau !</string>
-    <string name="persona_create_first_free_text">Votre première création de persona ou d\'univers est offerte, sans compter vos Ofudas.</string>
 
     <!-- create/PersonaCreationScreen.kt — GeneratingStep -->
     <string name="persona_create_generating_single">Création de votre fiche…</string>
@@ -66,8 +62,6 @@
     <string name="persona_create_error_generation_failed">La génération a échoué.</string>
     <string name="persona_create_error_schedule_failed">La planification de la génération a échoué.</string>
     <string name="persona_review_error_age_minimum">L\'âge du persona doit être un nombre entier de %1$d ou plus.</string>
-    <string name="persona_limit_reached_title">Limite de personas atteinte</string>
-    <string name="persona_limit_reached_text">Les comptes gratuits sont limités à %1$d personas. Abonnez-vous à Kitsune+ dans la Boutique pour un nombre illimité de personas (leur création consomme toujours des Ofudas).</string>
 
     <!-- detail/PersonaDetailScreen.kt — dialogs -->
     <string name="persona_detail_generate_image_label">Générer une image</string>
@@ -147,14 +141,11 @@
     <!-- list/PersonaListScreen.kt — dialogue de détail d'une génération échouée -->
     <string name="action_close">Fermer</string>
     <string name="generation_failure_dialog_title">Génération échouée</string>
-    <string name="generation_failure_category_content_policy">Bloqué par le filtre de contenu (contenu impliquant potentiellement un mineur ou des actes non consensuels)</string>
-    <string name="generation_failure_category_insufficient_credits">Ofudas insuffisants</string>
+    <string name="generation_failure_category_content_policy">Refusé par la modération de votre fournisseur. Essayez un autre modèle ou fournisseur.</string>
+    <string name="generation_failure_category_insufficient_credits">Votre fournisseur indique que votre compte n’a plus de crédit.</string>
     <string name="generation_failure_category_parsing_failed">L\'IA a répondu, mais sa réponse n\'a pas pu être comprise</string>
     <string name="generation_failure_category_technical">Erreur technique (réseau, serveur…)</string>
     <string name="generation_failure_category_unknown">Raison inconnue</string>
-    <string name="generation_failure_credit_consumed">Un Ofuda a été consommé pour cette tentative, malgré l\'échec.</string>
-    <string name="generation_failure_credit_not_consumed">Aucun Ofuda n\'a été consommé pour cette tentative.</string>
-    <string name="generation_failure_credit_unknown">Impossible de déterminer si un Ofuda a été consommé pour cette tentative.</string>
     <string name="generation_failure_retry_button">Réessayer</string>
     <string name="generation_failure_report_button">Signaler un problème</string>
     <string name="generation_failure_delete_button">Supprimer</string>

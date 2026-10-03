@@ -34,10 +34,7 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:backend"))
     implementation(project(":core:transfer"))
-
-    implementation(libs.zxing.android.embedded) {
-        isTransitive = true
-    }
+    implementation(project(":core:network"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)

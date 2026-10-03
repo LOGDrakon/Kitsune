@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kitsune.core.backend.KitsuneBackendClient
 import com.kitsune.core.common.style.PersonaTemplate
 import com.kitsune.core.data.local.entities.MaturityTag
 import com.kitsune.core.data.local.entities.ParticipantType
@@ -37,10 +36,6 @@ import javax.inject.Inject
 
 private const val MINIMUM_PERSONA_AGE = 18
 
-/** Free tier cap on total personas (across all universes); Kitsune+ subscribers are unlimited —
- * creating still costs Ofudas either way, this only caps the free-tier ceiling. */
-const val MAX_FREE_PERSONAS = 10
-
 /** Proposal counts offered to the user — "1 ou 3 ou 5" as requested. */
 val PERSONA_PROPOSAL_COUNT_OPTIONS = listOf(1, 3, 5)
 
@@ -54,7 +49,6 @@ class PersonaCreationViewModel @Inject constructor(
     private val npcRepository: NpcRepository,
     private val generationScheduler: GenerationScheduler,
     private val generationJobRepository: GenerationJobRepository,
-    private val backendClient: KitsuneBackendClient,
     private val appLanguageManager: AppLanguageManager,
     private val userProfileStore: UserProfileStore
 ) : ViewModel() {
@@ -77,24 +71,8 @@ class PersonaCreationViewModel @Inject constructor(
     private val _state = MutableStateFlow<PersonaCreationUiState>(PersonaCreationUiState.DescribeInput)
     val state: StateFlow<PersonaCreationUiState> = _state.asStateFlow()
 
-    /** True if this user's next quick persona/universe generation is free (first-time perk) —
-     * lets the cost-confirmation dialog say "Ce coup-ci c'est cadeau !" instead of a cost that
-     * won't actually be charged. */
-    val firstCreationFree: StateFlow<Boolean> = backendClient.firstCreationFree
-
-    /** Prix d'une proposition, annoncé par le serveur (voir `KitsuneBackendClient`) — l'écran
-     * multipliait auparavant le nombre de propositions par un tarif implicite de 1. */
-    val personaGenCostCredits: StateFlow<Int> = backendClient.personaGenCostCredits
-
     private val _initialDescription = MutableStateFlow("")
     val initialDescription: StateFlow<String> = _initialDescription.asStateFlow()
-
-    private val _limitReached = MutableStateFlow(false)
-    val limitReached: StateFlow<Boolean> = _limitReached.asStateFlow()
-
-    fun dismissLimitReached() {
-        _limitReached.value = false
-    }
 
     init {
         viewModelScope.launch {
@@ -182,14 +160,6 @@ class PersonaCreationViewModel @Inject constructor(
      */
     fun generate(description: String, template: PersonaTemplate? = null, count: Int = 1) {
         viewModelScope.launch {
-            if (!backendClient.isKitsunePlus.value) {
-                val currentCount = personaRepository.observeAll().first().size
-                if (currentCount >= MAX_FREE_PERSONAS) {
-                    _limitReached.value = true
-                    return@launch
-                }
-            }
-
             _state.value = PersonaCreationUiState.Generating(count)
             val promptWithStyle = if (template != null) {
                 "$description\n\nStyle: ${template.styleHint}"

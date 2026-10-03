@@ -3,6 +3,7 @@ package com.kitsune.core.network.repository
 import com.kitsune.core.network.preferences.LlmModelResolver
 import com.kitsune.core.network.preferences.NetworkPreferences
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -13,30 +14,28 @@ import org.junit.Test
 
 class GenerateImageUseCaseTest {
 
-    private val chatCompletionRepository = mockk<ChatCompletionRepository>()
+    private val imageRepository = mockk<ImageGenerationRepository>()
     private val llmModelResolver = mockk<LlmModelResolver> {
-        coEvery { resolve(any()) } returns "gemini-3.1-flash-image-preview"
+        coEvery { resolve(any()) } returns "or::google/gemini-2.5-flash-image"
     }
     private val networkPreferences = mockk<NetworkPreferences> {
-        every { getDefaultImageModelId() } returns "gemini-3.1-flash-image-preview"
-        every { getDefaultImageFallbackModelId() } returns "gemini-3.1-flash-image-preview"
+        every { getDefaultImageFallbackModelId() } returns null
     }
 
-    private val useCase = GenerateImageUseCase(chatCompletionRepository, llmModelResolver, networkPreferences)
+    private val useCase = GenerateImageUseCase(imageRepository, llmModelResolver, networkPreferences)
 
     @Test
     fun `fails fast on a blank description without calling the API`() = runTest {
         val result = useCase(characterContext = "Aria", description = "")
 
         assertTrue(result.isFailure)
+        coVerify(exactly = 0) { imageRepository.generate(any(), any(), any(), any()) }
     }
 
     @Test
-    fun `returns the decoded images on success`() = runTest {
+    fun `returns the images on success`() = runTest {
         val imageBytes = listOf("image-bytes".toByteArray())
-        coEvery {
-            chatCompletionRepository.complete(any(), any(), any(), any(), any(), any(), any(), any(), any())
-        } returns Result.success(ChatCompletionResult(content = "", usage = null, modelUsed = "gemini-3.1-flash-image-preview", images = imageBytes))
+        coEvery { imageRepository.generate(any(), any(), any(), any()) } returns Result.success(imageBytes)
 
         val result = useCase(characterContext = "Aria", description = "a portrait smiling")
 
@@ -45,62 +44,52 @@ class GenerateImageUseCaseTest {
 
     @Test
     fun `fails with ImageGenerationRefusedException when the model returns no images at all`() = runTest {
-        coEvery {
-            chatCompletionRepository.complete(any(), any(), any(), any(), any(), any(), any(), any(), any())
-        } returns Result.success(ChatCompletionResult(content = "sorry, no image", usage = null, modelUsed = "gemini-3.1-flash-image-preview"))
+        coEvery { imageRepository.generate(any(), any(), any(), any()) } returns Result.success(emptyList())
 
         val result = useCase(characterContext = "Aria", description = "a portrait smiling")
 
-        assertTrue(result.isFailure)
         assertTrue(result.exceptionOrNull() is ImageGenerationRefusedException)
     }
 
     @Test
-    fun `attaches the reference image on the outgoing turn when provided`() = runTest {
-        val messagesSlot = slot<List<ChatTurn>>()
-        coEvery {
-            chatCompletionRepository.complete(any(), any(), capture(messagesSlot), any(), any(), any(), any(), any(), any())
-        } returns Result.success(ChatCompletionResult(content = "", usage = null, modelUsed = "x", images = listOf(byteArrayOf(1))))
+    fun `passes the reference image when provided, and none otherwise`() = runTest {
+        val refs = mutableListOf<List<ByteArray>>()
+        coEvery { imageRepository.generate(any(), any(), capture(refs), any()) } returns Result.success(listOf(byteArrayOf(1)))
 
         val reference = "avatar-bytes".toByteArray()
         useCase(characterContext = "Aria", description = "a portrait", referenceImage = reference)
-
-        assertEquals(listOf(reference), messagesSlot.captured.single().referenceImages)
-    }
-
-    @Test
-    fun `sends no reference images when none is provided`() = runTest {
-        val messagesSlot = slot<List<ChatTurn>>()
-        coEvery {
-            chatCompletionRepository.complete(any(), any(), capture(messagesSlot), any(), any(), any(), any(), any(), any())
-        } returns Result.success(ChatCompletionResult(content = "", usage = null, modelUsed = "x", images = listOf(byteArrayOf(1))))
-
         useCase(characterContext = "Aria", description = "a portrait")
 
-        assertTrue(messagesSlot.captured.single().referenceImages.isEmpty())
+        assertEquals(listOf(reference), refs[0])
+        assertTrue(refs[1].isEmpty())
     }
 
     @Test
-    fun `appends a -ar directive to the prompt when an aspect ratio is given`() = runTest {
-        val messagesSlot = slot<List<ChatTurn>>()
-        coEvery {
-            chatCompletionRepository.complete(any(), any(), capture(messagesSlot), any(), any(), any(), any(), any(), any())
-        } returns Result.success(ChatCompletionResult(content = "", usage = null, modelUsed = "x", images = listOf(byteArrayOf(1))))
+    fun `appends a -ar directive only when an aspect ratio is given`() = runTest {
+        val prompts = mutableListOf<String>()
+        coEvery { imageRepository.generate(any(), capture(prompts), any(), any()) } returns Result.success(listOf(byteArrayOf(1)))
 
         useCase(characterContext = "Aria", description = "a portrait", aspectRatio = "16:9")
+        useCase(characterContext = "Aria", description = "a portrait")
 
-        assertTrue(messagesSlot.captured.single().content.contains("-ar 16:9"))
+        assertTrue(prompts[0].contains("-ar 16:9"))
+        assertTrue(!prompts[1].contains("-ar"))
     }
 
     @Test
-    fun `omits the -ar directive when no aspect ratio is given`() = runTest {
-        val messagesSlot = slot<List<ChatTurn>>()
-        coEvery {
-            chatCompletionRepository.complete(any(), any(), capture(messagesSlot), any(), any(), any(), any(), any(), any())
-        } returns Result.success(ChatCompletionResult(content = "", usage = null, modelUsed = "x", images = listOf(byteArrayOf(1))))
+    fun `retries once with the fallback model when one is set and the first model fails`() = runTest {
+        every { networkPreferences.getDefaultImageFallbackModelId() } returns "or::other/image-model"
+        val models = slot<String>()
+        coEvery { imageRepository.generate("or::google/gemini-2.5-flash-image", any(), any(), any()) } returns
+            Result.failure(IllegalStateException("down"))
+        coEvery { imageRepository.generate(capture(models), any(), any(), any()) } answers {
+            if (models.captured == "or::other/image-model") Result.success(listOf(byteArrayOf(2)))
+            else Result.failure(IllegalStateException("down"))
+        }
 
-        useCase(characterContext = "Aria", description = "a portrait")
+        val result = useCase(characterContext = "Aria", description = "a portrait")
 
-        assertTrue(!messagesSlot.captured.single().content.contains("-ar"))
+        assertTrue(result.isSuccess)
+        assertEquals("or::other/image-model", models.captured)
     }
 }

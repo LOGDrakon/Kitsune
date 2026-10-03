@@ -24,7 +24,7 @@ class UserMessageManager @Inject constructor(
     val unreadCount: StateFlow<Int> = _unreadCount.asStateFlow()
 
     suspend fun refresh() = withContext(dispatcherProvider.io) {
-        if (!backendClient.isAuthenticated()) return@withContext
+        if (!backendClient.isEnabled() || !backendClient.isAuthenticated()) return@withContext
         backendClient.getUserMessages()
             .onSuccess { list ->
                 _messages.value = list

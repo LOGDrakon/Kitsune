@@ -35,4 +35,9 @@
     <string name="model_tokens_k">%1$dk tokens</string>
     <string name="model_tokens_count">%1$d tokens</string>
     <string name="model_cost_format">$%1$s / $%2$s par M tokens (entrée/sortie)</string>
+    <string name="model_capability_embedding_title">Choisir un modèle d’embeddings</string>
+    <string name="model_picker_search_placeholder">Rechercher un modèle…</string>
+    <string name="model_picker_all_providers">Tous les fournisseurs</string>
+    <string name="model_picker_count">%1$d modèles</string>
+    <string name="model_vision">vision</string>
 </resources>

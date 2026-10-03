@@ -5,6 +5,7 @@ import android.util.Base64
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kitsune.core.backend.KitsuneBackendClient
+import com.kitsune.core.network.persona.TranslatePersonaUseCase
 import com.kitsune.core.backend.model.*
 import com.kitsune.core.data.local.entities.*
 import com.kitsune.core.data.repository.*
@@ -35,6 +36,7 @@ class MarketplaceViewModel @Inject constructor(
     private val universeImageRepository: UniverseImageRepository,
     private val encryptedImageStore: EncryptedImageStore,
     private val appLanguageManager: AppLanguageManager,
+    private val translatePersonaUseCase: TranslatePersonaUseCase,
     @ApplicationContext private val appContext: Context
 ) : ViewModel() {
 
@@ -123,32 +125,35 @@ class MarketplaceViewModel @Inject constructor(
     }
 
     /** Translates the persona sheet of the currently displayed listing into the app's current
-     * language, going through the server's translation cache (`KitsuneBackendClient.translateListing`)
-     * — the first user to translate a given listing/language pair pays the AI cost, every
-     * subsequent one gets the cached result instantly (demande explicite). This only swaps the
-     * displayed fields in [_selectedListing] (name is intentionally left untranslated, same as
-     * before) — it does not persist anything, since the listing isn't owned by the user yet.
-     * **Personas only**, matching the backend's current scope: `TranslatedListingResult` has no
-     * universe payload. */
+     * language with the user's own translation model. This only swaps the displayed fields in
+     * [_selectedListing] (the name is left untranslated) — nothing is persisted, since the listing
+     * isn't owned by the user yet. **Personas only.** */
     fun translateListing(listingId: String) {
         if (_isTranslating.value) return
         val current = _selectedListing.value ?: return
         val currentPersona = current.personaData ?: return
-        val targetLanguage = appLanguageManager.getSelectedLanguage().languageTag
+        val targetLanguage = appLanguageManager.getSelectedLanguage()
 
         viewModelScope.launch {
             _isTranslating.value = true
             _translateError.value = null
 
-            backendClient.translateListing(listingId, targetLanguage).fold(
+            translatePersonaUseCase(
+                shortDescription = currentPersona.shortDescription,
+                personality = currentPersona.personality,
+                scenario = currentPersona.scenario,
+                firstMessage = currentPersona.firstMessage,
+                exampleDialogues = currentPersona.exampleDialogues,
+                targetLanguage = targetLanguage
+            ).fold(
                 onSuccess = { result ->
                     _selectedListing.value = current.copy(
                         personaData = currentPersona.copy(
-                            shortDescription = result.personaData.shortDescription,
-                            personality = result.personaData.personality,
-                            scenario = result.personaData.scenario,
-                            firstMessage = result.personaData.firstMessage,
-                            exampleDialogues = result.personaData.exampleDialogues
+                            shortDescription = result.shortDescription,
+                            personality = result.personality,
+                            scenario = result.scenario,
+                            firstMessage = result.firstMessage,
+                            exampleDialogues = result.exampleDialogues
                         )
                     )
                 },

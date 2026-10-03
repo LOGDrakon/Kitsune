@@ -29,18 +29,19 @@
     <string name="onboarding_account_choice_recover">Récupérer mon ancien compte</string>
 
     <!-- RecoverAccountScreen -->
-    <string name="onboarding_recover_scan_title">Récupérez votre compte</string>
-    <string name="onboarding_recover_scan_subtitle">Sur votre ancien téléphone, ouvrez Paramètres → \"Transférer mon compte\" et scannez le QR code affiché.</string>
-    <string name="onboarding_recover_scan_button">Scanner le QR code</string>
-    <string name="onboarding_recover_scan_prompt">Pointez votre appareil photo vers le QR code de votre ancien téléphone</string>
-    <string name="onboarding_recover_downloading">Téléchargement de vos données…</string>
-    <string name="onboarding_recover_transfer_pin_title">Code PIN de transfert</string>
-    <string name="onboarding_recover_transfer_pin_subtitle">Entrez le même PIN que celui défini sur votre ancien téléphone.</string>
-    <string name="onboarding_recover_transfer_pin_confirm">Confirmer</string>
     <string name="onboarding_recover_decrypting">Déchiffrement et vérification…</string>
     <string name="onboarding_recover_vault_pin_title">Protégez votre coffre</string>
-    <string name="onboarding_recover_vault_pin_subtitle">Choisissez un code PIN pour ce téléphone à partir de maintenant — distinct du PIN de transfert. Une authentification biométrique ou le déverrouillage de votre appareil sera aussi demandé.</string>
+    <string name="onboarding_recover_vault_pin_subtitle">Choisissez un code PIN pour ce téléphone — distinct de la phrase secrète de la sauvegarde. L’authentification biométrique ou le déverrouillage de l’appareil seront aussi demandés.</string>
     <string name="onboarding_recover_pins_do_not_match">Les deux codes ne correspondent pas.</string>
     <string name="onboarding_recover_importing">Importation de vos histoires…</string>
-    <string name="onboarding_recover_error_title">Échec de la récupération</string>
+    <string name="onboarding_recover_error_title">Échec de la restauration</string>
+    <string name="onboarding_restore_title">Restaurer une sauvegarde</string>
+    <string name="onboarding_restore_subtitle">Choisissez le fichier .kitsune exporté depuis Réglages → Sauvegarde sur votre autre téléphone.</string>
+    <string name="onboarding_restore_pick_button">Choisir le fichier de sauvegarde</string>
+    <string name="onboarding_restore_reading">Lecture du fichier…</string>
+    <string name="onboarding_restore_passphrase_title">Phrase secrète de la sauvegarde</string>
+    <string name="onboarding_restore_passphrase_subtitle">Saisissez la phrase secrète choisie lors de la création de cette sauvegarde.</string>
+    <string name="onboarding_restore_passphrase_label">Phrase secrète</string>
+    <string name="onboarding_restore_passphrase_confirm">Déchiffrer</string>
+    <string name="onboarding_restore_retry">Choisir un autre fichier</string>
 </resources>

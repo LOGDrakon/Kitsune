@@ -166,20 +166,6 @@ data class ReviewsResponse(val reviews: List<ReviewResponse>)
 data class ReportRequest(val reason: String, val description: String = "")
 
 @Serializable
-data class TranslateListingRequest(val targetLanguage: String)
-
-/** [cached] is true when the server already had this listing translated into this language from a
- * previous request (by any user) — same content either way, just informative. */
-@Serializable
-data class TranslatedListingResult(
-    val personaData: MarketplacePersonaData,
-    val cached: Boolean
-)
-
-@Serializable
-data class PurchaseResponse(val success: Boolean, val error: String? = null)
-
-@Serializable
 data class SetUsernameRequest(val username: String)
 
 @Serializable

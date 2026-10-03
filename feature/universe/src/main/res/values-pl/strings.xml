@@ -18,14 +18,9 @@
 
     <!-- UniverseListScreen.kt — okno szczegółów nieudanej generacji -->
     <string name="generation_failure_dialog_title">Generowanie nie powiodło się</string>
-    <string name="generation_failure_category_content_policy">Zablokowane przez filtr treści (treść mogąca dotyczyć osoby niepełnoletniej lub czynów bez zgody)</string>
-    <string name="generation_failure_category_insufficient_credits">Za mało Ofuda</string>
     <string name="generation_failure_category_parsing_failed">AI odpowiedziało, ale odpowiedzi nie udało się zrozumieć</string>
     <string name="generation_failure_category_technical">Błąd techniczny (sieć, serwer…)</string>
     <string name="generation_failure_category_unknown">Nieznany powód</string>
-    <string name="generation_failure_credit_consumed">Za tę próbę pobrano Ofudę, mimo niepowodzenia.</string>
-    <string name="generation_failure_credit_not_consumed">Za tę próbę nie pobrano żadnej Ofudy.</string>
-    <string name="generation_failure_credit_unknown">Nie można ustalić, czy za tę próbę pobrano Ofudę.</string>
     <string name="generation_failure_retry_button">Spróbuj ponownie</string>
     <string name="generation_failure_report_button">Zgłoś problem</string>
     <string name="generation_failure_delete_button">Usuń</string>

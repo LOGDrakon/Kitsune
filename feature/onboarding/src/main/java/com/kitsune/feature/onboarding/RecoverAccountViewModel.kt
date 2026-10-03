@@ -1,27 +1,33 @@
 package com.kitsune.feature.onboarding
 
+import android.content.Context
+import android.net.Uri
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kitsune.core.backend.KitsuneBackendClient
+import com.kitsune.core.network.provider.ProviderStore
 import com.kitsune.core.security.transfer.TransferDecryptionException
 import com.kitsune.core.security.vault.VaultKeyProvider
 import com.kitsune.core.security.vault.VaultUnlockResult
 import com.kitsune.core.transfer.ArchiveIntegrityException
-import com.kitsune.core.transfer.ParsedTransferQr
+import com.kitsune.core.transfer.ImportBackupUseCase
+import com.kitsune.core.transfer.NotABackupFileException
 import com.kitsune.core.transfer.TransferArchive
-import com.kitsune.core.transfer.TransferInUseCase
-import com.kitsune.core.transfer.TransferPairing
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 sealed interface RecoverAccountState {
-    data object Scanning : RecoverAccountState
-    data object Downloading : RecoverAccountState
-    data class AwaitingTransferPin(val error: String? = null) : RecoverAccountState
+    data object PickingFile : RecoverAccountState
+    data object Reading : RecoverAccountState
+    data class AwaitingPassphrase(val error: String? = null) : RecoverAccountState
     data object Decrypting : RecoverAccountState
     data object AwaitingVaultPin : RecoverAccountState
     data object Importing : RecoverAccountState
@@ -30,82 +36,88 @@ sealed interface RecoverAccountState {
 }
 
 /**
- * New-phone side of account transfer (FEATURES.md section 2). Drives [TransferInUseCase]'s
- * discrete steps, pausing at [RecoverAccountState.AwaitingVaultPin] to let the screen collect
- * THIS device's own new vault PIN (unrelated to the transfer PIN) via [VaultKeyProvider.initialize],
- * which needs the `FragmentActivity` only the screen has access to.
+ * Restores an encrypted backup file on a fresh install (FEATURES.md section 2). Drives
+ * [ImportBackupUseCase]'s steps, pausing at [RecoverAccountState.AwaitingVaultPin] to let the
+ * screen collect THIS device's own vault PIN via [VaultKeyProvider.initialize], which needs the
+ * `FragmentActivity` only the screen has.
  *
- * Known limitation: if the import/verify/claim sequence fails AFTER [VaultKeyProvider.initialize]
- * has already succeeded (i.e. this device's vault PIN is set but nothing was imported into it
- * yet), there's no supported "undo" — [VaultKeyProvider] only exposes first-run setup, not a
- * reset. The [RecoverAccountState.Error] shown in that case tells the user to restart the app and
- * try again, which starts a fresh process with no PIN configured yet.
+ * Known limitation: if the import fails AFTER [VaultKeyProvider.initialize] has succeeded, there is
+ * no supported "undo" — [VaultKeyProvider] only exposes first-run setup. The error then tells the
+ * user to restart the app, which starts a fresh process with no PIN configured yet.
  */
 @HiltViewModel
 class RecoverAccountViewModel @Inject constructor(
-    private val transferInUseCase: TransferInUseCase,
-    private val vaultKeyProvider: VaultKeyProvider
+    @ApplicationContext private val context: Context,
+    private val importBackupUseCase: ImportBackupUseCase,
+    private val vaultKeyProvider: VaultKeyProvider,
+    private val providerStore: ProviderStore,
+    private val backendClient: KitsuneBackendClient
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<RecoverAccountState>(RecoverAccountState.Scanning)
+    private val _state = MutableStateFlow<RecoverAccountState>(RecoverAccountState.PickingFile)
     val state: StateFlow<RecoverAccountState> = _state.asStateFlow()
 
-    private var parsedQr: ParsedTransferQr? = null
-    private var encryptedEnvelope: ByteArray? = null
+    private var fileBytes: ByteArray? = null
     private var decryptedArchive: TransferArchive.UnpackedArchive? = null
 
-    fun onQrScanned(raw: String) {
-        if (_state.value != RecoverAccountState.Scanning) return
-        val parsed = TransferPairing.parseQrPayload(raw)
-        if (parsed == null) {
-            _state.value = RecoverAccountState.Error("Ce code QR ne provient pas de Kitsune.")
-            return
-        }
-        parsedQr = parsed
-        _state.value = RecoverAccountState.Downloading
+    fun onFilePicked(uri: Uri) {
+        _state.value = RecoverAccountState.Reading
         viewModelScope.launch {
-            try {
-                encryptedEnvelope = transferInUseCase.downloadBlob(parsed.transferId, parsed.pullToken)
-                _state.value = RecoverAccountState.AwaitingTransferPin()
-            } catch (e: Exception) {
-                _state.value = RecoverAccountState.Error(e.message ?: "Échec du téléchargement — vérifiez votre connexion.")
+            fileBytes = runCatching {
+                withContext(Dispatchers.IO) {
+                    context.contentResolver.openInputStream(uri)?.use { it.readBytes() }
+                }
+            }.getOrNull()
+            _state.value = if (fileBytes == null) {
+                RecoverAccountState.Error("Impossible de lire ce fichier.")
+            } else {
+                RecoverAccountState.AwaitingPassphrase()
             }
         }
     }
 
-    fun submitTransferPin(pin: CharArray) {
-        val envelope = encryptedEnvelope ?: return
-        val transferKey = parsedQr?.transferKey ?: return
+    fun submitPassphrase(passphrase: CharArray) {
+        val bytes = fileBytes ?: return
         viewModelScope.launch {
             _state.value = RecoverAccountState.Decrypting
             try {
-                decryptedArchive = transferInUseCase.decryptAndUnpack(envelope, pin, transferKey)
+                decryptedArchive = importBackupUseCase.decryptAndUnpack(bytes, passphrase)
                 _state.value = RecoverAccountState.AwaitingVaultPin
+            } catch (e: NotABackupFileException) {
+                _state.value = RecoverAccountState.Error(e.message ?: "Ce fichier n’est pas une sauvegarde Kitsune.")
             } catch (e: TransferDecryptionException) {
-                _state.value = RecoverAccountState.AwaitingTransferPin(error = "Code PIN incorrect.")
+                _state.value = RecoverAccountState.AwaitingPassphrase(error = "Phrase secrète incorrecte, ou fichier endommagé.")
             } catch (e: ArchiveIntegrityException) {
-                _state.value = RecoverAccountState.Error(e.message ?: "Les données transférées semblent corrompues.")
+                _state.value = RecoverAccountState.Error(e.message ?: "La sauvegarde semble corrompue.")
             } catch (e: Exception) {
                 _state.value = RecoverAccountState.Error(e.message ?: "Erreur inattendue.")
             }
         }
     }
 
+    fun restart() {
+        fileBytes = null
+        decryptedArchive = null
+        _state.value = RecoverAccountState.PickingFile
+    }
+
     fun submitVaultPin(activity: FragmentActivity, pin: CharArray) {
         val archive = decryptedArchive ?: return
-        val parsed = parsedQr ?: return
         viewModelScope.launch {
             _state.value = RecoverAccountState.Importing
             when (val result = vaultKeyProvider.initialize(activity, pin)) {
                 is VaultUnlockResult.Unlocked -> {
                     try {
-                        transferInUseCase.importDatabaseAndImages(archive, result.passphrase)
-                        transferInUseCase.verifyImportedDatabase()
-                        transferInUseCase.claimAndComplete(parsed.transferId, parsed.pullToken)
+                        importBackupUseCase.importDatabaseAndImages(archive, result.passphrase)
+                        importBackupUseCase.verifyImportedDatabase()
+                        // The restored settings were written straight to storage; the in-memory
+                        // holders of providers and marketplace settings must pick them up.
+                        providerStore.reload()
+                        backendClient.reloadSettings()
                         _state.value = RecoverAccountState.Completed
                     } catch (e: Exception) {
                         _state.value = RecoverAccountState.Error(
-                            (e.message ?: "Échec de l'import") + " Redémarrez l'application et réessayez."
+                            (e.message ?: "Échec de l’import") + " Redémarrez l’application et réessayez."
                         )
                     }
                 }

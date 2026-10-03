@@ -32,10 +32,6 @@ sqlcipher = "4.16.0"
 sqlite = "2.6.2"
 argon2kt = "1.6.0"
 
-# Account transfer QR pairing — zxing avoids any Google Play Services dependency (unlike ML Kit),
-# consistent with this app's privacy-first posture.
-zxingCore = "3.5.3"
-zxingAndroidEmbedded = "4.3.0"
 
 # WorkManager (background jobs: summarization, drift detection, reports)
 workManager = "2.10.0"
@@ -98,8 +94,6 @@ androidx-biometric = { group = "androidx.biometric", name = "biometric", version
 sqlcipher-android = { group = "net.zetetic", name = "sqlcipher-android", version.ref = "sqlcipher" }
 androidx-sqlite = { group = "androidx.sqlite", name = "sqlite", version.ref = "sqlite" }
 argon2kt = { group = "com.lambdapioneer.argon2kt", name = "argon2kt", version.ref = "argon2kt" }
-zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxingCore" }
-zxing-android-embedded = { group = "com.journeyapps", name = "zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
 
 # WorkManager
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workManager" }

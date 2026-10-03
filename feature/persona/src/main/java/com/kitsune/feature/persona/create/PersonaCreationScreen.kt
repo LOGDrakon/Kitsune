@@ -38,7 +38,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kitsune.core.common.style.PersonaTemplate
 import com.kitsune.core.common.style.PersonaTemplates
 import com.kitsune.core.data.local.entities.MaturityTag
-import com.kitsune.core.designsystem.OfudaAmount
 import com.kitsune.core.designsystem.TagsEditor
 import com.kitsune.feature.persona.R
 
@@ -51,20 +50,6 @@ fun PersonaCreationScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val initialDescription by viewModel.initialDescription.collectAsStateWithLifecycle()
-    val limitReached by viewModel.limitReached.collectAsStateWithLifecycle()
-    val firstCreationFree by viewModel.firstCreationFree.collectAsStateWithLifecycle()
-    val personaGenCost by viewModel.personaGenCostCredits.collectAsStateWithLifecycle()
-
-    if (limitReached) {
-        AlertDialog(
-            onDismissRequest = viewModel::dismissLimitReached,
-            title = { Text(stringResource(R.string.persona_limit_reached_title)) },
-            text = { Text(stringResource(R.string.persona_limit_reached_text, MAX_FREE_PERSONAS)) },
-            confirmButton = {
-                TextButton(onClick = viewModel::dismissLimitReached) { Text(stringResource(R.string.action_ok)) }
-            }
-        )
-    }
 
     when (val current = state) {
         is PersonaCreationUiState.RequiresProfileSetup -> RequiresProfileSetupStep(
@@ -73,8 +58,6 @@ fun PersonaCreationScreen(
         )
         is PersonaCreationUiState.DescribeInput -> DescribeStep(
             initialDescription = initialDescription,
-            firstCreationFree = firstCreationFree,
-            unitCostCredits = personaGenCost,
             onCancel = onCancel,
             onGenerate = viewModel::generate
         )
@@ -145,16 +128,12 @@ private fun RequiresProfileSetupStep(
 @Composable
 private fun DescribeStep(
     initialDescription: String = "",
-    firstCreationFree: Boolean = false,
-    /** Ofudas facturés par proposition (poussé par le serveur). */
-    unitCostCredits: Int = 3,
     onCancel: () -> Unit,
     onGenerate: (String, PersonaTemplate?, Int) -> Unit
 ) {
     var description by remember { mutableStateOf(initialDescription) }
     var selectedTemplate by remember { mutableStateOf<PersonaTemplate?>(null) }
     var proposalCount by remember { mutableStateOf(1) }
-    var showCostConfirm by remember { mutableStateOf(false) }
 
     // initialDescription starts blank and is populated asynchronously (only when this screen was
     // opened "from" an existing NPC — see PersonaCreationViewModel.fromNpcId) — seed the field once
@@ -231,45 +210,10 @@ private fun DescribeStep(
 
         Row(modifier = Modifier.fillMaxWidth().padding(top = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             TextButton(onClick = onCancel) { Text(stringResource(R.string.action_cancel)) }
-            Button(onClick = { showCostConfirm = true }, enabled = description.isNotBlank()) {
+            Button(onClick = { onGenerate(description, selectedTemplate, proposalCount) }, enabled = description.isNotBlank()) {
                 Text(stringResource(R.string.action_generate))
             }
         }
-    }
-
-    if (showCostConfirm) {
-        AlertDialog(
-            onDismissRequest = { showCostConfirm = false },
-            title = {
-                Text(
-                    stringResource(
-                        if (firstCreationFree) R.string.persona_create_first_free_title
-                        else R.string.persona_create_cost_confirm_title
-                    )
-                )
-            },
-            text = {
-                if (firstCreationFree) {
-                    Text(stringResource(R.string.persona_create_first_free_text))
-                } else {
-                    Column {
-                        Text(stringResource(R.string.persona_create_cost_confirm_text, proposalCount))
-                        // Une proposition = un appel facturé : le coût total est le produit, et non
-                        // le simple nombre de propositions comme affiché auparavant.
-                        OfudaAmount(amount = proposalCount * unitCostCredits, modifier = Modifier.padding(top = 8.dp))
-                    }
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    showCostConfirm = false
-                    onGenerate(description, selectedTemplate, proposalCount)
-                }) { Text(stringResource(R.string.action_generate)) }
-            },
-            dismissButton = {
-                TextButton(onClick = { showCostConfirm = false }) { Text(stringResource(R.string.action_cancel)) }
-            }
-        )
     }
 }
 

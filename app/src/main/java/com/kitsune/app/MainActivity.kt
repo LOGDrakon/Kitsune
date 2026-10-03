@@ -130,7 +130,6 @@ class MainActivity : AppCompatActivity() {
                             body = current.body,
                             type = current.type,
                             dismissible = current.dismissible,
-                            rewardCredits = current.rewardCredits,
                             onDismiss = {
                                 coroutineScope.launch { announcementManager.dismiss(current.id) }
                             }

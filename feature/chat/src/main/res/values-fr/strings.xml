@@ -190,10 +190,7 @@
     <string name="image_gen_generate_anyway_button">Générer quand même (version suggestive)</string>
     <string name="image_gen_soften_hint">Rhabille et adoucit légèrement la scène pour respecter le filtre de contenu du modèle, en gardant l\'esprit de la scène.</string>
     <string name="image_gen_generate_button">Générer</string>
-    <string name="image_credit_cost">Co\u00fbt : %1$d Ofudas</string>
-    <string name="image_credit_cost_first_free">Ce coup ci c\'est cadeau ! Votre premi\u00e8re image est gratuite.</string>
-    <string name="image_gen_hd_quality_label">Qualité HD (%1$d Ofudas)</string>
-    <string name="image_gen_hd_quality_hint">Rendu plus fin et plus détaillé, sur un modèle premium. La qualité Standard suffit largement pour la plupart des scènes.</string>
+    <string name="image_gen_hd_quality_hint">Demande à votre fournisseur une résolution et une qualité supérieures. Généralement plus cher chez lui ; tous les modèles ne le prennent pas en charge.</string>
     <string name="image_gen_generate_new_button">Générer une nouvelle image</string>
     <string name="image_gen_sfw_fallback_notice">ℹ️ Version suggestive générée après un refus du filtre de contenu — l\'image peut différer de la scène exacte.</string>
     <string name="image_gen_regenerate_button">Régénérer (même description, résultat différent)</string>
@@ -347,4 +344,5 @@
     <string name="chat_tools_section_help">Aide</string>
     <string name="chat_mode_standard">Standard</string>
     <string name="chat_mode_pro">Pro</string>
+    <string name="image_gen_hd_quality_title">Qualité HD</string>
 </resources>

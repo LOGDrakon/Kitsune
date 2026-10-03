@@ -44,10 +44,8 @@ import com.kitsune.core.data.repository.MessageVariantRepository
 import com.kitsune.core.data.repository.ToneCardRepository
 import com.kitsune.core.data.repository.LoreEntryRepository
 import com.kitsune.core.data.repository.MessageRepository
-import com.kitsune.core.data.repository.ModerationLogRepository
 import com.kitsune.core.data.repository.NpcRepository
 import com.kitsune.core.data.local.entities.ChatImageEntity
-import com.kitsune.core.data.local.entities.ModerationLogEntity
 import com.kitsune.core.data.local.entities.NpcEntity
 import com.kitsune.core.data.local.entities.PersonaImageEntity
 import com.kitsune.core.data.local.entities.UniverseImageEntity
@@ -72,22 +70,15 @@ import com.kitsune.core.memory.summarization.SummarizationConfig
 import com.kitsune.core.memory.semantic.IndexMessageChunkUseCase
 import com.kitsune.core.memory.summarization.UpdateChatSummaryUseCase
 import com.kitsune.core.memory.recap.GenerateRecapUseCase
-import com.kitsune.core.moderation.filter.LocalKeywordFilter
-import com.kitsune.core.moderation.model.ModerationCategory
-import com.kitsune.core.moderation.model.ModerationResult
 import com.kitsune.core.moderation.safeword.SafeWordManager
 import com.kitsune.core.network.dto.ChatMessageDto
-import com.kitsune.core.network.moderation.ClassifyFlaggedContentUseCase
 import com.kitsune.core.network.preferences.LlmModelResolver
 import com.kitsune.core.network.preferences.LlmOperation
 import com.kitsune.core.network.preferences.NetworkPreferences
 import com.kitsune.core.network.repository.ChatCompletionRepository
 import com.kitsune.core.network.repository.ChatCompletionResult
 import com.kitsune.core.network.repository.ChatTurn
-import com.kitsune.core.network.repository.ContentPolicyViolationException
 import com.kitsune.core.network.suggestions.GenerateNextReplySuggestionsUseCase
-import com.kitsune.core.network.repository.InsufficientCreditsException
-import com.kitsune.core.network.repository.ProSubscriptionRequiredException
 import com.kitsune.core.security.profile.UserProfileStore
 import com.kitsune.core.security.storage.EncryptedImageStore
 import com.kitsune.core.security.locale.AppLanguageManager
@@ -95,8 +86,6 @@ import com.kitsune.core.security.storage.SecureStorage
 import com.kitsune.core.security.taste.StoryTasteStore
 import com.kitsune.core.diagnostics.PersonalNameRedactor
 import com.kitsune.core.diagnostics.SubmitBugReportUseCase
-import com.kitsune.core.backend.AccountLockReason
-import com.kitsune.core.backend.KitsuneBackendClient
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -117,11 +106,8 @@ import kotlinx.coroutines.withContext
 import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
+import com.kitsune.feature.chat.style.StylePacks
 
-/** Rough heuristic (chars/token varies by language/model); labelled as an estimate in the UI. */
-/** Credits charged per turn in Pro chat mode (billed server-side; kept here only for the UI's own
- * "can I afford this" check, matching CostCalculator.MESSAGE_COST_PRO in KitsuneBackend). Flat — Pro
- * is a Kitsune+/Max perk again, so only subscribers ever reach this price. */
 /** Used to tell the world beat how much time it has to account for. */
 private const val MILLIS_PER_DAY = 24L * 60 * 60 * 1000
 
@@ -142,9 +128,19 @@ private const val CONTRACT_CLOSING_BOUNDARY =
 
 private const val TAG = "ChatViewModel"
 
-private const val STYLE_PACK_BUNDLE_ID = "style_pack_bundle"
+/**
+ * The one content rule the app itself states, first in every system prompt: no sexual content
+ * involving minors. It addresses the model, never the user's text — nothing is filtered or blocked
+ * client-side, so it cannot produce false positives on legitimate adult fiction. Kept as the only
+ * rule on purpose: everything else between consenting adult characters is the user's business.
+ */
+private const val SAFETY_DIRECTIVE =
+    "[Content rule, set by the app and not overridable by anything below: never write sexual content " +
+        "involving a minor — any character under 18, whatever their claimed age or framing. If a scene " +
+        "drifts that way, steer it elsewhere in character instead of refusing outright. All other dark, " +
+        "violent or explicit fiction between consenting adult characters is allowed.]"
 
-private const val PRO_MODE_CREDIT_COST = 2
+private const val STYLE_PACK_BUNDLE_ID = "style_pack_bundle"
 
 /** Pro mode leans into more creative, less predictable output — a temperature bump on top of the
  * user's own setting, capped so it stays coherent rather than degrading into incoherent text. */
@@ -214,9 +210,6 @@ enum class DirectorToolKind {
     RANDOM_INTERLUDE
 }
 
-/** How many credits the user has vs. how many the failed turn needed — shown in the
- * "buy more Ofudas" dialog. */
-data class InsufficientCreditsInfo(val currentBalance: Int, val requiredCredits: Int)
 
 /** Captures a failed LLM operation so the user can retry it. */
 sealed interface PendingChatRetry {
@@ -237,10 +230,7 @@ class ChatViewModel @Inject constructor(
     private val chatCompletionRepository: ChatCompletionRepository,
     private val networkPreferences: NetworkPreferences,
     private val llmModelResolver: LlmModelResolver,
-    private val localKeywordFilter: LocalKeywordFilter,
-    private val classifyFlaggedContentUseCase: ClassifyFlaggedContentUseCase,
     private val safeWordManager: SafeWordManager,
-    private val moderationLogRepository: ModerationLogRepository,
     private val updateChatSummaryUseCase: UpdateChatSummaryUseCase,
     private val indexMessageChunkUseCase: IndexMessageChunkUseCase,
     private val userProfileStore: UserProfileStore,
@@ -259,7 +249,6 @@ class ChatViewModel @Inject constructor(
     private val rewindChatUseCase: RewindChatUseCase,
     private val generationScheduler: GenerationScheduler,
     private val generationJobRepository: GenerationJobRepository,
-    private val backendClient: KitsuneBackendClient,
     private val generateRecapUseCase: GenerateRecapUseCase,
     private val secureStorage: SecureStorage,
     private val storyTasteStore: StoryTasteStore,
@@ -282,47 +271,13 @@ class ChatViewModel @Inject constructor(
     private val _bugReportSending = MutableStateFlow(false)
     val bugReportSending: StateFlow<Boolean> = _bugReportSending.asStateFlow()
 
-    val creditBalance: StateFlow<Int> = backendClient.creditBalance
-
-    /**
-     * Whether this account still has a legacy Kitsune+/Max subscription running.
-     *
-     * v2 sells no subscriptions and gates nothing on this (Pro mode is now priced, not gated — see
-     * [setProMode]). Kept observable only because an existing subscriber is still being billed by
-     * Google Play and still receives their monthly Ofuda allowance; nothing in the UI branches on it.
-     */
-    val isKitsunePlus: StateFlow<Boolean> = backendClient.isKitsunePlus
-
-    /** Standard vs Pro chat mode — Pro uses a curated, higher-quality model. Global preference,
-     * not per-conversation. */
+    /** Standard vs Pro chat mode — Pro uses the model the user picked for it (Réglages → Modèles),
+     * a longer reply ceiling and a larger memory window. Global preference, not per-conversation. */
     private val _isProMode = MutableStateFlow(networkPreferences.isProModeEnabled())
     val isProMode: StateFlow<Boolean> = _isProMode.asStateFlow()
 
-    /** What a Pro turn costs: a flat [PRO_MODE_CREDIT_COST] (billed server-side by CostCalculator —
-     * mirrored here only for the cost shown in the UI). Kept as a StateFlow rather than the bare
-     * constant so the pricing-info popup and the toggle's label can keep observing it uniformly. */
-    val proModeCreditCost: StateFlow<Int> = MutableStateFlow(PRO_MODE_CREDIT_COST).asStateFlow()
-
-    /**
-     * Live image price, straight from the server (`BalanceResponse.imageCostCredits`).
-     *
-     * Surfaced here so the story-tools sheet can print the cost **next to the entry that triggers it**,
-     * before the user taps into the image screen. v1 only revealed it on the confirmation dialog two
-     * screens later, and only as a hard-coded literal that went stale when the price changed 5 to 3.
-     */
-    val imageCostCredits: StateFlow<Int> = backendClient.imageCostCredits
-
-    /** Surfaced so the toggle can disable itself instead of letting the user flip Pro on only to
-     * hit an insufficient-credits error on the next send. */
-    val canAffordProMode: StateFlow<Boolean> = creditBalance
-        .map { it >= PRO_MODE_CREDIT_COST }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), creditBalance.value >= PRO_MODE_CREDIT_COST)
-
     fun setProMode(enabled: Boolean) {
         if (enabled == _isProMode.value) return
-        // No subscription gate: Pro is purely a price in v2 (2 Ofudas per turn instead of 1, enforced
-        // server-side by CostCalculator). Affordability is the only constraint, and it is already
-        // expressed by [canAffordProMode] disabling the toggle — so there is nothing to block here.
         val before = _chat.value?.let { StyleSettings.from(it, _isProMode.value) }
         networkPreferences.setProModeEnabled(enabled)
         _isProMode.value = enabled
@@ -332,35 +287,6 @@ class ChatViewModel @Inject constructor(
         // states the current mode on every turn regardless of where it was changed.
         before?.let { commitStyleChanges(it) }
     }
-
-    /**
-     * Set only when the *server* refuses a Pro turn — which a v2 backend never does.
-     *
-     * It survives as a defensive path for the window where an updated app talks to a backend that
-     * still has the old `PRO_REQUIRES_SUBSCRIPTION` gate: rather than failing the send with a generic
-     * error, the app turns Pro off and says so. There is no purchase to offer, so the dialog it drives
-     * is informational only.
-     */
-    private val _proUnavailable = MutableStateFlow(false)
-    val proUnavailable: StateFlow<Boolean> = _proUnavailable.asStateFlow()
-
-    fun dismissProUnavailable() {
-        _proUnavailable.value = false
-    }
-
-    /** One-time, app-global explainer for the Standard (1 Ofuda/turn) vs Pro (2 Ofudas/turn, 1 for
-     * subscribers) pricing — shown the first time any chat is opened, never again afterward. */
-    private val _showPricingInfo = MutableStateFlow(
-        secureStorage.getInt(SecureStorage.KEY_SEEN_OFUDA_PRICING_POPUP, 0) == 0
-    )
-    val showPricingInfo: StateFlow<Boolean> = _showPricingInfo.asStateFlow()
-
-    fun dismissPricingInfo() {
-        secureStorage.putInt(SecureStorage.KEY_SEEN_OFUDA_PRICING_POPUP, 1)
-        _showPricingInfo.value = false
-    }
-
-    private fun currentChatModeHeader(): String = if (_isProMode.value) "PRO" else "STANDARD"
 
     /**
      * The base temperature for this conversation, before any bonus.
@@ -385,49 +311,12 @@ class ChatViewModel @Inject constructor(
     private fun regenerateTemperature(): Double =
         (effectiveTemperature() + REGENERATE_TEMPERATURE_BONUS).coerceAtMost(REGENERATE_TEMPERATURE_MAX)
 
-    /** Routes a failed LLM call to the right UI surface: insufficient credits gets its own
-     * "buy more Ofudas" dialog (no retry banner, since retrying won't help) unless the user
-     * qualifies for the first-chat bonus (see [handleInsufficientCredits]), a content-policy
-     * rejection (backend `ModerationService.checkChatContent`, HTTP 451) gets its own dialog
-     * too — resending the same content will just be rejected again, a lapsed-subscription Pro
-     * rejection (HTTP 403) forces Pro mode back off and shows the same paywall dialog the toggle
-     * itself already guards against — everything else gets the generic error banner with a
-     * same-model retry option. */
-    private suspend fun handleChatFailure(e: Throwable, retry: PendingChatRetry) {
-        when (e) {
-            is InsufficientCreditsException -> handleInsufficientCredits(e, retry)
-            is ContentPolicyViolationException -> _contentPolicyViolation.value =
-                FlaggedContent(text = e.flaggedExcerpt ?: "(contenu non identifié précisément)", category = e.category)
-            is ProSubscriptionRequiredException -> {
-                // Only an out-of-date backend still answers this (see [proUnavailable]). Turn Pro off
-                // so the next send succeeds at the Standard price; no retry is offered, because
-                // retrying without dropping Pro would fail identically.
-                networkPreferences.setProModeEnabled(false)
-                _isProMode.value = false
-                _proUnavailable.value = true
-            }
-            else -> {
-                _error.value = NetworkErrorMessages.forUser(e)
-                _pendingRetry.value = retry
-            }
-        }
-    }
-
-    /** Running out of credits mid-scene during the user's first-ever chat (guided mini-arc,
-     * FEATURES.md section 11) is the one "important moment" where we proactively offer a
-     * one-time +5 Ofuda bonus instead of immediately asking the user to buy more — see
-     * [SecureStorage.KEY_FIRST_CHAT_ID]. The backend enforces the once-ever payout regardless of
-     * how often this is called, so re-triggering it outside that moment just falls through to the
-     * normal "buy more Ofudas" dialog. */
-    private suspend fun handleInsufficientCredits(e: InsufficientCreditsException, retry: PendingChatRetry) {
-        val isFirstChatMiniArc = secureStorage.getString(SecureStorage.KEY_FIRST_CHAT_ID) == chatId
-        val granted = isFirstChatMiniArc && backendClient.claimFirstChatBonus().getOrDefault(false)
-        if (granted) {
-            _pendingRetry.value = retry
-            _firstChatBonusGranted.value = true
-        } else {
-            _insufficientCredits.value = InsufficientCreditsInfo(e.currentBalance, e.requiredCredits)
-        }
+    /** Routes a failed LLM call to the error banner with a same-model retry option. Provider
+     * errors (bad key, no credit left at the provider, rate limit) get an actionable message from
+     * [NetworkErrorMessages]. */
+    private fun handleChatFailure(e: Throwable, retry: PendingChatRetry) {
+        _error.value = NetworkErrorMessages.forUser(e)
+        _pendingRetry.value = retry
     }
 
     /** Sends a bug report built from the user-provided [subject]/[description] (FEATURES.md
@@ -447,8 +336,7 @@ class ChatViewModel @Inject constructor(
         subject: String,
         description: String,
         attachConversation: Boolean,
-        focusMessageId: String? = null,
-        flaggedContent: FlaggedContent? = null
+        focusMessageId: String? = null
     ) {
         if (_bugReportSending.value) return
         viewModelScope.launch {
@@ -459,9 +347,7 @@ class ChatViewModel @Inject constructor(
                 description = description,
                 chatId = chatId,
                 focusMessageId = focusMessageId,
-                flaggedContentText = flaggedContent?.text,
-                flaggedContentCategory = flaggedContent?.category,
-                attachFullConversation = attachConversation && focusMessageId == null && flaggedContent == null
+                attachFullConversation = attachConversation && focusMessageId == null
             )
             minDisplay.join()
             _bugReportSending.value = false
@@ -472,17 +358,6 @@ class ChatViewModel @Inject constructor(
      * attaches just that message + a small window of context, not the whole conversation. */
     fun reportMessage(messageId: String, subject: String, description: String) {
         generateBugReport(subject, description, attachConversation = false, focusMessageId = messageId)
-    }
-
-    /** "Signaler" button on the content-policy-violation dialog — attaches the moderation
-     * classifier's own captured excerpt ([contentPolicyViolation]), not the whole conversation.
-     * Clears [contentPolicyViolation] once captured, so the violation dialog doesn't reappear
-     * after the report is actually sent (`ChatScreen` keeps it visible while a targeted report
-     * dialog is merely open on top of it, in case the user cancels instead of submitting). */
-    fun reportContentPolicyViolation(subject: String, description: String) {
-        val flagged = _contentPolicyViolation.value ?: return
-        _contentPolicyViolation.value = null
-        generateBugReport(subject, description, attachConversation = false, flaggedContent = flagged)
     }
 
     /** Redacts [text] with the user's own first/last name, using the exact same logic
@@ -564,42 +439,6 @@ class ChatViewModel @Inject constructor(
     private val _pendingRetry = MutableStateFlow<PendingChatRetry?>(null)
     val pendingRetry: StateFlow<PendingChatRetry?> = _pendingRetry.asStateFlow()
 
-    /** Non-null when the last chat completion failed for lack of credits — surfaced as a
-     * dedicated "buy more Ofudas" dialog instead of the generic error banner. */
-    private val _insufficientCredits = MutableStateFlow<InsufficientCreditsInfo?>(null)
-    val insufficientCredits: StateFlow<InsufficientCreditsInfo?> = _insufficientCredits.asStateFlow()
-
-    fun dismissInsufficientCredits() {
-        _insufficientCredits.value = null
-    }
-
-    /** True right after the one-time first-chat bonus (see [handleInsufficientCredits]) is
-     * granted — shows the "C'est cadeau !" dialog. Confirming it retries the action that ran out
-     * of credits in the first place ([_pendingRetry], already populated by the time this is set). */
-    private val _firstChatBonusGranted = MutableStateFlow(false)
-    val firstChatBonusGranted: StateFlow<Boolean> = _firstChatBonusGranted.asStateFlow()
-
-    fun claimFirstChatBonusAndRetry() {
-        _firstChatBonusGranted.value = false
-        retrySameModel()
-    }
-
-    /** Non-null after either the backend's content-policy guardrail (HTTP 451, input side — see
-     * [handleChatFailure]) or the client-side AI-response check ([acceptOrBlockAiResponse], output
-     * side) blocked something. Surfaced as a dedicated dialog offering to file a targeted report —
-     * [text] is the moderation classifier's own verbatim excerpt of the problematic passage (or the
-     * hard net's matched term as a fallback), never something the user typed or could edit, so a
-     * report built from it can't be doctored (demande explicite). Held only in memory — discarded
-     * on dismiss, never persisted unless the user explicitly reports it. */
-    data class FlaggedContent(val text: String, val category: String?)
-
-    private val _contentPolicyViolation = MutableStateFlow<FlaggedContent?>(null)
-    val contentPolicyViolation: StateFlow<FlaggedContent?> = _contentPolicyViolation.asStateFlow()
-
-    fun dismissContentPolicyViolation() {
-        _contentPolicyViolation.value = null
-    }
-
     /** "What could I say next?" reply-suggestion chips, shown above the input field on demand
      * only — never fetched automatically after every AI turn (see BUG-070: an unconditional extra
      * LLM call on every single turn already caused a production incident once, for moderation; the
@@ -649,18 +488,6 @@ class ChatViewModel @Inject constructor(
     private fun rawWindowSize(): Int = SummarizationConfig.rawWindowSize(isPro = _isProMode.value)
 
     init {
-        viewModelScope.launch {
-            backendClient.refreshBalance()
-        }
-
-        // Retention perk (FEATURES.md): the very first chat ever opened becomes THE reference
-        // point for "is the user still in their first-ever conversation" — checked in
-        // buildSystemPrompt to guarantee a satisfying mini story arc on the free welcome credits,
-        // rather than an open-ended slow burn that cuts off abruptly. Set once, never overwritten.
-        if (secureStorage.getString(SecureStorage.KEY_FIRST_CHAT_ID) == null) {
-            secureStorage.putString(SecureStorage.KEY_FIRST_CHAT_ID, chatId)
-        }
-
         viewModelScope.launch {
             val chat = chatRepository.getById(chatId) ?: return@launch
             _chat.value = chat
@@ -793,29 +620,14 @@ class ChatViewModel @Inject constructor(
      *    instruction to blend them: with nothing chosen it now applies none and lets the default
      *    register stand, until the story card picks one.
      */
-    private suspend fun loadStylePackPrompt() {
-        val chatPackId = _chat.value?.stylePackId?.takeIf { it.isNotBlank() }
-        val appliedPackId = chatPackId
+    private fun loadStylePackPrompt() {
+        val packId = _chat.value?.stylePackId?.takeIf { it.isNotBlank() }
             ?: secureStorage.getString(SecureStorage.KEY_APPLIED_STYLE_PACK)?.takeIf { it.isNotBlank() }
-            ?: return
-        if (appliedPackId == STYLE_PACK_BUNDLE_ID) {
-            stylePackPrompt = null
-            return
-        }
-        backendClient.getCosmeticCatalog().onSuccess { catalog ->
-            stylePackPrompt = catalog.items.find { it.id == appliedPackId }?.stylePrompt
-        }
+        stylePackPrompt = StylePacks.find(packId)?.prompt
     }
 
-    /** Style packs the user may pick from for this conversation — the bundle resolves to its four. */
-    suspend fun availableStylePacks(): List<Pair<String, String>> {
-        val owned = secureStorage.getString(SecureStorage.KEY_APPLIED_STYLE_PACK).orEmpty()
-        if (owned.isBlank()) return emptyList()
-        val catalog = backendClient.getCosmeticCatalog().getOrNull() ?: return emptyList()
-        val packs = catalog.items.filter { it.category == "STYLE_PACK" && it.id != STYLE_PACK_BUNDLE_ID }
-        return if (owned == STYLE_PACK_BUNDLE_ID) packs.map { it.id to it.name }
-        else packs.filter { it.id == owned }.map { it.id to it.name }
-    }
+    /** Style packs the user may pick from for this conversation — all of them, they ship with the app. */
+    fun availableStylePacks(): List<Pair<String, String>> = StylePacks.all.map { it.id to it.name }
 
     /**
      * True while this conversation still needs its framing question answered.
@@ -1256,7 +1068,6 @@ class ChatViewModel @Inject constructor(
         _error.value = null
         _isSending.value = true
 
-        if (blockedByBan()) return
 
         if (safeWordManager.matches(trimmed)) {
             viewModelScope.launch { insertSystemMessage(chatId, "— Safe word activé : la scène a été interrompue. —") }
@@ -1265,26 +1076,6 @@ class ChatViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            val moderation = localKeywordFilter.check(trimmed)
-            if (moderation is ModerationResult.Flagged && isModerationBlockUpheld(moderation, trimmed)) {
-                moderationLogRepository.record(
-                    ModerationLogEntity(
-                        id = UUID.randomUUID().toString(),
-                        chatId = chatId,
-                        category = moderation.category.name,
-                        reason = moderation.reason,
-                        createdAt = System.currentTimeMillis()
-                    )
-                )
-                // Same dialog/report path as a server-side block (acceptOrBlockAiResponse,
-                // handleChatFailure) — the app already has the full text locally here, no server
-                // round trip needed to get an excerpt. Previously this path only set a generic
-                // _error banner with no way to see/report what was actually flagged.
-                _contentPolicyViolation.value = FlaggedContent(text = trimmed.take(300), category = moderation.category.name)
-                _isSending.value = false
-                return@launch
-            }
-
             messageRepository.upsert(
                 MessageEntity(
                     id = UUID.randomUUID().toString(),
@@ -1303,14 +1094,13 @@ class ChatViewModel @Inject constructor(
 
             chatCompletionRepository.complete(
                 modelId = resolveChatModel(),
-                chatMode = currentChatModeHeader(),
                 systemPrompt = buildSystemPrompt(persona, _castMembers.value, memory),
                 messages = history,
                 temperature = effectiveTemperature(),
                 maxTokens = chatMaxTokens(),
                 sampling = currentSampling()
             ).onSuccess { result ->
-                acceptOrBlockAiResponse(result, "— Réponse bloquée par le filtre de contenu. —")
+                acceptAiResponse(result)
             }.onFailure { e ->
                 handleChatFailure(e, PendingChatRetry.Send(trimmed))
             }
@@ -1332,7 +1122,6 @@ class ChatViewModel @Inject constructor(
         _isSending.value = true
         _error.value = null
 
-        if (blockedByBan()) return
 
         viewModelScope.launch {
             val recentMessages = messageRepository.getRecent(chatId, 2)
@@ -1455,7 +1244,6 @@ class ChatViewModel @Inject constructor(
             val lastAssistant = messageRepository.getRecent(chatId, 1)
                 .firstOrNull { it.role == MessageRole.ASSISTANT } ?: return@launch
             _isSending.value = true
-            if (blockedByBan()) return@launch
 
             val rawWindow = messageRepository.getRecent(chatId, rawWindowSize())
             val memory = buildTurnMemoryUseCase(chatId, lastAssistant.content, rawWindow, _isProMode.value)
@@ -1465,7 +1253,6 @@ class ChatViewModel @Inject constructor(
 
             chatCompletionRepository.complete(
                 modelId = resolveChatModel(),
-                chatMode = currentChatModeHeader(),
                 systemPrompt = buildSystemPrompt(_persona.value, _castMembers.value, memory),
                 messages = history,
                 temperature = effectiveTemperature(),
@@ -1491,7 +1278,6 @@ class ChatViewModel @Inject constructor(
         temperatureOverride: Double? = null,
         onFailurePendingRetry: () -> PendingChatRetry
     ) {
-        if (blockedByBan()) return
         val persona = _persona.value
         val rawWindow = messageRepository.getRecent(chatId, rawWindowSize())
         val memory = buildTurnMemoryUseCase(chatId, lastUserContent, rawWindow, _isProMode.value)
@@ -1499,14 +1285,13 @@ class ChatViewModel @Inject constructor(
 
         chatCompletionRepository.complete(
             modelId = resolveChatModel(),
-            chatMode = currentChatModeHeader(),
             systemPrompt = buildSystemPrompt(persona, _castMembers.value, memory),
             messages = history,
             temperature = temperatureOverride ?: effectiveTemperature(),
             maxTokens = chatMaxTokens(),
             sampling = currentSampling()
         ).onSuccess { result ->
-            acceptOrBlockAiResponse(result, "— Réponse bloquée par le filtre de contenu. —")
+            acceptAiResponse(result)
         }.onFailure { e ->
             handleChatFailure(e, onFailurePendingRetry())
         }
@@ -1595,7 +1380,6 @@ class ChatViewModel @Inject constructor(
         _isSending.value = true
         _error.value = null
 
-        if (blockedByBan()) return
 
         viewModelScope.launch {
             val instruction = when (kind) {
@@ -1619,7 +1403,6 @@ class ChatViewModel @Inject constructor(
 
             chatCompletionRepository.complete(
                 modelId = resolveChatModel(),
-                chatMode = currentChatModeHeader(),
                 systemPrompt = buildSystemPrompt(persona, _castMembers.value, memory),
                 messages = history,
                 temperature = effectiveTemperature(),
@@ -1628,9 +1411,9 @@ class ChatViewModel @Inject constructor(
             ).onSuccess { result ->
                 val (accepted, newStoryTime) = if (kind == DirectorToolKind.TIME_SKIP) {
                     val (cleaned, extracted) = extractAndStripStoryTimeMarker(result.content)
-                    acceptOrBlockAiResponse(result.copy(content = cleaned), "— Directeur de scène bloqué par le filtre de contenu. —") to extracted
+                    acceptAiResponse(result.copy(content = cleaned)) to extracted
                 } else {
-                    acceptOrBlockAiResponse(result, "— Directeur de scène bloqué par le filtre de contenu. —") to null
+                    acceptAiResponse(result) to null
                 }
                 if (accepted && newStoryTime != null) {
                     chatRepository.getById(chatId)?.let { chat ->
@@ -1661,7 +1444,6 @@ class ChatViewModel @Inject constructor(
         _isSending.value = true
         _error.value = null
 
-        if (blockedByBan()) return
 
         viewModelScope.launch {
             val systemPrompt = buildSystemPrompt(null, _castMembers.value, TurnMemory(storyTimeAnchor = chat.storyTimeAnchor)) +
@@ -1681,7 +1463,6 @@ class ChatViewModel @Inject constructor(
 
             chatCompletionRepository.complete(
                 modelId = resolveChatModel(),
-                chatMode = currentChatModeHeader(),
                 systemPrompt = systemPrompt,
                 messages = openingTurns,
                 temperature = effectiveTemperature(),
@@ -1805,7 +1586,6 @@ class ChatViewModel @Inject constructor(
 
     private suspend fun generateArrivalBeat(names: List<String>) {
         _isSending.value = true
-        if (blockedByBan()) return
         val systemPrompt = buildSystemPrompt(
             null,
             _castMembers.value,
@@ -1822,7 +1602,6 @@ class ChatViewModel @Inject constructor(
 
         chatCompletionRepository.complete(
             modelId = resolveChatModel(),
-            chatMode = currentChatModeHeader(),
             systemPrompt = systemPrompt,
             messages = arrivalTurns,
             temperature = effectiveTemperature(),
@@ -1889,7 +1668,6 @@ class ChatViewModel @Inject constructor(
         _error.value = null
         _isSending.value = true
 
-        if (blockedByBan()) return
 
         viewModelScope.launch {
             val rawWindow = messageRepository.getRecent(chatId, rawWindowSize())
@@ -1898,14 +1676,13 @@ class ChatViewModel @Inject constructor(
 
             chatCompletionRepository.complete(
                 modelId = resolveChatModel(),
-                chatMode = currentChatModeHeader(),
                 systemPrompt = buildSystemPrompt(persona, _castMembers.value, memory),
                 messages = history,
                 temperature = effectiveTemperature(),
                 maxTokens = chatMaxTokens(),
                 sampling = currentSampling()
             ).onSuccess { result ->
-                acceptOrBlockAiResponse(result, "— Réponse bloquée par le filtre de contenu. —")
+                acceptAiResponse(result)
             }.onFailure { e ->
                 handleChatFailure(e, PendingChatRetry.Send(text))
             }
@@ -2035,42 +1812,16 @@ private suspend fun insertSystemMessage(chatId: String, content: String) {
     }
 
     /**
-     * A banned account keeps normal app access (chats, settings) but can't generate new content —
-     * enforced server-side (`checkAccountStatus`) regardless, this just avoids a doomed network
-     * round-trip and gives a clear reason instead of a generic failure. Sets `_error`/`_isSending`
-     * and returns true if the caller should stop; false (nothing touched) if generation may proceed.
+     * Persists an AI reply as an assistant message (returns true), unless it is not a usable story
+     * beat at all (returns false, with a retry offered). Shared by every call site that handles a
+     * `chatCompletionRepository.complete()` success (send, regenerate, director beat, retry).
+     *
+     * There is no keyword moderation of replies or user messages: without a model to tell narrated
+     * dark fiction from real harm, a keyword list mostly produced false positives on legitimate adult
+     * fiction. What remains is the age floor on characters (persona creation), [SAFETY_DIRECTIVE] at
+     * the top of the system prompt, and the provider's own policies.
      */
-    private fun blockedByBan(): Boolean {
-        if (backendClient.accountLockReason.value != AccountLockReason.BANNED) return false
-        _error.value = "Votre compte a été banni : la génération de nouveau contenu n'est plus disponible."
-        _isSending.value = false
-        return true
-    }
-
-    /**
-     * Decides whether a keyword match from [localKeywordFilter] should actually be upheld.
-     * [ModerationCategory.MINOR_CONTENT] stays a hard, non-appealable block — no nuance is safe
-     * there; every other category gets a second opinion from [classifyFlaggedContentUseCase] before
-     * the message/response is thrown away (see BUGS.md: the bare keyword filter can't distinguish
-     * narrated dark fiction — a confession, a past assault told as backstory — from content that
-     * actually glorifies, encourages, or instructs real-world harm). Returns true if the block
-     * should stand.
-     */
-    private suspend fun isModerationBlockUpheld(moderation: ModerationResult.Flagged, text: String): Boolean {
-        if (moderation.category == ModerationCategory.MINOR_CONTENT) return true
-        return !classifyFlaggedContentUseCase(text, moderation.category.name)
-    }
-
-    /**
-     * Runs an AI-generated response through moderation (including the classifier appeal above) and
-     * either persists it as an assistant message (returns true) or inserts [blockedSystemMessage]
-     * and logs the block (returns false). Shared by every call site that handles a
-     * `chatCompletionRepository.complete()` success (send, regenerate, director beat, retry) to
-     * avoid repeating the appeal logic at each one. Also populates [contentPolicyViolation] (same
-     * dialog/report path as an input-side block) so a blocked response can be reported too, not
-     * just silently replaced by [blockedSystemMessage] in the chat.
-     */
-    private suspend fun acceptOrBlockAiResponse(result: ChatCompletionResult, blockedSystemMessage: String): Boolean {
+    private suspend fun acceptAiResponse(result: ChatCompletionResult): Boolean {
         // Before anything else: is this a story beat at all? A user's evening produced the literal
         // word "null", several stage directions and a block of token soup, all written permanently
         // into their story next to real scenes. Nothing unusable reaches the transcript now — the
@@ -2082,21 +1833,6 @@ private suspend fun insertSystemMessage(chatId: String, content: String) {
                 return false
             }
             ReplyVerdict.Usable -> Unit
-        }
-        val moderation = localKeywordFilter.check(result.content)
-        if (moderation is ModerationResult.Flagged && isModerationBlockUpheld(moderation, result.content)) {
-            moderationLogRepository.record(
-                ModerationLogEntity(
-                    id = UUID.randomUUID().toString(),
-                    chatId = chatId,
-                    category = moderation.category.name,
-                    reason = moderation.reason,
-                    createdAt = System.currentTimeMillis()
-                )
-            )
-            _contentPolicyViolation.value = FlaggedContent(text = result.content.take(300), category = moderation.category.name)
-            insertSystemMessage(chatId, blockedSystemMessage)
-            return false
         }
         messageRepository.upsert(
             MessageEntity(
@@ -2250,6 +1986,8 @@ private suspend fun insertSystemMessage(chatId: String, content: String) {
         val loreEntries = memory.loreEntries
         val relevantMemories = memory.relevantMemories
         val storyTimeAnchor = memory.storyTimeAnchor
+        appendLine(SAFETY_DIRECTIVE)
+        appendLine()
         if (persona != null) {
             appendLine("You are roleplaying as ${persona.name}. Stay in character at all times and never break the fourth wall.")
         } else {
@@ -2286,17 +2024,6 @@ private suspend fun insertSystemMessage(chatId: String, content: String) {
         appendLine("- Never speak for, narrate the actions of, or decide the internal thoughts, feelings, or decisions of the user's character.")
         appendLine("- The user's character belongs entirely to the user.")
         appendLine("- End your turn at the point where the user's character would need to respond, act, or choose.")
-
-        if (secureStorage.getString(SecureStorage.KEY_FIRST_CHAT_ID) == chatId) {
-            appendLine()
-            appendLine("## First Story — Guided Mini-Arc")
-            appendLine("This is the user's very first conversation in the app, running on a limited free credit budget. Proactively shape it into a satisfying, mostly self-contained mini story arc instead of an open-ended slow burn:")
-            appendLine("- Establish the scene and hook quickly — don't spend many turns on scene-setting before something meaningful starts moving.")
-            appendLine("- Build rising tension or intimacy at a noticeably brisker pace than you would in a longer-running story.")
-            appendLine("- Steer organically toward a clear, emotionally satisfying high point (a confession, a confrontation, a reveal, a moment of closeness — whatever fits the scenario) within roughly the next several exchanges, rather than lingering indefinitely.")
-            appendLine("- Once that high point lands, let the scene settle toward a natural, non-abrupt resolution or pause — a place where the story feels complete or comfortably paused, not cut off mid-sentence.")
-            appendLine("- Never announce or reference any of this out loud, never mention credits, limits, or pacing — this is purely how you structure the story from the inside.")
-        }
 
         // The style pack and the global custom style used to be rendered here. They now travel in the
         // style contract, at the rank 3 the contract had been *claiming* for them all along while

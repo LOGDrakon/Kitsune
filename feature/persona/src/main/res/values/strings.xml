@@ -22,10 +22,6 @@
     <string name="persona_create_visual_style_label">Visual style (optional)</string>
     <string name="persona_create_proposal_count_label">Number of proposals</string>
     <string name="persona_create_proposal_count_hint">You\'ll be able to browse the %1$d generated sheets and choose the one you prefer.</string>
-    <string name="persona_create_cost_confirm_title">Generate persona?</string>
-    <string name="persona_create_cost_confirm_text">This will cost %1$d Ofuda(s).</string>
-    <string name="persona_create_first_free_title">This one\'s on the house!</string>
-    <string name="persona_create_first_free_text">Your first persona or universe creation is free, no Ofudas needed.</string>
 
     <!-- create/PersonaCreationScreen.kt — GeneratingStep -->
     <string name="persona_create_generating_single">Creating your sheet…</string>
@@ -66,8 +62,6 @@
     <string name="persona_create_error_generation_failed">Generation failed.</string>
     <string name="persona_create_error_schedule_failed">Scheduling the generation failed.</string>
     <string name="persona_review_error_age_minimum">Persona age must be a whole number of %1$d or older.</string>
-    <string name="persona_limit_reached_title">Persona limit reached</string>
-    <string name="persona_limit_reached_text">Free accounts are limited to %1$d personas. Subscribe to Kitsune+ from the Store for unlimited personas (creating one still costs Ofudas).</string>
 
     <!-- detail/PersonaDetailScreen.kt — dialogs -->
     <string name="persona_detail_generate_image_label">Generate an image</string>
@@ -147,14 +141,11 @@
     <!-- list/PersonaListScreen.kt — failed generation detail dialog -->
     <string name="action_close">Close</string>
     <string name="generation_failure_dialog_title">Generation failed</string>
-    <string name="generation_failure_category_content_policy">Blocked by the content filter (content possibly involving a minor or non-consensual acts)</string>
-    <string name="generation_failure_category_insufficient_credits">Not enough Ofudas</string>
+    <string name="generation_failure_category_content_policy">Refused by your provider’s content moderation. Try another model or provider.</string>
+    <string name="generation_failure_category_insufficient_credits">Your provider says your account has no credit left.</string>
     <string name="generation_failure_category_parsing_failed">The AI responded, but its answer could not be understood</string>
     <string name="generation_failure_category_technical">Technical error (network, server…)</string>
     <string name="generation_failure_category_unknown">Unknown reason</string>
-    <string name="generation_failure_credit_consumed">An Ofuda was consumed for this attempt, even though it failed.</string>
-    <string name="generation_failure_credit_not_consumed">No Ofuda was consumed for this attempt.</string>
-    <string name="generation_failure_credit_unknown">Whether an Ofuda was consumed for this attempt could not be determined.</string>
     <string name="generation_failure_retry_button">Retry</string>
     <string name="generation_failure_report_button">Report a bug</string>
     <string name="generation_failure_delete_button">Delete</string>

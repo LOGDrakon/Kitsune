@@ -1,19 +1,22 @@
 package com.kitsune.core.diagnostics
 
-import com.kitsune.core.backend.KitsuneBackendClient
-import com.kitsune.core.security.bugreport.BugReportCrypto
+import android.content.Context
+import android.content.Intent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 /**
- * Redacts ([BuildBugReportUseCase]), encrypts ([BugReportCrypto]) and submits a bug report to the
- * backend automatically — no user action beyond triggering report generation, and no plaintext
- * report is ever shown or copyable on-device. The backend only ever receives ciphertext; see
- * [BugReportCrypto] for the hybrid RSA/AES scheme and rationale.
+ * Builds a redacted bug report ([BuildBugReportUseCase]) and hands it to the system share sheet, so
+ * the user decides where it goes — a GitHub issue, an email, a note — and can read every word of it
+ * first.
+ *
+ * The hosted version encrypted the report and uploaded it to its backend automatically. There is no
+ * backend to receive it any more, and an open-source project's bug tracker is public: a report that
+ * goes anywhere should go there knowingly, which is what the share sheet gives.
  */
 class SubmitBugReportUseCase @Inject constructor(
-    private val buildBugReportUseCase: BuildBugReportUseCase,
-    private val bugReportCrypto: BugReportCrypto,
-    private val backendClient: KitsuneBackendClient
+    @ApplicationContext private val context: Context,
+    private val buildBugReportUseCase: BuildBugReportUseCase
 ) {
     suspend operator fun invoke(
         subject: String,
@@ -25,12 +28,23 @@ class SubmitBugReportUseCase @Inject constructor(
         flaggedContentText: String? = null,
         flaggedContentCategory: String? = null,
         attachFullConversation: Boolean = true
-    ): Result<Unit> {
+    ): Result<Unit> = runCatching {
         val report = buildBugReportUseCase(
             subject, description, chatId, jobId, detailed,
             focusMessageId, flaggedContentText, flaggedContentCategory, attachFullConversation
         )
-        val encrypted = bugReportCrypto.encrypt(report)
-        return backendClient.submitBugReport(encrypted.encryptedKey, encrypted.iv, encrypted.ciphertext)
+        val send = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_SUBJECT, "[Kitsune] $subject")
+            putExtra(Intent.EXTRA_TEXT, report)
+        }
+        context.startActivity(
+            Intent.createChooser(send, "Envoyer le rapport de bug").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        )
+    }
+
+    companion object {
+        /** Where bug reports and feature requests belong. */
+        const val ISSUES_URL = "https://github.com/LOGDrakon/Kitsune/issues"
     }
 }

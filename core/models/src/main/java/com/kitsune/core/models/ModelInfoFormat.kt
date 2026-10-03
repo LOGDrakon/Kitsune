@@ -9,6 +9,7 @@ import java.util.Locale
 internal fun modelSubtitle(model: ModelInfo): String {
     val parts = mutableListOf<String>()
     parts.add(model.provider)
+    if (model.displayName != model.modelId) parts.add(model.modelId)
     model.contextWindowTokens?.let { tokens ->
         if (tokens >= 1_000) {
             parts.add(stringResource(R.string.model_tokens_k, tokens / 1_000))
@@ -21,5 +22,6 @@ internal fun modelSubtitle(model: ModelInfo): String {
         val output = String.format(Locale.US, "%.2f", model.outputCostPerMillionTokens)
         parts.add(stringResource(R.string.model_cost_format, input, output))
     }
+    if (model.supportsImageInput) parts.add(stringResource(R.string.model_vision))
     return parts.joinToString(" · ")
 }

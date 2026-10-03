@@ -30,7 +30,6 @@ fun AnnouncementDialog(
     body: String,
     type: String,
     dismissible: Boolean,
-    rewardCredits: Int? = null,
     onDismiss: () -> Unit
 ) {
     val icon = when (type.uppercase()) {
@@ -65,15 +64,6 @@ fun AnnouncementDialog(
                     text = body,
                     style = MaterialTheme.typography.bodyMedium
                 )
-                if (rewardCredits != null && rewardCredits > 0) {
-                    Spacer(modifier = Modifier.size(12.dp))
-                    Text(
-                        text = stringResource(R.string.designsystem_announcement_reward, rewardCredits),
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
             }
         },
         confirmButton = {

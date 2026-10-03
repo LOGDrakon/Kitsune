@@ -18,14 +18,9 @@
 
     <!-- UniverseListScreen.kt — finestra di dettaglio di una generazione non riuscita -->
     <string name="generation_failure_dialog_title">Generazione non riuscita</string>
-    <string name="generation_failure_category_content_policy">Bloccato dal filtro dei contenuti (contenuto che potrebbe coinvolgere un minore o atti non consensuali)</string>
-    <string name="generation_failure_category_insufficient_credits">Ofuda insufficienti</string>
     <string name="generation_failure_category_parsing_failed">L\'IA ha risposto, ma la sua risposta non è stata compresa</string>
     <string name="generation_failure_category_technical">Errore tecnico (rete, server…)</string>
     <string name="generation_failure_category_unknown">Motivo sconosciuto</string>
-    <string name="generation_failure_credit_consumed">Per questo tentativo è stato consumato un Ofuda, nonostante il fallimento.</string>
-    <string name="generation_failure_credit_not_consumed">Per questo tentativo non è stato consumato alcun Ofuda.</string>
-    <string name="generation_failure_credit_unknown">Non è stato possibile determinare se per questo tentativo sia stato consumato un Ofuda.</string>
     <string name="generation_failure_retry_button">Riprova</string>
     <string name="generation_failure_report_button">Segnala un problema</string>
     <string name="generation_failure_delete_button">Elimina</string>

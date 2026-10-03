@@ -99,7 +99,7 @@ data class KitsuneTextStyles(
     val narration: TextStyle = serif(16, 27, FontWeight.Normal, -0.004),
     /** Long-form reading mode (novel view), centred measure, larger and looser still. */
     val prose: TextStyle = serif(18, 32, FontWeight.Normal, -0.006),
-    /** Numerals that must line up in a column (Ofuda counts, stats). */
+    /** Numerals that must line up in a column (counts, stats). */
     val numeric: TextStyle = sans(15, 20, FontWeight.Medium, 0.010),
     /** Quiet metadata under a title: timestamps, counts, "il y a 2 h". */
     val meta: TextStyle = sans(12, 16, FontWeight.Normal, 0.010),

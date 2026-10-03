@@ -98,7 +98,6 @@
 
     <!-- SettingsScreen: support section -->
     <string name="support_section_title">Asistencia</string>
-    <string name="bug_report_description">Describe lo que pasó y generaremos un informe anónimo (sin claves API, sin palabra de seguridad, tu nombre/apellido censurados en la transcripción), cifrado y enviado automáticamente. Se elimina una vez resuelto el problema.</string>
     <string name="generate_bug_report_button">Enviar un informe de error</string>
     <string name="bug_report_dialog_title">Informar de un problema</string>
     <string name="bug_report_subject_label">Asunto</string>

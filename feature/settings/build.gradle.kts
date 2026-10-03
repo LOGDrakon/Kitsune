@@ -40,7 +40,6 @@ dependencies {
     implementation(project(":core:backend"))
     implementation(project(":core:transfer"))
 
-    implementation(libs.zxing.core)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)

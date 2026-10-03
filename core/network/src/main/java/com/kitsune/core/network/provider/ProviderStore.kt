@@ -71,17 +71,18 @@ class ProviderStore @Inject constructor(private val secureStorage: SecureStorage
         save(listOf(target) + _providers.value.filterNot { it.id == id })
     }
 
+    /** Re-reads storage — after a backup restore wrote the providers behind this store's back. */
+    fun reload() {
+        _providers.value = load()
+    }
+
     private fun load(): List<ProviderConfig> =
-        secureStorage.getString(KEY_PROVIDERS)
+        secureStorage.getString(SecureStorage.KEY_AI_PROVIDERS)
             ?.let { runCatching { json.decodeFromString(serializer, it) }.getOrNull() }
             .orEmpty()
 
     private fun save(list: List<ProviderConfig>) {
-        secureStorage.putString(KEY_PROVIDERS, json.encodeToString(serializer, list))
+        secureStorage.putString(SecureStorage.KEY_AI_PROVIDERS, json.encodeToString(serializer, list))
         _providers.value = list
-    }
-
-    private companion object {
-        const val KEY_PROVIDERS = "ai_providers_v1"
     }
 }

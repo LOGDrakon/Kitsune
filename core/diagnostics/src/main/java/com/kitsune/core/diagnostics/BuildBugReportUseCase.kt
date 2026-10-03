@@ -32,9 +32,8 @@ import javax.inject.Inject
  *   "Name User" / "Last Name User". Other profile fields (pronoun/age/description) are reported
  *   only as "renseigné : oui/non", never their actual values.
  * - No account identifier, device id or other personal data is collected.
- * - The report is then encrypted client-side (see `BugReportCrypto`, `core:security`) with a
- *   hybrid RSA/AES scheme before being sent to the backend — only the backend holds the RSA
- *   private key needed to decrypt it.
+ * - The report is shown to the user through the share sheet (see [SubmitBugReportUseCase]) — it
+ *   only goes where they send it.
  *
  * The conversation transcript is read from the local, append-only [MessageAuditLogRepository]
  * rather than the live, editable message table — see that entity's doc comment for why (a message
@@ -246,7 +245,6 @@ class BuildBugReportUseCase @Inject constructor(
         appendLine("- Propositions demandées : ${job.proposalCount}")
         appendLine("- Description/prompt utilisé : ${job.description.ifBlank { "(vide)" }}")
         appendLine("- Catégorie d'échec : ${categoryLabel(category)}")
-        appendLine("- Crédit consommé pour cette tentative : ${creditConsumedLabel(category)}")
         appendLine("- Message technique brut : ${job.errorMessage ?: "(aucun)"}")
         appendLine("- Créé le : ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Date(job.createdAt))}")
         job.completedAt?.let {
@@ -298,15 +296,13 @@ class BuildBugReportUseCase @Inject constructor(
     }
 
     private fun categoryLabel(category: GenerationFailureCategory?): String = when (category) {
-        GenerationFailureCategory.CONTENT_POLICY -> "Bloqué par le filtre de contenu (contenu potentiellement impliquant un mineur ou non consensuel)"
-        GenerationFailureCategory.INSUFFICIENT_CREDITS -> "Crédits insuffisants"
+        GenerationFailureCategory.CONTENT_POLICY -> "Refusé par la modération du fournisseur"
+        GenerationFailureCategory.INSUFFICIENT_CREDITS -> "Crédit insuffisant chez le fournisseur"
         GenerationFailureCategory.PARSING_FAILED -> "Réponse de l'IA reçue mais impossible à interpréter"
         GenerationFailureCategory.TECHNICAL -> "Erreur technique (réseau, serveur...)"
         null -> "Inconnue (job antérieur à cette fonctionnalité)"
     }
 
-    private fun creditConsumedLabel(category: GenerationFailureCategory?): String =
-        category?.let { if (it.creditConsumed) "Oui" else "Non" } ?: "Inconnu"
 
     private fun roleLabelForRole(role: MessageRole): String = when (role) {
         MessageRole.USER -> "Utilisateur"

@@ -19,6 +19,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Backup
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.AccountCircle
@@ -75,12 +79,19 @@ import com.kitsune.core.backend.AccountLockReason
 import com.kitsune.core.designsystem.BugReportPrivacyDialog
 import com.kitsune.core.security.locale.AppLanguage
 import com.kitsune.core.security.model.VaultSecurityMode
-import com.kitsune.core.transfer.TransferOutState
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import com.kitsune.core.designsystem.component.KitsuneRow
+import com.kitsune.core.transfer.BackupFormat
 import androidx.compose.material3.Slider
 import java.util.Locale
 import com.kitsune.feature.settings.R
 
-private const val DATA_TRANSPARENCY_URL = "https://kitsune-ai.com/data-transparency.html"
+private const val DATA_TRANSPARENCY_URL = "https://github.com/LOGDrakon/Kitsune/blob/main/PRIVACY.md"
+private const val SOURCE_CODE_URL = "https://github.com/LOGDrakon/Kitsune"
+private const val ISSUES_URL = "https://github.com/LOGDrakon/Kitsune/issues"
+private const val SERVER_SOURCE_URL = "https://github.com/LOGDrakon/Kitsune-Server"
+private const val DONATE_URL = "https://github.com/sponsors/LOGDrakon"
 
 /**
  * Groups related settings under a titled block.
@@ -132,7 +143,8 @@ fun SettingsScreen(
      *  back to, so drawing a back arrow that pops the whole shell would be a trap. */
     showBack: Boolean = true,
     onAccountDeleted: () -> Unit = {},
-    onAccountTransferred: () -> Unit = {},
+    onOpenProviders: () -> Unit = {},
+    onOpenModels: () -> Unit = {},
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val activity = LocalContext.current as FragmentActivity
@@ -143,13 +155,27 @@ fun SettingsScreen(
     val securityActionResult by viewModel.securityActionResult.collectAsStateWithLifecycle()
     val panicPinResult by viewModel.panicPinResult.collectAsStateWithLifecycle()
     val deleteAccountState by viewModel.deleteAccountState.collectAsStateWithLifecycle()
-    val transferOutState by viewModel.transferOutState.collectAsStateWithLifecycle()
+    val providers by viewModel.providers.collectAsStateWithLifecycle()
+    val marketplaceEnabled by viewModel.marketplaceEnabled.collectAsStateWithLifecycle()
+    val marketplaceServerUrl by viewModel.marketplaceServerUrl.collectAsStateWithLifecycle()
+    val marketplaceAccountState by viewModel.marketplaceAccountState.collectAsStateWithLifecycle()
+    val backupExportState by viewModel.backupExportState.collectAsStateWithLifecycle()
     val accountLockReason by viewModel.accountLockReason.collectAsStateWithLifecycle()
     val banReason by viewModel.banReason.collectAsStateWithLifecycle()
     var activeSecurityDialog by remember { mutableStateOf<SecurityDialog?>(null) }
     var showLanguageDialog by remember { mutableStateOf(false) }
     var showDeleteAccountDialog by remember { mutableStateOf(false) }
-    var showTransferPinDialog by remember { mutableStateOf(false) }
+    var showBackupDialog by remember { mutableStateOf(false) }
+    var showDeleteMarketplaceDialog by remember { mutableStateOf(false) }
+    // Held only between the passphrase dialog and the file picker's answer.
+    var pendingBackupPassphrase by remember { mutableStateOf<CharArray?>(null) }
+    val backupLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument(BackupFormat.MIME_TYPE)
+    ) { uri ->
+        val passphrase = pendingBackupPassphrase
+        pendingBackupPassphrase = null
+        if (uri != null && passphrase != null) viewModel.exportBackup(passphrase, uri)
+    }
     var showBugReportDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(deleteAccountState) {
@@ -157,13 +183,6 @@ fun SettingsScreen(
             showDeleteAccountDialog = false
             viewModel.dismissDeleteAccountResult()
             onAccountDeleted()
-        }
-    }
-
-    LaunchedEffect(transferOutState) {
-        if (transferOutState is TransferOutState.Completed) {
-            viewModel.dismissTransferOut()
-            onAccountTransferred()
         }
     }
 
@@ -248,27 +267,75 @@ fun SettingsScreen(
         )
     }
 
-    if (showTransferPinDialog) {
-        NewPinDialog(
-            title = stringResource(R.string.transfer_pin_dialog_title),
-            description = stringResource(R.string.transfer_pin_dialog_description),
-            confirmLabel = stringResource(R.string.transfer_pin_dialog_confirm),
-            isBusy = false,
-            onDismiss = { showTransferPinDialog = false },
-            onConfirm = { pin ->
-                showTransferPinDialog = false
-                viewModel.startAccountTransfer(pin.toCharArray())
+    if (showBackupDialog) {
+        BackupPassphraseDialog(
+            validate = viewModel::validateBackupPassphrase,
+            onDismiss = { showBackupDialog = false },
+            onConfirm = { passphrase ->
+                showBackupDialog = false
+                pendingBackupPassphrase = passphrase.toCharArray()
+                backupLauncher.launch(BackupFormat.suggestedFileName())
             }
         )
     }
 
-    transferOutState?.let { current ->
-        if (current !is TransferOutState.Completed) {
-            TransferProgressDialog(
-                state = current,
-                onDismiss = viewModel::dismissTransferOut
-            )
-        }
+    backupExportState?.let { current ->
+        AlertDialog(
+            onDismissRequest = { if (current !is BackupExportState.Exporting) viewModel.dismissBackupExport() },
+            title = { Text(stringResource(R.string.backup_section_title)) },
+            text = {
+                when (current) {
+                    BackupExportState.Exporting -> Row(verticalAlignment = Alignment.CenterVertically) {
+                        CircularProgressIndicator(modifier = Modifier.size(20.dp))
+                        Spacer(Modifier.width(12.dp))
+                        Text(stringResource(R.string.backup_exporting))
+                    }
+                    BackupExportState.Done -> Text(stringResource(R.string.backup_done))
+                    is BackupExportState.Error -> Text(current.message, color = MaterialTheme.colorScheme.error)
+                }
+            },
+            confirmButton = {
+                if (current !is BackupExportState.Exporting) {
+                    TextButton(onClick = viewModel::dismissBackupExport) { Text(stringResource(R.string.action_ok)) }
+                }
+            }
+        )
+    }
+
+    if (showDeleteMarketplaceDialog) {
+        val deleting = marketplaceAccountState is MarketplaceAccountState.Deleting
+        AlertDialog(
+            onDismissRequest = { if (!deleting) { showDeleteMarketplaceDialog = false; viewModel.dismissMarketplaceAccountState() } },
+            title = { Text(stringResource(R.string.marketplace_delete_account_title)) },
+            text = {
+                Column {
+                    Text(stringResource(R.string.marketplace_delete_account_body))
+                    when (val st = marketplaceAccountState) {
+                        is MarketplaceAccountState.Error -> Text(st.message, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = 8.dp))
+                        MarketplaceAccountState.Deleted -> Text(stringResource(R.string.marketplace_delete_account_done), color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 8.dp))
+                        else -> Unit
+                    }
+                }
+            },
+            confirmButton = {
+                if (marketplaceAccountState is MarketplaceAccountState.Deleted) {
+                    TextButton(onClick = { showDeleteMarketplaceDialog = false; viewModel.dismissMarketplaceAccountState() }) {
+                        Text(stringResource(R.string.action_ok))
+                    }
+                } else {
+                    TextButton(onClick = viewModel::deleteMarketplaceAccount, enabled = !deleting) {
+                        Text(stringResource(R.string.marketplace_delete_account_confirm), color = MaterialTheme.colorScheme.error)
+                    }
+                }
+            },
+            dismissButton = {
+                if (marketplaceAccountState !is MarketplaceAccountState.Deleted) {
+                    TextButton(onClick = { showDeleteMarketplaceDialog = false; viewModel.dismissMarketplaceAccountState() }, enabled = !deleting) {
+                        Text(stringResource(R.string.action_cancel))
+                    }
+                }
+            }
+        )
     }
 
     // KitsunePage, not a Material Scaffold with a titled TopAppBar: Settings is one of the shell's five
@@ -312,6 +379,30 @@ fun SettingsScreen(
 
             val uriHandler = LocalUriHandler.current
 
+            SettingsSectionCard(title = stringResource(R.string.ai_section_title), icon = Icons.Filled.AutoAwesome) {
+                if (providers.isEmpty()) {
+                    Text(
+                        stringResource(R.string.ai_section_no_provider),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                }
+                KitsuneRow(
+                    title = stringResource(R.string.ai_providers_row),
+                    subtitle = if (providers.isEmpty()) stringResource(R.string.ai_providers_none)
+                        else providers.joinToString(", ") { it.name },
+                    card = false,
+                    onClick = onOpenProviders
+                )
+                KitsuneRow(
+                    title = stringResource(R.string.ai_models_row),
+                    subtitle = stringResource(R.string.ai_models_row_hint),
+                    card = false,
+                    onClick = onOpenModels
+                )
+            }
+
             SettingsSectionCard(title = stringResource(R.string.account_section_title), icon = Icons.Filled.AccountCircle) {
                 // Propositions, messages, abonnements suivis and badges used to live here. They are
                 // all facets of "who am I in this community", so v2 shows them in the Profil tab and
@@ -325,7 +416,8 @@ fun SettingsScreen(
                         .clickable { showLanguageDialog = true }
                 )
 
-                // Username (pseudonyme)
+                // Username (pseudonyme) — a marketplace identity, so only shown while it is on.
+                if (marketplaceEnabled) {
                 val usernameAvailable by viewModel.usernameAvailable.collectAsStateWithLifecycle()
                 val isSettingUsername by viewModel.isSettingUsername.collectAsStateWithLifecycle()
                 var showUsernameDialog by remember { mutableStateOf(false) }
@@ -383,7 +475,8 @@ fun SettingsScreen(
                         }
                     )
                 }
-                if (state.backendUserId.isNotBlank()) {
+                }
+                if (marketplaceEnabled && state.backendUserId.isNotBlank()) {
                     val clipboardManager = androidx.compose.ui.platform.LocalClipboardManager.current
                     var copied by remember { mutableStateOf(false) }
                     ListItem(
@@ -487,10 +580,6 @@ fun SettingsScreen(
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
                 )
             }
-
-            // No credits section. The balance and the store are on the Profil tab, which is the only
-            // place either appears in v2 — Settings is where you change how the app behaves, not where
-            // you are reminded what you have left to spend.
 
             SettingsSectionCard(title = stringResource(R.string.creativity_section_title), icon = Icons.Filled.Palette) {
                 // The tone library moved to the Créer tab, next to the personas whose voice it sets.
@@ -681,6 +770,62 @@ fun SettingsScreen(
                 }
             }
 
+            SettingsSectionCard(title = stringResource(R.string.marketplace_section_title), icon = Icons.Filled.Storefront) {
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+                    Text(stringResource(R.string.marketplace_enabled_label), modifier = Modifier.weight(1f))
+                    Switch(checked = marketplaceEnabled, onCheckedChange = viewModel::setMarketplaceEnabled)
+                }
+                Text(
+                    stringResource(R.string.marketplace_enabled_description),
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+                if (marketplaceEnabled) {
+                    var urlInput by remember(marketplaceServerUrl) { mutableStateOf(marketplaceServerUrl) }
+                    var urlError by remember { mutableStateOf(false) }
+                    OutlinedTextField(
+                        value = urlInput,
+                        onValueChange = { urlInput = it; urlError = false },
+                        label = { Text(stringResource(R.string.marketplace_server_label)) },
+                        isError = urlError,
+                        supportingText = {
+                            Text(
+                                if (urlError) stringResource(R.string.marketplace_server_invalid)
+                                else stringResource(R.string.marketplace_server_hint)
+                            )
+                        },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
+                        modifier = Modifier.fillMaxWidth().padding(top = 12.dp)
+                    )
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        TextButton(
+                            onClick = { urlError = !viewModel.setMarketplaceServerUrl(urlInput) },
+                            enabled = urlInput.trim().trimEnd('/') != marketplaceServerUrl
+                        ) { Text(stringResource(R.string.action_save)) }
+                        if (!viewModel.isDefaultMarketplaceServer()) {
+                            TextButton(onClick = viewModel::resetMarketplaceServerUrl) {
+                                Text(stringResource(R.string.marketplace_server_reset))
+                            }
+                        }
+                    }
+                    TextButton(onClick = { showDeleteMarketplaceDialog = true }) {
+                        Text(stringResource(R.string.marketplace_delete_account_button), color = MaterialTheme.colorScheme.error)
+                    }
+                }
+            }
+
+            SettingsSectionCard(title = stringResource(R.string.backup_section_title), icon = Icons.Filled.Backup) {
+                Text(
+                    stringResource(R.string.backup_section_description),
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                OutlinedButton(onClick = { showBackupDialog = true }) {
+                    Text(stringResource(R.string.backup_export_button))
+                }
+            }
+
             SettingsSectionCard(title = stringResource(R.string.support_section_title), icon = Icons.Filled.SupportAgent) {
                 Text(
                     stringResource(R.string.bug_report_description),
@@ -690,17 +835,28 @@ fun SettingsScreen(
                 Button(onClick = { showBugReportDialog = true }) {
                     Text(stringResource(R.string.generate_bug_report_button))
                 }
-            }
-
-            SettingsSectionCard(title = stringResource(R.string.transfer_account_section_title), icon = Icons.Filled.SwapHoriz) {
-                Text(
-                    stringResource(R.string.transfer_account_section_description),
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                ListItem(
+                    headlineContent = { Text(stringResource(R.string.about_issues)) },
+                    trailingContent = { Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null) },
+                    modifier = Modifier.fillMaxWidth().clickable { uriHandler.openUri(ISSUES_URL) }
                 )
-                OutlinedButton(onClick = { showTransferPinDialog = true }) {
-                    Text(stringResource(R.string.transfer_account_button))
-                }
+                ListItem(
+                    headlineContent = { Text(stringResource(R.string.about_source_code)) },
+                    supportingContent = { Text(stringResource(R.string.about_license)) },
+                    trailingContent = { Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null) },
+                    modifier = Modifier.fillMaxWidth().clickable { uriHandler.openUri(SOURCE_CODE_URL) }
+                )
+                ListItem(
+                    headlineContent = { Text(stringResource(R.string.about_server_source)) },
+                    trailingContent = { Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null) },
+                    modifier = Modifier.fillMaxWidth().clickable { uriHandler.openUri(SERVER_SOURCE_URL) }
+                )
+                ListItem(
+                    headlineContent = { Text(stringResource(R.string.about_donate)) },
+                    supportingContent = { Text(stringResource(R.string.about_donate_description)) },
+                    trailingContent = { Icon(Icons.Filled.Favorite, contentDescription = null) },
+                    modifier = Modifier.fillMaxWidth().clickable { uriHandler.openUri(DONATE_URL) }
+                )
             }
 
             SettingsSectionCard(title = stringResource(R.string.danger_zone_section_title), icon = Icons.Filled.Warning) {
@@ -778,58 +934,48 @@ private fun DeleteAccountDialog(
 }
 
 @Composable
-private fun TransferProgressDialog(
-    state: TransferOutState,
-    onDismiss: () -> Unit
+private fun BackupPassphraseDialog(
+    validate: (String, String) -> String?,
+    onDismiss: () -> Unit,
+    onConfirm: (String) -> Unit
 ) {
-    val isError = state is TransferOutState.Error
+    var passphrase by remember { mutableStateOf("") }
+    var confirm by remember { mutableStateOf("") }
+    var error by remember { mutableStateOf<String?>(null) }
     AlertDialog(
-        onDismissRequest = { if (isError) onDismiss() },
-        title = { Text(stringResource(R.string.transfer_progress_dialog_title)) },
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.backup_passphrase_title)) },
         text = {
-            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
-                when (state) {
-                    is TransferOutState.Packaging -> {
-                        CircularProgressIndicator(modifier = Modifier.padding(bottom = 12.dp))
-                        Text(stringResource(R.string.transfer_progress_packaging))
-                    }
-                    is TransferOutState.Uploading -> {
-                        CircularProgressIndicator(modifier = Modifier.padding(bottom = 12.dp))
-                        Text(stringResource(R.string.transfer_progress_uploading))
-                    }
-                    is TransferOutState.WaitingForScan -> {
-                        Text(
-                            stringResource(R.string.transfer_progress_waiting_for_scan),
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(bottom = 16.dp)
-                        )
-                        QrCodeImage(payload = state.qrPayload, sizePx = 512, modifier = Modifier.size(240.dp))
-                    }
-                    is TransferOutState.NewDeviceImporting -> {
-                        CircularProgressIndicator(modifier = Modifier.padding(bottom = 12.dp))
-                        Text(stringResource(R.string.transfer_progress_new_device_importing))
-                    }
-                    is TransferOutState.Completed -> Unit
-                    is TransferOutState.Error -> {
-                        Text(
-                            state.message,
-                            color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                }
+            Column {
+                Text(stringResource(R.string.backup_passphrase_description), style = MaterialTheme.typography.bodySmall)
+                OutlinedTextField(
+                    value = passphrase,
+                    onValueChange = { passphrase = it; error = null },
+                    label = { Text(stringResource(R.string.backup_passphrase_label)) },
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth().padding(top = 12.dp)
+                )
+                OutlinedTextField(
+                    value = confirm,
+                    onValueChange = { confirm = it; error = null },
+                    label = { Text(stringResource(R.string.backup_passphrase_confirm_label)) },
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                )
+                error?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 8.dp)) }
             }
         },
         confirmButton = {
-            if (isError) {
-                TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_close)) }
-            }
+            TextButton(onClick = {
+                val problem = validate(passphrase, confirm)
+                if (problem != null) error = problem else onConfirm(passphrase)
+            }) { Text(stringResource(R.string.backup_export_button)) }
         },
-        dismissButton = {
-            if (!isError) {
-                TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
-            }
-        }
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } }
     )
 }
 

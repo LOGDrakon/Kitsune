@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.kitsune.core.background.GenerationScheduler
 import com.kitsune.core.background.UniverseGenerationRequest
 import com.kitsune.core.background.parseUniverseResult
-import com.kitsune.core.backend.KitsuneBackendClient
 import com.kitsune.core.common.inspiration.InspirationDraftHolder
 import com.kitsune.core.data.local.entities.FactionEntity
 import com.kitsune.core.data.local.entities.GenerationJobState
@@ -43,10 +42,6 @@ import javax.inject.Inject
 
 /** Proposal counts offered to the user — "1 ou 3 ou 5" as requested. */
 val UNIVERSE_PROPOSAL_COUNT_OPTIONS = listOf(1, 3, 5)
-
-/** Free tier cap on total universes; Kitsune+ subscribers are unlimited — creating still costs
- * Ofudas either way, this only caps the free-tier ceiling. */
-const val MAX_FREE_UNIVERSES = 5
 
 sealed interface UniverseCreationUiState {
     /** Manual, no-AI form (unchanged from before this feature) — also where the AI description and
@@ -89,8 +84,7 @@ class UniverseCreationViewModel @Inject constructor(
     private val npcRepository: NpcRepository,
     private val generateWorldElementUseCase: GenerateWorldElementUseCase,
     private val generationScheduler: GenerationScheduler,
-    private val generationJobRepository: GenerationJobRepository,
-    private val backendClient: KitsuneBackendClient
+    private val generationJobRepository: GenerationJobRepository
 ) : ViewModel() {
 
     /** Set when reviewing an asynchronously-generated universe draft from `GenerationJobEntity`. */
@@ -98,31 +92,6 @@ class UniverseCreationViewModel @Inject constructor(
 
     private val _state = MutableStateFlow<UniverseCreationUiState>(UniverseCreationUiState.Form())
     val state: StateFlow<UniverseCreationUiState> = _state.asStateFlow()
-
-    private val _limitReached = MutableStateFlow(false)
-    val limitReached: StateFlow<Boolean> = _limitReached.asStateFlow()
-
-    /** True if this user's next quick persona/universe generation is free (first-time perk) —
-     * lets the cost-confirmation dialog say "Ce coup-ci c'est cadeau !" instead of a cost that
-     * won't actually be charged. */
-    val firstCreationFree: StateFlow<Boolean> = backendClient.firstCreationFree
-
-    /** Prix d'une proposition, annoncé par le serveur (voir `KitsuneBackendClient`) — l'écran
-     * multipliait auparavant le nombre de propositions par un tarif implicite de 1. */
-    val universeGenCostCredits: StateFlow<Int> = backendClient.universeGenCostCredits
-
-    fun dismissLimitReached() {
-        _limitReached.value = false
-    }
-
-    /** True (and flips [limitReached]) when a free-tier user is already at [MAX_FREE_UNIVERSES] —
-     * checked both before spending credits on generation and right before persisting, since
-     * browsing lets the user save several proposals from the same generated batch. */
-    private suspend fun isBlockedByUniverseLimit(): Boolean {
-        if (backendClient.isKitsunePlus.value) return false
-        val currentCount = universeRepository.getAll().first().size
-        return (currentCount >= MAX_FREE_UNIVERSES).also { if (it) _limitReached.value = true }
-    }
 
     init {
         // Only set when this screen was just navigated to from the "Je ne sais pas quoi créer"
@@ -184,7 +153,6 @@ class UniverseCreationViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            if (isBlockedByUniverseLimit()) return@launch
 
             _state.value = current.copy(isSaving = true, error = null)
             val draft = UniverseDraft(name = current.name, description = current.description, genre = current.genre, visualStyle = current.visualStyle, tags = current.tags)
@@ -204,7 +172,6 @@ class UniverseCreationViewModel @Inject constructor(
         val count = form.proposalCount
 
         viewModelScope.launch {
-            if (isBlockedByUniverseLimit()) return@launch
 
             _state.value = UniverseCreationUiState.Generating(count)
             try {
@@ -271,7 +238,6 @@ class UniverseCreationViewModel @Inject constructor(
         val bundle = browsing.proposals.getOrNull(browsing.currentIndex) ?: return
 
         viewModelScope.launch {
-            if (isBlockedByUniverseLimit()) return@launch
 
             persistUniverse(bundle.universe, bundle.factions, bundle.locations, bundle.npcs)
             (_state.value as? UniverseCreationUiState.Browsing)?.let {

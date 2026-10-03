@@ -48,7 +48,7 @@ data class KitsuneColors(
     val accent: Color,
     /** Accent, brightened — pressed state, or accent text on [accentContainer]. */
     val accentBright: Color,
-    /** A filled accent surface at rest (selected tab background, Ofuda pill). */
+    /** A filled accent surface at rest (selected tab background, a selected chip). */
     val accentContainer: Color,
     /** Text/icon on a solid [accent] fill. */
     val onAccent: Color,

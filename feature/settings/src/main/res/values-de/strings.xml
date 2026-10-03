@@ -98,7 +98,6 @@
 
     <!-- SettingsScreen: support section -->
     <string name="support_section_title">Support</string>
-    <string name="bug_report_description">Beschreiben Sie, was passiert ist — wir erstellen einen anonymen Bericht (keine API-Schlüssel, kein Safeword, Vor-/Nachname im Verlauf geschwärzt), verschlüsselt und automatisch gesendet. Wird nach Behebung des Problems gelöscht.</string>
     <string name="generate_bug_report_button">Fehlerbericht senden</string>
     <string name="bug_report_dialog_title">Problem melden</string>
     <string name="bug_report_subject_label">Betreff</string>

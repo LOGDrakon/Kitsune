@@ -140,9 +140,6 @@
     <string name="error_prefix">Erreur : %1$s</string>
     <string name="retry">Réessayer</string>
     <!-- Daily login bonus (HomeScreen) -->
-    <string name="daily_bonus_title">+%1$d Ofudas offerts !</string>
-    <string name="daily_bonus_message">Chaque jour où vous ouvrez Kitsune, on vous offre 3 Ofudas. Ils s\'ajoutent à votre solde et n\'expirent jamais — ceux que vous n\'utilisez pas restent sur votre compte.</string>
-    <string name="daily_bonus_remaining">Il reste %1$d Ofudas gratuits à récupérer sur ce compte.</string>
     <string name="daily_bonus_action">Super, merci !</string>
     <!-- Inspiration wizard: exploration mode (2026-08-24) -->
     <string name="inspiration_wizard_mode_title">Comment veux-tu trouver ton idée ?</string>
@@ -163,4 +160,6 @@
     <string name="inspiration_wizard_sketch_build">Je prends celle-là</string>
     <string name="inspiration_wizard_sketch_last_round">Dernier tour — choisis celle que tu veux créer.</string>
     <string name="my_stories">Mes histoires</string>
+    <string name="shell_needs_provider">Ajoutez la clé API de votre fournisseur d’IA pour commencer à écrire des histoires.</string>
+    <string name="shell_needs_provider_action">Ajouter</string>
 </resources>

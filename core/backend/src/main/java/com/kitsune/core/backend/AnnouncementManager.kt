@@ -18,18 +18,14 @@ class AnnouncementManager @Inject constructor(
     val pendingAnnouncements: StateFlow<List<AnnouncementResponse>> = _pendingAnnouncements.asStateFlow()
 
     suspend fun fetchActiveAnnouncements() = withContext(dispatcherProvider.io) {
-        if (!backendClient.isAuthenticated()) return@withContext
+        if (!backendClient.isEnabled() || !backendClient.isAuthenticated()) return@withContext
         backendClient.getActiveAnnouncements()
             .onSuccess { _pendingAnnouncements.value = it }
             .onFailure { }
     }
 
-    /** Returns the number of credits granted by this dismissal, or null if the announcement carried
-     * no reward (the common case) — lets the caller show a confirmation without a second network
-     * round trip; the balance itself is already synced by [KitsuneBackendClient.dismissAnnouncement]. */
-    suspend fun dismiss(announcementId: String): Int? = withContext(dispatcherProvider.io) {
-        val rewardCredits = backendClient.dismissAnnouncement(announcementId).getOrNull()?.rewardCredits
+    suspend fun dismiss(announcementId: String) = withContext(dispatcherProvider.io) {
+        backendClient.dismissAnnouncement(announcementId)
         _pendingAnnouncements.value = _pendingAnnouncements.value.filterNot { it.id == announcementId }
-        rewardCredits
     }
 }

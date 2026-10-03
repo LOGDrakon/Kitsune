@@ -40,7 +40,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kitsune.core.designsystem.AiQuickGenerateSection
 import com.kitsune.core.common.style.MAX_NAME_LENGTH
-import com.kitsune.core.designsystem.OfudaAmount
 import com.kitsune.core.designsystem.TagsEditor
 import com.kitsune.core.network.repository.UniverseBundleDraft
 import com.kitsune.feature.universe.R
@@ -53,20 +52,6 @@ fun UniverseCreationScreen(
     viewModel: UniverseCreationViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val limitReached by viewModel.limitReached.collectAsStateWithLifecycle()
-    val firstCreationFree by viewModel.firstCreationFree.collectAsStateWithLifecycle()
-    val universeGenCost by viewModel.universeGenCostCredits.collectAsStateWithLifecycle()
-
-    if (limitReached) {
-        AlertDialog(
-            onDismissRequest = viewModel::dismissLimitReached,
-            title = { Text(stringResource(R.string.universe_limit_reached_title)) },
-            text = { Text(stringResource(R.string.universe_limit_reached_text, MAX_FREE_UNIVERSES)) },
-            confirmButton = {
-                TextButton(onClick = viewModel::dismissLimitReached) { Text(stringResource(R.string.universe_detail_error_ok)) }
-            }
-        )
-    }
 
     Scaffold(
         topBar = {
@@ -83,8 +68,6 @@ fun UniverseCreationScreen(
         when (val current = state) {
             is UniverseCreationUiState.Form -> FormStep(
                 state = current,
-                firstCreationFree = firstCreationFree,
-                unitCostCredits = universeGenCost,
                 onUpdateName = viewModel::updateName,
                 onUpdateDescription = viewModel::updateDescription,
                 onUpdateGenre = viewModel::updateGenre,
@@ -123,9 +106,6 @@ fun UniverseCreationScreen(
 @Composable
 private fun FormStep(
     state: UniverseCreationUiState.Form,
-    firstCreationFree: Boolean,
-    /** Ofudas facturés par proposition (poussé par le serveur). */
-    unitCostCredits: Int = 4,
     onUpdateName: (String) -> Unit,
     onUpdateDescription: (String) -> Unit,
     onUpdateGenre: (String) -> Unit,
@@ -138,8 +118,6 @@ private fun FormStep(
     onSave: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var showCostConfirm by remember { mutableStateOf(false) }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -150,7 +128,7 @@ private fun FormStep(
             description = state.aiDescription,
             onDescriptionChange = onUpdateAiDescription,
             isGenerating = false,
-            onGenerate = { showCostConfirm = true }
+            onGenerate = onGenerateProposals
         )
 
         Text(
@@ -233,41 +211,6 @@ private fun FormStep(
         ) {
             Text(stringResource(R.string.universe_create_submit))
         }
-    }
-
-    if (showCostConfirm) {
-        AlertDialog(
-            onDismissRequest = { showCostConfirm = false },
-            title = {
-                Text(
-                    stringResource(
-                        if (firstCreationFree) R.string.universe_create_first_free_title
-                        else R.string.universe_create_cost_confirm_title
-                    )
-                )
-            },
-            text = {
-                if (firstCreationFree) {
-                    Text(stringResource(R.string.universe_create_first_free_text))
-                } else {
-                    Column {
-                        Text(stringResource(R.string.universe_create_cost_confirm_text, state.proposalCount))
-                        // Une proposition = un appel facturé : le coût total est le produit, et non
-                        // le simple nombre de propositions comme affiché auparavant.
-                        OfudaAmount(amount = state.proposalCount * unitCostCredits, modifier = Modifier.padding(top = 8.dp))
-                    }
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    showCostConfirm = false
-                    onGenerateProposals()
-                }) { Text(stringResource(R.string.universe_detail_action_generate)) }
-            },
-            dismissButton = {
-                TextButton(onClick = { showCostConfirm = false }) { Text(stringResource(R.string.common_cancel)) }
-            }
-        )
     }
 }
 

@@ -8,7 +8,6 @@ import com.kitsune.core.background.LocationResult
 import com.kitsune.core.background.NpcResult
 import com.kitsune.core.background.UniverseBundleResult
 import com.kitsune.core.background.UniverseGenerationResult
-import com.kitsune.core.backend.KitsuneBackendClient
 import com.kitsune.core.data.local.entities.GenerationJobEntity
 import com.kitsune.core.data.local.entities.GenerationJobState
 import com.kitsune.core.data.local.entities.GenerationJobType
@@ -61,7 +60,6 @@ class UniverseCreationViewModelTest {
     private val generateWorldElementUseCase = mockk<GenerateWorldElementUseCase>()
     private val generationScheduler = mockk<GenerationScheduler>(relaxed = true)
     private val generationJobRepository = mockk<GenerationJobRepository>(relaxed = true)
-    private val backendClient = mockk<KitsuneBackendClient>(relaxed = true)
     private val context = mockk<Context>(relaxed = true)
 
     @Before
@@ -74,8 +72,6 @@ class UniverseCreationViewModelTest {
         every { generationJobRepository.observeById(any()) } returns emptyFlow()
         // Relaxed mocking of a generic StateFlow<Boolean> property is unreliable (type erasure can
         // make MockK hand back a mock object where a real Boolean is expected) — stub explicitly.
-        every { backendClient.isKitsunePlus } returns MutableStateFlow(false)
-        every { backendClient.firstCreationFree } returns MutableStateFlow(false)
         every { universeRepository.getAll() } returns flowOf(emptyList())
     }
 
@@ -88,7 +84,7 @@ class UniverseCreationViewModelTest {
         context,
         savedStateHandle,
         universeRepository, factionRepository, locationRepository, npcRepository,
-        generateWorldElementUseCase, generationScheduler, generationJobRepository, backendClient
+        generateWorldElementUseCase, generationScheduler, generationJobRepository
     )
 
     private fun succeededUniverseJob(jobId: String, vararg bundles: UniverseBundleResult): GenerationJobEntity =

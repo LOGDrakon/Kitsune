@@ -55,9 +55,6 @@ fun ImageGenerationScreen(
     viewModel: ImageGenerationViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val firstImageFree by viewModel.firstImageFree.collectAsStateWithLifecycle()
-    val imageCostCredits by viewModel.imageCostCredits.collectAsStateWithLifecycle()
-    val imageHdCostCredits by viewModel.imageHdCostCredits.collectAsStateWithLifecycle()
     var galleryConfirmation by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -230,7 +227,7 @@ fun ImageGenerationScreen(
                         modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
                     ) {
                         Text(
-                            stringResource(R.string.image_gen_hd_quality_label, imageHdCostCredits),
+                            stringResource(R.string.image_gen_hd_quality_title),
                             modifier = Modifier.weight(1f)
                         )
                         Switch(checked = current.useHdQuality, onCheckedChange = viewModel::setUseHdQuality)
@@ -240,17 +237,6 @@ fun ImageGenerationScreen(
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(top = 4.dp)
-                    )
-
-                    Text(
-                        if (firstImageFree) stringResource(R.string.image_credit_cost_first_free)
-                        else stringResource(
-                            R.string.image_credit_cost,
-                            if (current.useHdQuality) imageHdCostCredits else imageCostCredits
-                        ),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(top = 12.dp)
                     )
 
                     Button(

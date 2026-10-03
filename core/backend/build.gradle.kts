@@ -12,18 +12,12 @@ android {
 
     defaultConfig {
         minSdk = 23
-        buildConfigField("String", "BACKEND_BASE_URL", "\"https://kitsune-ai.com\"")
-    }
-
-    buildTypes {
-        debug {
-            // Was "http://91.99.182.95:8081" (raw port, no TLS) — closed off during the pentest
-            // hardening pass (see KitsuneBackend BUGS.md); the dev backend is now only reachable
-            // through nginx+TLS on this subdomain, same pattern as production.
-            val devUrl = project.findProperty("kitsune.backendUrl") as String?
-                ?: "https://dev.kitsune-ai.com"
-            buildConfigField("String", "BACKEND_BASE_URL", "\"$devUrl\"")
-        }
+        // Default marketplace server. Users can point the app at any other instance of
+        // Kitsune-Server in Settings; a fork can change the default with
+        // `-Pkitsune.marketplaceUrl=https://...` or in gradle.properties.
+        val marketplaceUrl = project.findProperty("kitsune.marketplaceUrl") as String?
+            ?: "https://kitsune-ai.com"
+        buildConfigField("String", "BACKEND_BASE_URL", "\"$marketplaceUrl\"")
     }
 
     compileOptions {

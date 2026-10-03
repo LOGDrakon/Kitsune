@@ -35,7 +35,8 @@ import com.kitsune.core.designsystem.component.KitsuneCard
 import com.kitsune.core.designsystem.component.KitsunePage
 import com.kitsune.core.designsystem.component.KitsuneRow
 import com.kitsune.core.designsystem.component.KitsuneSection
-import com.kitsune.core.designsystem.component.OfudaBalanceBlock
+import com.kitsune.core.designsystem.component.KitsuneEmptyState
+import com.kitsune.core.designsystem.component.KitsuneNotice
 import com.kitsune.core.designsystem.component.PageTitle
 
 /**
@@ -46,15 +47,13 @@ import com.kitsune.core.designsystem.component.PageTitle
  * 1. **Who am I here** — the name, and the creator standing that the badge system already tracks
  *    (listings, downloads, followers). v1 computed all of this and showed it only on *other people's*
  *    profiles, or behind a "Mes badges" menu item in Settings.
- * 2. **What do I have** — the Ofuda balance, and the one door to the store.
+ * 2. **The community** — follows, moderation messages and idea proposals.
  *
- * The balance block sits second, not first. That ordering is deliberate: the first thing the user sees
- * about themselves should be what they have made, not what they have left to spend.
+ * All of it is marketplace identity, so with the marketplace switched off this tab only says so.
  */
 @Composable
 fun ProfileTab(
-    onOpenStore: () -> Unit,
-    onOpenPrices: () -> Unit,
+    onOpenSettings: () -> Unit,
     onOpenBadges: () -> Unit,
     onOpenFollows: () -> Unit,
     onOpenMessages: () -> Unit,
@@ -63,8 +62,9 @@ fun ProfileTab(
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val balance by viewModel.creditBalance.collectAsStateWithLifecycle()
-    val dailyRemaining by viewModel.dailyFreeRemaining.collectAsStateWithLifecycle()
+    val marketplaceEnabled by viewModel.marketplaceEnabled.collectAsStateWithLifecycle()
+    val authState by viewModel.authState.collectAsStateWithLifecycle()
+    androidx.compose.runtime.LaunchedEffect(marketplaceEnabled, authState) { viewModel.refresh() }
     val spacing = KitsuneTheme.spacing
     val colors = KitsuneTheme.colors
 
@@ -81,6 +81,26 @@ fun ProfileTab(
                 text = state.username ?: "Vous",
                 subtitle = if (state.username == null) "Compte anonyme" else "Créateur"
             )
+
+            if (!marketplaceEnabled) {
+                KitsuneEmptyState(
+                    title = "Marketplace désactivée",
+                    body = "Votre profil est votre identité sur la marketplace communautaire. Elle est " +
+                        "désactivée : Kitsune ne contacte aucun serveur, et vos histoires restent sur ce téléphone.",
+                    icon = Icons.Filled.Storefront,
+                    actionLabel = "Ouvrir les réglages",
+                    onAction = onOpenSettings
+                )
+                return@Column
+            }
+            if (viewModel.userId == null) {
+                KitsuneNotice(
+                    text = "Pas encore de compte sur la marketplace : il est créé, anonymement, la première " +
+                        "fois que vous la parcourez dans Découvrir.",
+                    icon = Icons.Filled.Storefront,
+                    modifier = Modifier.fillMaxWidth().padding(bottom = spacing.md)
+                )
+            }
 
             // ---- Creator standing -------------------------------------------------------------
             val creator = state.creatorProfile
@@ -122,15 +142,6 @@ fun ProfileTab(
                 }
                 Spacer(Modifier.height(spacing.md))
             }
-
-            // ---- Ofudas ---------------------------------------------------------------------
-            OfudaBalanceBlock(
-                balance = balance,
-                dailyRemaining = dailyRemaining,
-                onBuy = onOpenStore,
-                onSeePrices = onOpenPrices,
-                modifier = Modifier.fillMaxWidth()
-            )
 
             Spacer(Modifier.height(spacing.xxl))
 

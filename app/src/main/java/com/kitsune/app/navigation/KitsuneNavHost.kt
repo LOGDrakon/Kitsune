@@ -16,8 +16,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.kitsune.app.inspiration.InspirationWizardScreen
-import com.kitsune.app.store.OfudaStoreScreen
-import com.kitsune.app.store.PriceListScreen
+import com.kitsune.feature.settings.models.ModelsScreen
+import com.kitsune.feature.settings.providers.ProvidersScreen
 import com.kitsune.core.common.inspiration.InspirationDraftHolder
 import com.kitsune.core.network.inspiration.InspirationTarget
 import com.kitsune.feature.auth.LockScreen
@@ -203,8 +203,7 @@ fun KitsuneNavHost(
                 },
                 onCreatePersonaFromNpc = { universeId, chatId, npcId ->
                     navController.navigate(Routes.personaCreateFromNpc(universeId, chatId, npcId))
-                },
-                onOpenStore = { navController.navigate(Routes.store()) }
+                }
             )
         }
         screen(Routes.STORY_MEMORY_PATTERN, listOf(navArgument("chatId") { type = NavType.StringType })) {
@@ -221,8 +220,7 @@ fun KitsuneNavHost(
         }
         screen(Routes.NOVEL_MODE_PATTERN, listOf(navArgument("chatId") { type = NavType.StringType })) {
             NovelModeScreen(
-                onBack = { navController.popBackStack() },
-                onOpenStore = { navController.navigate(Routes.store()) }
+                onBack = { navController.popBackStack() }
             )
         }
         screen(Routes.IMAGE_GENERATION_PATTERN, listOf(navArgument("chatId") { type = NavType.StringType })) {
@@ -372,15 +370,6 @@ fun KitsuneNavHost(
         // Profil
         // -------------------------------------------------------------------------------------
 
-        screen(Routes.STORE) {
-            OfudaStoreScreen(
-                onBack = { navController.popBackStack() },
-                onOpenPrices = { navController.navigate(Routes.prices()) }
-            )
-        }
-        screen(Routes.PRICES) {
-            PriceListScreen(onBack = { navController.popBackStack() })
-        }
         screen(Routes.MY_BADGES) {
             MyBadgesScreen(onBack = { navController.popBackStack() })
         }
@@ -409,7 +398,17 @@ fun KitsuneNavHost(
             com.kitsune.feature.settings.SettingsScreen(
                 onBack = { navController.popBackStack() },
                 onAccountDeleted = { navController.navigate(Routes.LOCK) { popUpTo(0) } },
-                onAccountTransferred = { navController.navigate(Routes.ACCOUNT_CHOICE) { popUpTo(0) } }
+                onOpenProviders = { navController.navigate(Routes.providers()) },
+                onOpenModels = { navController.navigate(Routes.models()) }
+            )
+        }
+        screen(Routes.PROVIDERS) {
+            ProvidersScreen(onBack = { navController.popBackStack() })
+        }
+        screen(Routes.MODELS) {
+            ModelsScreen(
+                onBack = { navController.popBackStack() },
+                onOpenProviders = { navController.navigate(Routes.providers()) }
             )
         }
     }

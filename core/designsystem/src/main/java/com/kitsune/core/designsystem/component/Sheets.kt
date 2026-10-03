@@ -169,9 +169,7 @@ fun KitsuneConfirmDialog(
 /**
  * The overflow menu, as a bottom sheet of labelled rows.
  *
- * Each entry carries an icon and, where relevant, its Ofuda price via [SheetAction.cost] — so the
- * user sees what a chat action will cost *in the menu*, before they open a confirmation, instead of
- * discovering it in a dialog after committing mentally to the action.
+ * Each entry carries an icon and an optional one-line [SheetAction.detail].
  */
 @Composable
 fun KitsuneActionSheet(
@@ -202,8 +200,6 @@ data class SheetAction(
     val icon: ImageVector,
     val onClick: () -> Unit,
     val detail: String? = null,
-    /** Ofuda price, or null when the action is free. 0 renders as an explicit "Gratuit". */
-    val cost: Int? = null,
     /** Optional group heading. Consecutive actions sharing one only print it once. */
     val section: String? = null,
     val destructive: Boolean = false,
@@ -240,9 +236,6 @@ private fun SheetActionRow(action: SheetAction, onDismiss: () -> Unit) {
                 if (action.detail != null) {
                     Text(action.detail, style = KitsuneTheme.type.meta, color = colors.textDim)
                 }
-            }
-            if (action.cost != null) {
-                OfudaCost(cost = action.cost, free = action.cost == 0)
             }
         }
     }

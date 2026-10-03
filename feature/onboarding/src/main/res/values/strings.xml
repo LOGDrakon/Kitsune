@@ -29,18 +29,19 @@
     <string name="onboarding_account_choice_recover">Recover my old account</string>
 
     <!-- RecoverAccountScreen -->
-    <string name="onboarding_recover_scan_title">Recover your account</string>
-    <string name="onboarding_recover_scan_subtitle">On your old phone, open Settings → \"Transfer my account\" and scan the QR code it shows.</string>
-    <string name="onboarding_recover_scan_button">Scan QR code</string>
-    <string name="onboarding_recover_scan_prompt">Point your camera at the QR code on your old phone</string>
-    <string name="onboarding_recover_downloading">Downloading your data…</string>
-    <string name="onboarding_recover_transfer_pin_title">Transfer PIN</string>
-    <string name="onboarding_recover_transfer_pin_subtitle">Enter the same PIN you set on your old phone.</string>
-    <string name="onboarding_recover_transfer_pin_confirm">Confirm</string>
     <string name="onboarding_recover_decrypting">Decrypting and verifying…</string>
     <string name="onboarding_recover_vault_pin_title">Protect your vault</string>
-    <string name="onboarding_recover_vault_pin_subtitle">Choose a PIN for this phone going forward — separate from the transfer PIN. Biometric authentication or unlocking your device will also be required.</string>
+    <string name="onboarding_recover_vault_pin_subtitle">Choose a PIN for this phone — separate from the backup passphrase. Biometric authentication or unlocking your device will also be required.</string>
     <string name="onboarding_recover_pins_do_not_match">The two codes don\'t match.</string>
     <string name="onboarding_recover_importing">Importing your stories…</string>
-    <string name="onboarding_recover_error_title">Recovery failed</string>
+    <string name="onboarding_recover_error_title">Restore failed</string>
+    <string name="onboarding_restore_title">Restore a backup</string>
+    <string name="onboarding_restore_subtitle">Pick the .kitsune file you exported from Settings → Backup on your other phone.</string>
+    <string name="onboarding_restore_pick_button">Choose the backup file</string>
+    <string name="onboarding_restore_reading">Reading the file…</string>
+    <string name="onboarding_restore_passphrase_title">Backup passphrase</string>
+    <string name="onboarding_restore_passphrase_subtitle">Enter the passphrase you chose when you created this backup.</string>
+    <string name="onboarding_restore_passphrase_label">Passphrase</string>
+    <string name="onboarding_restore_passphrase_confirm">Decrypt</string>
+    <string name="onboarding_restore_retry">Choose another file</string>
 </resources>

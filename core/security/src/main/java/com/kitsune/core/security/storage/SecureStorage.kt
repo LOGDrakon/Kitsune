@@ -59,11 +59,11 @@ class SecureStorage @Inject constructor(
     }
 
     /** Reads every key in [TRANSFERABLE_STRING_KEYS]/[TRANSFERABLE_INT_KEYS] that's actually set,
-     * for bundling into an account-transfer archive (see `TransferOutUseCase`) — everything a user
+     * for bundling into an encrypted backup (see `ExportBackupUseCase`) — everything a user
      * would think of as "my settings" (profile, safe word, model/chat prefs, personalization),
      * deliberately excluding vault/PIN-internal keys (device-specific by design), age verification
      * (re-done per device on purpose), and the first-chat-mini-arc marker (handled separately by
-     * the transfer flow itself, not copied as-is). */
+     * the restore flow itself, not copied as-is). */
     fun exportTransferablePrefs(): Map<String, String> {
         val result = mutableMapOf<String, String>()
         TRANSFERABLE_STRING_KEYS.forEach { key -> getString(key)?.let { result[key] = it } }
@@ -71,7 +71,7 @@ class SecureStorage @Inject constructor(
         return result
     }
 
-    /** Reverses [exportTransferablePrefs] on the receiving device — see `TransferInUseCase`. Keys
+    /** Reverses [exportTransferablePrefs] on the restoring device — see `ImportBackupUseCase`. Keys
      * outside the transferable allow-lists are ignored rather than trusted blindly. */
     fun importTransferablePrefs(values: Map<String, String>) {
         values.forEach { (key, value) ->
@@ -124,7 +124,11 @@ class SecureStorage @Inject constructor(
         const val KEY_APPLIED_STYLE_PACK = "applied_style_pack"
         const val KEY_APPLIED_TIMELINE_THEME = "applied_timeline_theme"
         const val KEY_CHAT_MODE_PRO_ENABLED = "chat_mode_pro_enabled"
-        const val KEY_SEEN_OFUDA_PRICING_POPUP = "seen_ofuda_pricing_popup"
+        /** The user's AI providers, API keys included (see `ProviderStore`). Travels inside an
+         * encrypted backup on purpose: restoring onto a new phone should not mean hunting for keys. */
+        const val KEY_AI_PROVIDERS = "ai_providers_v1"
+        const val KEY_MARKETPLACE_ENABLED = "marketplace_enabled"
+        const val KEY_MARKETPLACE_SERVER_URL = "marketplace_server_url"
         /** The very first chat ever opened in the app, set once and never changed — used to detect
          * "is this still the user's first-ever conversation" so it can be shaped into a guaranteed
          * mini story arc (see ChatViewModel.buildSystemPrompt). */
@@ -132,6 +136,10 @@ class SecureStorage @Inject constructor(
 
         /** String-valued keys eligible for account-transfer — see [exportTransferablePrefs]. */
         private val TRANSFERABLE_STRING_KEYS = listOf(
+            KEY_AI_PROVIDERS, KEY_MARKETPLACE_SERVER_URL,
+            "op_summary_model_id", "op_lore_model_id", "op_quick_generation_model_id",
+            "op_visual_sheet_model_id", "op_image_description_model_id", "op_embedding_model_id",
+            "op_translation_model_id", "op_inspiration_model_id", "op_next_reply_suggestions_model_id",
             KEY_APP_LANGUAGE_SELECTED, KEY_DEFAULT_CHAT_MODEL_ID, KEY_DEFAULT_IMAGE_MODEL_ID,
             KEY_DEFAULT_IMAGE_FALLBACK_MODEL_ID,
             KEY_DEFAULT_CHAT_PRO_MODEL_ID, KEY_SAFE_WORD, KEY_USER_FIRST_NAME, KEY_USER_LAST_NAME,
@@ -145,7 +153,7 @@ class SecureStorage @Inject constructor(
         private val TRANSFERABLE_INT_KEYS = listOf(
             KEY_DISCREET_MODE_ENABLED, KEY_AUTO_LOCK_TIMEOUT_SECONDS, KEY_FLAG_SECURE_ENABLED,
             KEY_DEFAULT_TEMPERATURE_X100, KEY_AUTO_RECAP_ENABLED, KEY_CHAT_MODE_PRO_ENABLED,
-            KEY_SEEN_OFUDA_PRICING_POPUP
+            KEY_MARKETPLACE_ENABLED
         )
     }
 }

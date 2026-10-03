@@ -109,7 +109,6 @@ import com.kitsune.feature.chat.experiencemode.ExperienceModeDialog
 import com.kitsune.core.designsystem.AiQuickGenerateSection
 import com.kitsune.core.designsystem.DecryptedImage
 import com.kitsune.core.designsystem.LocalDiscreetMode
-import com.kitsune.core.designsystem.OfudaAmount
 import com.kitsune.core.designsystem.BugReportPrivacyDialog
 import com.kitsune.core.designsystem.discreetBlur
 import com.kitsune.feature.chat.director.DirectorToolsDialog
@@ -134,21 +133,6 @@ private sealed interface PendingMessageAction {
 private sealed interface ReportTarget {
     data object Generic : ReportTarget
     data class Message(val messageId: String) : ReportTarget
-    data object ContentPolicy : ReportTarget
-}
-
-/** Maps a raw moderation category name — either the backend's `ChatModerationCategory` or the
- * app's own `ModerationCategory` enum, both surfaced to `ChatViewModel` as a plain string — to a
- * localized, human-readable label. Returns null for an unrecognized/missing category so callers
- * can fall back to the existing generic wording rather than showing a raw enum name. */
-@Composable
-private fun contentPolicyCategoryLabel(category: String?): String? = when (category) {
-    "MINOR_SEXUAL_CONTENT", "MINOR_CONTENT" -> stringResource(R.string.chat_content_policy_category_minor_sexual)
-    "NON_CONSENSUAL_SEXUAL_CONTENT" -> stringResource(R.string.chat_content_policy_category_non_consensual_sexual)
-    "NON_CONSENSUAL_INSTRUCTIONAL" -> stringResource(R.string.chat_content_policy_category_non_consensual_instructional)
-    "ILLEGAL_INSTRUCTIONS" -> stringResource(R.string.chat_content_policy_category_illegal_instructions)
-    "HATE_INCITEMENT" -> stringResource(R.string.chat_content_policy_category_hate_incitement)
-    else -> null
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -163,7 +147,6 @@ fun ChatScreen(
     onForkChat: (chatId: String) -> Unit,
     onCreatePersonaForChat: (universeId: String, chatId: String) -> Unit,
     onCreatePersonaFromNpc: (universeId: String, chatId: String, npcId: String) -> Unit,
-    onOpenStore: () -> Unit,
     viewModel: ChatViewModel = hiltViewModel()
 ) {
     val chat by viewModel.chat.collectAsStateWithLifecycle()
@@ -172,14 +155,7 @@ fun ChatScreen(
     val messages by viewModel.messages.collectAsStateWithLifecycle()
     val isSending by viewModel.isSending.collectAsStateWithLifecycle()
     val error by viewModel.error.collectAsStateWithLifecycle()
-    val insufficientCredits by viewModel.insufficientCredits.collectAsStateWithLifecycle()
-    val proUnavailable by viewModel.proUnavailable.collectAsStateWithLifecycle()
-    val firstChatBonusGranted by viewModel.firstChatBonusGranted.collectAsStateWithLifecycle()
-    val contentPolicyViolation: ChatViewModel.FlaggedContent? by viewModel.contentPolicyViolation.collectAsStateWithLifecycle()
     val isProMode by viewModel.isProMode.collectAsStateWithLifecycle()
-    val canAffordProMode by viewModel.canAffordProMode.collectAsStateWithLifecycle()
-    val proModeCreditCost by viewModel.proModeCreditCost.collectAsStateWithLifecycle()
-    val showPricingInfo by viewModel.showPricingInfo.collectAsStateWithLifecycle()
     val input by viewModel.inputText.collectAsStateWithLifecycle()
     val avatarBytes by viewModel.avatarBytes.collectAsStateWithLifecycle()
     val backgroundBytes by viewModel.backgroundBytes.collectAsStateWithLifecycle()
@@ -290,7 +266,6 @@ fun ChatScreen(
                         label = { Text(stringResource(R.string.chat_bug_report_description_label)) },
                         modifier = Modifier.fillMaxWidth()
                     )
-                    val flagged = contentPolicyViolation
                     if (target == ReportTarget.Generic) {
                         Row(
                             modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
@@ -298,35 +273,6 @@ fun ChatScreen(
                         ) {
                             Checkbox(checked = attachConversation, onCheckedChange = { attachConversation = it })
                             Text(stringResource(R.string.chat_bug_report_attach_conversation_label))
-                        }
-                    } else if (target == ReportTarget.ContentPolicy && flagged != null) {
-                        // Explicit consent: the user must see, in advance and with the same
-                        // redaction the final report will use, exactly what excerpt of their own
-                        // conversation is about to be sent — never inferred, never silent.
-                        Text(
-                            stringResource(R.string.chat_bug_report_content_policy_notice),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(top = 8.dp)
-                        )
-                        Spacer(Modifier.height(8.dp))
-                        Text(
-                            stringResource(R.string.chat_bug_report_content_policy_preview_label),
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Surface(
-                            modifier = Modifier.fillMaxWidth().padding(top = 4.dp).heightIn(max = 180.dp),
-                            shape = MaterialTheme.shapes.small,
-                            color = MaterialTheme.colorScheme.surfaceVariant
-                        ) {
-                            Text(
-                                viewModel.redactedPreview(flagged.text),
-                                style = MaterialTheme.typography.bodySmall,
-                                modifier = Modifier
-                                    .verticalScroll(rememberScrollState())
-                                    .padding(12.dp)
-                            )
                         }
                     } else {
                         Text(
@@ -344,7 +290,6 @@ fun ChatScreen(
                         reportTarget = null
                         when (target) {
                             is ReportTarget.Message -> viewModel.reportMessage(target.messageId, subject, description)
-                            ReportTarget.ContentPolicy -> viewModel.reportContentPolicyViolation(subject, description)
                             ReportTarget.Generic -> viewModel.generateBugReport(subject, description, attachConversation)
                         }
                     },
@@ -508,113 +453,6 @@ fun ChatScreen(
         )
     }
 
-    if (showPricingInfo) {
-        AlertDialog(
-            onDismissRequest = viewModel::dismissPricingInfo,
-            title = { Text(stringResource(R.string.chat_pricing_info_title)) },
-            text = {
-                Column {
-                    Text(stringResource(R.string.chat_pricing_info_text))
-                    Row(modifier = Modifier.padding(top = 12.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Text(stringResource(R.string.chat_pricing_info_standard_label))
-                        Spacer(Modifier.width(6.dp))
-                        OfudaAmount(amount = 1)
-                    }
-                    Row(modifier = Modifier.padding(top = 6.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Text(stringResource(R.string.chat_pricing_info_pro_label))
-                        Spacer(Modifier.width(6.dp))
-                        // The user's own Pro price, not the list price — a subscriber pays 1.
-                        OfudaAmount(amount = proModeCreditCost)
-                    }
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = viewModel::dismissPricingInfo) { Text(stringResource(R.string.action_close)) }
-            }
-        )
-    }
-
-    if (firstChatBonusGranted) {
-        AlertDialog(
-            onDismissRequest = viewModel::claimFirstChatBonusAndRetry,
-            title = { Text(stringResource(R.string.chat_first_chat_bonus_title)) },
-            text = { Text(stringResource(R.string.chat_first_chat_bonus_text)) },
-            confirmButton = {
-                TextButton(onClick = viewModel::claimFirstChatBonusAndRetry) {
-                    Text(stringResource(R.string.chat_first_chat_bonus_button))
-                }
-            }
-        )
-    }
-
-    insufficientCredits?.let { info ->
-        AlertDialog(
-            onDismissRequest = viewModel::dismissInsufficientCredits,
-            title = { Text(stringResource(R.string.chat_insufficient_credits_title)) },
-            text = {
-                Text(stringResource(R.string.chat_insufficient_credits_text, info.currentBalance, info.requiredCredits))
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    viewModel.dismissInsufficientCredits()
-                    onOpenStore()
-                }) { Text(stringResource(R.string.chat_buy_ofudas_button)) }
-            },
-            dismissButton = {
-                TextButton(onClick = viewModel::dismissInsufficientCredits) { Text(stringResource(R.string.action_cancel)) }
-            }
-        )
-    }
-
-    // Informational only — there is nothing to buy (see ChatViewModel.proUnavailable), so this has
-    // one button. It used to be a paywall pointing at a Kitsune+ subscription that no longer exists.
-    if (proUnavailable) {
-        AlertDialog(
-            onDismissRequest = viewModel::dismissProUnavailable,
-            title = { Text(stringResource(R.string.chat_pro_unavailable_title)) },
-            text = { Text(stringResource(R.string.chat_pro_unavailable_text)) },
-            confirmButton = {
-                TextButton(onClick = viewModel::dismissProUnavailable) {
-                    Text(stringResource(R.string.action_close))
-                }
-            }
-        )
-    }
-
-    // Hidden (not dismissed — the captured excerpt is kept) while the targeted report dialog
-    // below is open on top of it, so the two don't stack; reappears if that dialog is cancelled
-    // rather than submitted (submitting clears contentPolicyViolation itself, see
-    // ChatViewModel.reportContentPolicyViolation).
-    val currentContentPolicyViolation = contentPolicyViolation
-    if (currentContentPolicyViolation != null && reportTarget == null) {
-        val violationCategoryLabel = contentPolicyCategoryLabel(currentContentPolicyViolation.category)
-        AlertDialog(
-            onDismissRequest = viewModel::dismissContentPolicyViolation,
-            title = { Text(stringResource(R.string.chat_content_policy_violation_title)) },
-            text = {
-                Column {
-                    Text(stringResource(R.string.chat_content_policy_violation_text))
-                    if (violationCategoryLabel != null) {
-                        Text(
-                            stringResource(R.string.chat_content_policy_violation_category_line, violationCategoryLabel),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(top = 8.dp)
-                        )
-                    }
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = { reportTarget = ReportTarget.ContentPolicy }) {
-                    Text(stringResource(R.string.chat_content_policy_violation_report_button))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = viewModel::dismissContentPolicyViolation) { Text(stringResource(R.string.action_close)) }
-            }
-        )
-    }
-
     // The framing question replaces the conversation until it is answered, rather than floating over
     // it: the answer changes how the very first message is written, so there is nothing meaningful to
     // show behind it yet. `needsStoryCard` is false as soon as the story has any message, so this can
@@ -641,10 +479,9 @@ fun ChatScreen(
     // phone, so every entry was out of thumb reach; and its three groups were separated only by
     // dividers, so "Mode roman" sat visually next to "Signaler un problème" with nothing saying they
     // were different kinds of thing. A bottom sheet fixes the reach, and named sections restore the
-    // grouping — while `SheetAction.cost` lets the one entry that spends Ofudas say so up front.
+    // grouping.
     if (showToolsSheet) {
         val isEnsemble = chat != null && chat?.personaId == null
-        val imageCost by viewModel.imageCostCredits.collectAsStateWithLifecycle()
         val chatId = chat?.id
         KitsuneActionSheet(
             title = stringResource(R.string.chat_tools_sheet_title),
@@ -656,7 +493,6 @@ fun ChatScreen(
                         label = stringResource(R.string.image_gen_title),
                         icon = Icons.Outlined.Image,
                         section = sceneSection,
-                        cost = imageCost,
                         enabled = chatId != null,
                         onClick = { chatId?.let(onOpenImageGeneration) }
                     )
@@ -783,7 +619,6 @@ fun ChatScreen(
                 },
                 avatarBytes = avatarBytes,
                 isPro = isProMode,
-                canAffordPro = canAffordProMode,
                 onTogglePro = viewModel::setProMode,
                 onBack = onBack,
                 onOpenTools = { showToolsSheet = true }

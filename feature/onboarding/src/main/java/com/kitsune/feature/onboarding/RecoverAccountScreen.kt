@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.journeyapps.barcodescanner.ScanContract
-import com.journeyapps.barcodescanner.ScanOptions
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material3.OutlinedButton
 import com.kitsune.feature.onboarding.R
 
 @Composable
@@ -40,8 +40,10 @@ fun RecoverAccountScreen(
     val activity = LocalContext.current as FragmentActivity
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    val scanLauncher = rememberLauncherForActivityResult(ScanContract()) { result ->
-        result.contents?.let { viewModel.onQrScanned(it) }
+    // Any type: backup files are application/octet-stream and some file managers report them as
+    // something else entirely, so filtering on the MIME type would hide valid backups.
+    val pickLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        uri?.let(viewModel::onFilePicked)
     }
 
     LaunchedEffect(state) {
@@ -55,56 +57,49 @@ fun RecoverAccountScreen(
         verticalArrangement = Arrangement.Center
     ) {
         when (val current = state) {
-            RecoverAccountState.Scanning -> {
-                Text(stringResource(R.string.onboarding_recover_scan_title), style = MaterialTheme.typography.headlineSmall)
+            RecoverAccountState.PickingFile -> {
+                Text(stringResource(R.string.onboarding_restore_title), style = MaterialTheme.typography.headlineSmall)
                 Text(
-                    stringResource(R.string.onboarding_recover_scan_subtitle),
+                    stringResource(R.string.onboarding_restore_subtitle),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = 4.dp, bottom = 24.dp)
                 )
                 Button(
-                    onClick = {
-                        scanLauncher.launch(
-                            ScanOptions()
-                                .setDesiredBarcodeFormats(ScanOptions.QR_CODE)
-                                .setBeepEnabled(false)
-                                .setOrientationLocked(true)
-                                .setPrompt(activity.getString(R.string.onboarding_recover_scan_prompt))
-                        )
-                    },
+                    onClick = { pickLauncher.launch(arrayOf("*/*")) },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(stringResource(R.string.onboarding_recover_scan_button))
+                    Text(stringResource(R.string.onboarding_restore_pick_button))
                 }
             }
 
-            RecoverAccountState.Downloading -> ProgressStep(stringResource(R.string.onboarding_recover_downloading))
+            RecoverAccountState.Reading -> ProgressStep(stringResource(R.string.onboarding_restore_reading))
 
-            is RecoverAccountState.AwaitingTransferPin -> {
-                var pin by remember { mutableStateOf("") }
-                Text(stringResource(R.string.onboarding_recover_transfer_pin_title), style = MaterialTheme.typography.headlineSmall)
+            is RecoverAccountState.AwaitingPassphrase -> {
+                var passphrase by remember { mutableStateOf("") }
+                Text(stringResource(R.string.onboarding_restore_passphrase_title), style = MaterialTheme.typography.headlineSmall)
                 Text(
-                    stringResource(R.string.onboarding_recover_transfer_pin_subtitle),
+                    stringResource(R.string.onboarding_restore_passphrase_subtitle),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = 4.dp, bottom = 16.dp)
                 )
                 OutlinedTextField(
-                    value = pin,
-                    onValueChange = { pin = it.filter(Char::isDigit) },
-                    label = { Text(stringResource(R.string.onboarding_pin_label)) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+                    value = passphrase,
+                    onValueChange = { passphrase = it },
+                    label = { Text(stringResource(R.string.onboarding_restore_passphrase_label)) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     visualTransformation = PasswordVisualTransformation(),
+                    singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
                 current.error?.let {
                     Text(it, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = 8.dp))
                 }
                 Button(
-                    onClick = { viewModel.submitTransferPin(pin.toCharArray()) },
-                    enabled = pin.isNotEmpty(),
+                    onClick = { viewModel.submitPassphrase(passphrase.toCharArray()) },
+                    enabled = passphrase.isNotEmpty(),
                     modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
                 ) {
-                    Text(stringResource(R.string.onboarding_recover_transfer_pin_confirm))
+                    Text(stringResource(R.string.onboarding_restore_passphrase_confirm))
                 }
             }
 
@@ -167,6 +162,9 @@ fun RecoverAccountScreen(
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = 8.dp)
                 )
+                OutlinedButton(onClick = viewModel::restart, modifier = Modifier.fillMaxWidth().padding(top = 16.dp)) {
+                    Text(stringResource(R.string.onboarding_restore_retry))
+                }
             }
         }
     }

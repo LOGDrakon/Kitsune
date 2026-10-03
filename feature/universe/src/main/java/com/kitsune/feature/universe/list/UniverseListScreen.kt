@@ -260,18 +260,6 @@ private fun FailedGenerationDetailDialog(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.error
                 )
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    stringResource(
-                        when (category?.creditConsumed) {
-                            true -> R.string.generation_failure_credit_consumed
-                            false -> R.string.generation_failure_credit_not_consumed
-                            null -> R.string.generation_failure_credit_unknown
-                        }
-                    ),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
                 job.errorMessage?.let { raw ->
                     Spacer(Modifier.height(8.dp))
                     Text(

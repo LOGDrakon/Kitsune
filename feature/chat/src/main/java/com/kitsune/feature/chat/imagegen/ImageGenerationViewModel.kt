@@ -3,7 +3,6 @@ package com.kitsune.feature.chat.imagegen
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kitsune.core.backend.KitsuneBackendClient
 import com.kitsune.core.common.style.PersonaTemplate
 import com.kitsune.core.common.style.PersonaTemplates
 import com.kitsune.core.data.local.entities.MaturityTag
@@ -108,19 +107,8 @@ class ImageGenerationViewModel @Inject constructor(
     private val describeSceneForImageUseCase: DescribeSceneForImageUseCase,
     private val softenImagePromptUseCase: SoftenImagePromptUseCase,
     private val chatParticipantRepository: ChatParticipantRepository,
-    private val npcRepository: NpcRepository,
-    private val backendClient: KitsuneBackendClient
+    private val npcRepository: NpcRepository
 ) : ViewModel() {
-
-    /** True if the user's next generated image is free (first-time perk) — lets the cost hint
-     * say so instead of showing a cost that won't actually be charged. */
-    val firstImageFree: StateFlow<Boolean> = backendClient.firstImageFree
-
-    /** Tarif annoncé par le serveur, pour ne plus l'afficher en dur (voir `KitsuneBackendClient`). */
-    val imageCostCredits: StateFlow<Int> = backendClient.imageCostCredits
-
-    /** Tarif du niveau HD, annoncé par le serveur (voir `KitsuneBackendClient`). */
-    val imageHdCostCredits: StateFlow<Int> = backendClient.imageHdCostCredits
 
     private val chatId: String = checkNotNull(savedStateHandle["chatId"])
 

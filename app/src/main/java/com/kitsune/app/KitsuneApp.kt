@@ -12,23 +12,22 @@ import com.kitsune.core.backend.CreatorFollowsManager
 import com.kitsune.core.backend.KitsuneBackendClient
 import com.kitsune.core.backend.UserMessageManager
 import com.kitsune.core.data.repository.GenerationJobRepository
-import com.kitsune.core.common.memory.MemorySettingsHolder
-import com.kitsune.core.network.preferences.NetworkPreferences
 import com.kitsune.core.security.locale.AppLanguageManager
 import com.kitsune.core.security.lock.AutoLockManager
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/** How often the app pings the backend while foregrounded, to derive session/engagement
- * telemetry (must stay well under SessionTrackingService's server-side session gap). */
-private const val SESSION_HEARTBEAT_INTERVAL_MS = 4 * 60 * 1000L
-
+/**
+ * Application entry point.
+ *
+ * Startup makes no network request on its own account: there is no telemetry, no remote
+ * configuration and no automatic registration. The only calls here refresh marketplace inboxes, and
+ * only for someone who already has a marketplace session on a marketplace they left switched on.
+ */
 @HiltAndroidApp
 class KitsuneApp : Application(), Configuration.Provider {
 
@@ -54,13 +53,9 @@ class KitsuneApp : Application(), Configuration.Provider {
     lateinit var creatorFollowsManager: CreatorFollowsManager
 
     @Inject
-    lateinit var networkPreferences: NetworkPreferences
-
-    @Inject
     lateinit var appLanguageManager: AppLanguageManager
 
     private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    private var heartbeatJob: Job? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -69,48 +64,23 @@ class KitsuneApp : Application(), Configuration.Provider {
 
         appScope.launch { runCatching { generationJobRepository.failStalePendingJobs() } }
 
-        // Auto-register anonymous account if not yet authenticated
         appScope.launch {
-            if (!backendClient.isAuthenticated()) {
-                runCatching { backendClient.registerAnonymous() }
+            if (backendClient.isEnabled() && backendClient.isAuthenticated()) {
+                // Populates accountLockReason so a banned account sees why publishing fails.
+                runCatching { backendClient.getUserProfile() }
+                runCatching { announcementManager.fetchActiveAnnouncements() }
+                runCatching { userMessageManager.refresh() }
+                runCatching { creatorFollowsManager.refresh() }
             }
-            // Populates backendClient.accountLockReason so a banned/frozen account gets locked
-            // out from app start, not just whenever the user happens to open Settings.
-            runCatching { backendClient.getUserProfile() }
-            // Fetch model config from backend and apply to NetworkPreferences
-            runCatching {
-                backendClient.fetchModelConfig().onSuccess { config ->
-                    networkPreferences.applyBackendModelConfig(config)
-                    MemorySettingsHolder.apply(
-                        maxContextTokens = config.maxContextTokens,
-                        rawWindowSize = config.rawWindowSize,
-                        rawWindowSizePro = config.rawWindowSizePro,
-                        loreEntries = config.loreEntries,
-                        loreEntriesPro = config.loreEntriesPro,
-                        samplingEnabled = config.samplingEnabled
-                    )
-                }
-            }
-            runCatching { announcementManager.fetchActiveAnnouncements() }
-            runCatching { userMessageManager.refresh() }
-            runCatching { creatorFollowsManager.refresh() }
         }
 
         ProcessLifecycleOwner.get().lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onStop(owner: LifecycleOwner) {
                 autoLockManager.onAppBackgrounded()
-                heartbeatJob?.cancel()
-                heartbeatJob = null
             }
 
             override fun onStart(owner: LifecycleOwner) {
                 autoLockManager.onAppForegrounded()
-                heartbeatJob = appScope.launch {
-                    while (true) {
-                        runCatching { backendClient.sendSessionHeartbeat() }
-                        delay(SESSION_HEARTBEAT_INTERVAL_MS)
-                    }
-                }
             }
         })
     }

@@ -8,13 +8,8 @@ data class AnnouncementResponse(
     val title: String,
     val body: String,
     val type: String,
-    val dismissible: Boolean,
-    val rewardCredits: Int? = null
+    val dismissible: Boolean
 )
 
 @Serializable
-data class DismissAnnouncementResponse(
-    val success: Boolean,
-    val rewardCredits: Int? = null,
-    val newBalance: Int? = null
-)
+data class DismissAnnouncementResponse(val success: Boolean)

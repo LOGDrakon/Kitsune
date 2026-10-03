@@ -12,25 +12,24 @@ import com.kitsune.core.common.generation.GenerationFailureCategory
 import com.kitsune.core.data.local.entities.GenerationJobEntity
 import com.kitsune.core.data.local.entities.GenerationJobState
 import com.kitsune.core.data.repository.GenerationJobRepository
-import com.kitsune.core.network.repository.ContentPolicyViolationException
 import com.kitsune.core.network.repository.GenerateWorldElementUseCase
 import com.kitsune.core.network.repository.GenerationParsingException
-import com.kitsune.core.network.repository.InsufficientCreditsException
 import com.kitsune.core.network.persona.GenerateQuickPersonaUseCase
 import com.kitsune.core.network.persona.PersonaDraft
+import com.kitsune.core.network.provider.ProviderHttpException
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-/** Maps a failure from the network layer to a user-facing category (see
- * [GenerationFailureCategory]'s doc comment for the credit-consumption reasoning behind each case).
- * Anything not explicitly recognised — including a plain `IllegalStateException` from a non-402/451
- * HTTP error, or an `IOException`/timeout before any response — is [GenerationFailureCategory.TECHNICAL]. */
-private fun classifyGenerationFailure(e: Throwable): GenerationFailureCategory = when (e) {
-    is ContentPolicyViolationException -> GenerationFailureCategory.CONTENT_POLICY
-    is InsufficientCreditsException -> GenerationFailureCategory.INSUFFICIENT_CREDITS
-    is GenerationParsingException -> GenerationFailureCategory.PARSING_FAILED
+/** Maps a failure from the network layer to a user-facing category. Anything not explicitly
+ * recognised — another HTTP error, an `IOException`/timeout — is [GenerationFailureCategory.TECHNICAL]. */
+private fun classifyGenerationFailure(e: Throwable): GenerationFailureCategory = when {
+    e is ProviderHttpException && e.code == 402 -> GenerationFailureCategory.INSUFFICIENT_CREDITS
+    e is ProviderHttpException && (e.code == 451 || (e.code == 403 &&
+        (e.body.contains("moderation", ignoreCase = true) || e.body.contains("flagged", ignoreCase = true)))) ->
+        GenerationFailureCategory.CONTENT_POLICY
+    e is GenerationParsingException -> GenerationFailureCategory.PARSING_FAILED
     else -> GenerationFailureCategory.TECHNICAL
 }
 
@@ -236,7 +235,7 @@ private suspend fun doGenerateNpc(): Result {
     }
 
     private suspend fun markFailed(message: String, category: GenerationFailureCategory) {
-        Log.i("GenerationWorker", "markFailed: jobId=$jobId, category=$category, creditConsumed=${category.creditConsumed}")
+        Log.i("GenerationWorker", "markFailed: jobId=$jobId, category=$category")
         generationJobRepository.getById(jobId)?.let {
             generationJobRepository.upsert(
                 it.copy(

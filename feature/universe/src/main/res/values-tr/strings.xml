@@ -18,14 +18,9 @@
 
     <!-- UniverseListScreen.kt — başarısız üretim ayrıntı iletişim kutusu -->
     <string name="generation_failure_dialog_title">Üretim başarısız oldu</string>
-    <string name="generation_failure_category_content_policy">İçerik filtresi tarafından engellendi (reşit olmayan biri veya rıza dışı eylemler içerebilecek içerik)</string>
-    <string name="generation_failure_category_insufficient_credits">Yetersiz Ofuda</string>
     <string name="generation_failure_category_parsing_failed">Yapay zeka yanıt verdi, ancak yanıtı anlaşılamadı</string>
     <string name="generation_failure_category_technical">Teknik hata (ağ, sunucu…)</string>
     <string name="generation_failure_category_unknown">Bilinmeyen neden</string>
-    <string name="generation_failure_credit_consumed">Başarısız olmasına rağmen bu deneme için bir Ofuda harcandı.</string>
-    <string name="generation_failure_credit_not_consumed">Bu deneme için Ofuda harcanmadı.</string>
-    <string name="generation_failure_credit_unknown">Bu deneme için Ofuda harcanıp harcanmadığı belirlenemedi.</string>
     <string name="generation_failure_retry_button">Yeniden dene</string>
     <string name="generation_failure_report_button">Sorun bildir</string>
     <string name="generation_failure_delete_button">Sil</string>

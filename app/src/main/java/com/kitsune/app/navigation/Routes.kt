@@ -84,14 +84,8 @@ object Routes {
     // -----------------------------------------------------------------------------------------
     // Tab 4 — Profil. Who the user is in the community, plus everything about their Ofudas.
     //
-    // The store lives here and nowhere else. In v1 it was a shopping-cart icon in the home app bar,
-    // a button in Settings, a button in the chat, a button in novel mode and a launch dialog.
-    // -----------------------------------------------------------------------------------------
-
-    const val STORE = "store"
-
-    /** The whole price list on one screen, so pricing is published rather than discovered. */
-    const val PRICES = "prices"
+    const val PROVIDERS = "providers"
+    const val MODELS = "models"
 
     const val MY_BADGES = "my_badges"
     const val MY_FOLLOWS = "my_follows"
@@ -131,8 +125,8 @@ object Routes {
     fun universeDraftReview(jobId: String) = "universe_create?draftJobId=$jobId"
     fun universeDetail(universeId: String) = "universe_detail/$universeId"
     fun universeChatCreate(universeId: String) = "universe_chat_create/$universeId"
-    fun store() = "store"
-    fun prices() = "prices"
+    fun providers() = "providers"
+    fun models() = "models"
     fun marketplaceDetail(listingId: String) = "marketplace_detail/$listingId"
     fun creatorListings(creatorId: String) = "creator-listings/$creatorId"
     fun proposals() = "proposals"

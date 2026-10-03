@@ -18,14 +18,9 @@
 
     <!-- UniverseListScreen.kt — Detaildialog für eine fehlgeschlagene Generierung -->
     <string name="generation_failure_dialog_title">Generierung fehlgeschlagen</string>
-    <string name="generation_failure_category_content_policy">Vom Inhaltsfilter blockiert (Inhalt betrifft möglicherweise eine minderjährige Person oder nicht einvernehmliche Handlungen)</string>
-    <string name="generation_failure_category_insufficient_credits">Nicht genügend Ofudas</string>
     <string name="generation_failure_category_parsing_failed">Die KI hat geantwortet, aber die Antwort konnte nicht verstanden werden</string>
     <string name="generation_failure_category_technical">Technischer Fehler (Netzwerk, Server…)</string>
     <string name="generation_failure_category_unknown">Unbekannter Grund</string>
-    <string name="generation_failure_credit_consumed">Für diesen Versuch wurde ein Ofuda verbraucht, obwohl er fehlgeschlagen ist.</string>
-    <string name="generation_failure_credit_not_consumed">Für diesen Versuch wurde kein Ofuda verbraucht.</string>
-    <string name="generation_failure_credit_unknown">Es konnte nicht festgestellt werden, ob für diesen Versuch ein Ofuda verbraucht wurde.</string>
     <string name="generation_failure_retry_button">Erneut versuchen</string>
     <string name="generation_failure_report_button">Fehler melden</string>
     <string name="generation_failure_delete_button">Löschen</string>

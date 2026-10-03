@@ -5,7 +5,6 @@ import androidx.lifecycle.SavedStateHandle
 import com.kitsune.core.background.GenerationScheduler
 import com.kitsune.core.background.PersonaGenerationResult
 import com.kitsune.core.background.PersonaProposalResult
-import com.kitsune.core.backend.KitsuneBackendClient
 import com.kitsune.core.data.local.entities.GenerationJobEntity
 import com.kitsune.core.data.local.entities.GenerationJobState
 import com.kitsune.core.data.local.entities.GenerationJobType
@@ -59,7 +58,6 @@ class PersonaCreationViewModelTest {
     private val npcRepository = mockk<NpcRepository>()
     private val generationScheduler = mockk<GenerationScheduler>(relaxed = true)
     private val generationJobRepository = mockk<GenerationJobRepository>(relaxed = true)
-    private val backendClient = mockk<KitsuneBackendClient>(relaxed = true)
     private val context = mockk<Context>(relaxed = true)
     private val appLanguageManager = mockk<AppLanguageManager>()
     private val userProfileStore = mockk<UserProfileStore>()
@@ -69,8 +67,6 @@ class PersonaCreationViewModelTest {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         // Relaxed mocking of a generic StateFlow<Boolean> property is unreliable (type erasure can
         // make MockK hand back a mock object where a real Boolean is expected) — stub explicitly.
-        every { backendClient.isKitsunePlus } returns MutableStateFlow(false)
-        every { backendClient.firstCreationFree } returns MutableStateFlow(false)
         every { personaRepository.observeAll() } returns flowOf(emptyList())
         every { appLanguageManager.getSelectedLanguage() } returns AppLanguage.ENGLISH
         // Non-blank by default so the "first persona requires profile setup" gate (see init)
@@ -92,7 +88,6 @@ class PersonaCreationViewModelTest {
         npcRepository,
         generationScheduler,
         generationJobRepository,
-        backendClient,
         appLanguageManager,
         userProfileStore
     )
