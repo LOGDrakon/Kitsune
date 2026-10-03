@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- LockScreen -->
+    <string name="auth_lock_title">Kitsune is locked</string>
+    <string name="auth_lock_pin_label">PIN code</string>
+    <string name="auth_lock_unlock">Unlock</string>
+    <string name="auth_lock_unlock_biometric">Unlock (biometric)</string>
+
+    <!-- Decoy notes app -->
+    <string name="decoy_notes_title">Notes</string>
+    <string name="decoy_notes_search_hint">Search notes</string>
+    <string name="decoy_notes_empty">No notes yet. Tap + to create one.</string>
+    <string name="decoy_notes_new_note">New note</string>
+    <string name="decoy_notes_pin_note">Pin</string>
+    <string name="decoy_notes_unpin_note">Unpin</string>
+    <string name="decoy_note_delete_title">Delete this note?</string>
+    <string name="decoy_note_delete_text">This action cannot be undone.</string>
+    <string name="decoy_note_editor_title_hint">Title</string>
+    <string name="decoy_note_editor_body_hint">Note</string>
+    <string name="decoy_note_editor_delete">Delete note</string>
+    <string name="decoy_content_desc_back">Back</string>
+    <string name="decoy_action_delete">Delete</string>
+    <string name="decoy_action_clear_search">Clear search</string>
+    <string name="decoy_action_cancel">Cancel</string>
+</resources>

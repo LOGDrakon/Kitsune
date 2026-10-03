@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common actions / fields shared across universe screens -->
+    <string name="common_cancel">Annuleren</string>
+    <string name="common_back">Terug</string>
+    <string name="common_close">Sluiten</string>
+    <string name="common_delete">Verwijderen</string>
+    <string name="common_add">Toevoegen</string>
+    <string name="field_name">Naam</string>
+    <string name="field_description">Beschrijving</string>
+
+    <!-- UniverseListScreen.kt -->
+    <string name="universe_list_empty_title">Nog geen universums</string>
+    <string name="universe_list_empty_hint">Tik op + om er een te maken.</string>
+    <string name="universe_list_jobs_active_format">%1$d generatie(s) bezig</string>
+    <string name="universe_list_jobs_ready_format">%1$d universum/universums klaar om te bekijken</string>
+    <string name="universe_list_jobs_failed_format">%1$d generatie(s) mislukt</string>
+
+    <!-- UniverseListScreen.kt — detailvenster voor een mislukte generatie -->
+    <string name="generation_failure_dialog_title">Generatie mislukt</string>
+    <string name="generation_failure_category_content_policy">Geblokkeerd door het contentfilter (inhoud die mogelijk een minderjarige of niet-consensuele handelingen betreft)</string>
+    <string name="generation_failure_category_insufficient_credits">Onvoldoende Ofuda\'s</string>
+    <string name="generation_failure_category_parsing_failed">De AI heeft geantwoord, maar het antwoord kon niet worden begrepen</string>
+    <string name="generation_failure_category_technical">Technische fout (netwerk, server…)</string>
+    <string name="generation_failure_category_unknown">Onbekende reden</string>
+    <string name="generation_failure_credit_consumed">Er is een Ofuda verbruikt voor deze poging, ondanks het mislukken.</string>
+    <string name="generation_failure_credit_not_consumed">Er is geen Ofuda verbruikt voor deze poging.</string>
+    <string name="generation_failure_credit_unknown">Het kon niet worden vastgesteld of er een Ofuda is verbruikt voor deze poging.</string>
+    <string name="generation_failure_retry_button">Opnieuw proberen</string>
+    <string name="generation_failure_report_button">Probleem melden</string>
+    <string name="generation_failure_delete_button">Verwijderen</string>
+
+    <!-- UniverseListScreen.kt — foutmelding voor een mislukte generatie -->
+    <string name="generation_bug_report_dialog_title">Probleem melden</string>
+    <string name="generation_bug_report_subject_label">Onderwerp</string>
+    <string name="generation_bug_report_description_label">Wat is er gebeurd?</string>
+    <string name="generation_bug_report_send_button">Verzenden</string>
+
+    <!-- UniverseCreationScreen.kt / UniverseCreationViewModel.kt -->
+    <string name="universe_create_title">Nieuw universum</string>
+    <string name="universe_create_proposal_count_label">Aantal voorstellen</string>
+    <string name="universe_create_proposal_hint">Elk voorstel is een compleet, ander universum (met facties, locaties en NPC\'s) — je kunt ze bekijken en er een of meerdere bewaren.</string>
+    <string name="universe_create_manual_section_title">Of maak handmatig een universum</string>
+    <string name="universe_create_genre_label">Genre</string>
+    <string name="universe_create_genre_placeholder">Bijv.: middeleeuwse fantasy, cyberpunk, post-apocalyptisch...</string>
+    <string name="universe_create_visual_style_label">Visuele stijl (optioneel)</string>
+    <string name="universe_create_submit">Aanmaken</string>
+    <string name="universe_create_generating_single">Universum wordt gegenereerd...</string>
+    <string name="universe_create_generating_multiple_format">%1$d universums worden gegenereerd...</string>
+    <string name="universe_create_generating_hint">Je kunt de app verlaten. Een melding laat het weten zodra het klaar is.</string>
+    <string name="universe_create_scheduled_title">Generatie gestart op de achtergrond</string>
+    <string name="universe_create_scheduled_message_format">Je kunt de app sluiten. Kom later terug — een melding laat je weten wanneer het universum (gebaseerd op \"%1$s\") klaar is.</string>
+    <string name="universe_create_back_to_list">Terug naar de lijst</string>
+    <string name="universe_create_error_title">Generatie mislukt</string>
+    <string name="universe_create_retry">Opnieuw proberen</string>
+    <string name="universe_create_proposal_index_format">Voorstel %1$d/%2$d</string>
+    <string name="universe_create_saved_count_format">%1$d opgeslagen</string>
+    <string name="universe_create_previous">◀ Vorige</string>
+    <string name="universe_create_next">Volgende ▶</string>
+    <string name="universe_create_saved_check">Opgeslagen ✓</string>
+    <string name="universe_create_select_this">Deze kiezen</string>
+    <string name="universe_create_finish">Klaar</string>
+    <string name="universe_create_visual_style_format">Visuele stijl: %1$s</string>
+    <string name="universe_create_section_factions">Facties</string>
+    <string name="universe_create_section_locations">Locaties</string>
+    <string name="universe_create_section_npcs">NPC\'s</string>
+    <string name="universe_create_error_empty_result">Het generatieresultaat is leeg.</string>
+    <string name="universe_create_error_generation_failed">De generatie is mislukt.</string>
+    <string name="universe_create_error_name_required">De naam van het universum is verplicht.</string>
+    <string name="universe_create_error_scheduling_failed">Het plannen van de generatie is mislukt.</string>
+
+    <!-- UniverseChatCreationScreen.kt / UniverseChatCreationViewModel.kt -->
+    <string name="universe_chat_create_title">Nieuwe groepschat</string>
+    <string name="universe_chat_create_intro">De AI speelt alle geselecteerde personages samen in één gedeelde scène en laat ze met elkaar en met jou interacteren — er is geen vaste hoofdpersoon.</string>
+    <string name="universe_chat_create_title_label">Titel (optioneel)</string>
+    <string name="universe_chat_create_title_placeholder">Bijv.: Ontmoeting op de markt</string>
+    <string name="universe_chat_create_characters_count_format">Personages (%1$d geselecteerd)</string>
+    <string name="universe_chat_create_empty_candidates">Dit universum heeft nog geen speelbare persona of NPC om als personage toe te voegen.</string>
+    <string name="universe_chat_create_type_persona">Persona</string>
+    <string name="universe_chat_create_type_npc">NPC</string>
+    <string name="universe_chat_create_submit">Chat aanmaken</string>
+    <string name="universe_chat_create_error_min_cast_format">Kies minstens %1$d personages voor een groepsscène.</string>
+    <string name="universe_chat_create_default_title">Groepsscène</string>
+
+    <!-- UniverseDetailScreen.kt / UniverseDetailViewModel.kt -->
+    <string name="universe_detail_fallback_title">Universum</string>
+    <string name="universe_detail_publish_title">Publiceren op de marketplace</string>
+    <string name="universe_detail_genre_format">Genre: %1$s</string>
+    <string name="universe_detail_locations_header_format">Locaties (%1$d)</string>
+    <string name="universe_detail_factions_header_format">Facties (%1$d)</string>
+    <string name="universe_detail_npcs_header_format">NPC\'s (%1$d)</string>
+    <string name="universe_detail_personas_header_format">Speelbare persona\'s (%1$d)</string>
+    <string name="universe_detail_include_persona_button">Bestaande persona toevoegen</string>
+    <string name="universe_detail_include_persona_dialog_title">Bestaande persona\'s toevoegen</string>
+    <string name="universe_detail_include_persona_empty">Geen losstaande persona beschikbaar — al je persona\'s horen al bij een universum.</string>
+    <string name="universe_detail_include_persona_confirm">Toevoegen (%1$d)</string>
+    <string name="universe_detail_ensemble_chats_header_format">Groepschats (%1$d)</string>
+    <string name="universe_detail_ensemble_chat_hint">Een chat zonder vaste hoofdpersoon: de AI speelt meerdere persona\'s/NPC\'s van dit universum samen en laat ze interacteren.</string>
+    <string name="universe_detail_publish_description_format">Deel \"%1$s\" met de Kitsune-community.</string>
+    <string name="universe_detail_publish_description_label">Beschrijving (optioneel)</string>
+    <string name="universe_detail_publish_price_label">Prijs in credits (0 = gratis)</string>
+    <string name="universe_detail_publish_hint">Het universum, zijn facties, locaties, NPC\'s en persona\'s worden gepubliceerd.</string>
+    <string name="universe_detail_publish_success">Publicatie geslaagd!</string>
+    <string name="universe_detail_publish_error_format">Fout: %1$s</string>
+    <string name="universe_detail_publish_confirm">Publiceren</string>
+    <string name="universe_detail_add_location_title">Locatie toevoegen</string>
+    <string name="universe_detail_location_type_placeholder">Type (stad, bos, kerker...)</string>
+    <string name="universe_detail_add_faction_title">Factie toevoegen</string>
+    <string name="universe_detail_faction_type_placeholder">Type (gilde, orde, rijk...)</string>
+    <string name="universe_detail_faction_alignment_label">Gezindheid (optioneel)</string>
+    <string name="universe_detail_add_npc_title">NPC toevoegen</string>
+    <string name="universe_detail_npc_personality_label">Persoonlijkheid</string>
+    <string name="universe_detail_npc_role_label">Rol</string>
+    <string name="universe_detail_npc_age_label">Leeftijd (optioneel)</string>
+    <string name="universe_detail_no_faction">Geen factie</string>
+    <string name="universe_detail_faction_label">Factie</string>
+    <string name="universe_detail_no_location">Geen locatie</string>
+    <string name="universe_detail_location_label">Locatie</string>
+    <string name="universe_detail_error_not_found">Universum niet gevonden</string>
+    <string name="universe_detail_error_unknown">Onbekende fout</string>
+    <string name="universe_detail_error_add_location">Fout bij het toevoegen van de locatie</string>
+    <string name="universe_detail_error_delete_location">Fout bij het verwijderen van de locatie</string>
+    <string name="universe_detail_error_add_faction">Fout bij het toevoegen van de factie</string>
+    <string name="universe_detail_error_delete_faction">Fout bij het verwijderen van de factie</string>
+    <string name="universe_detail_error_add_npc">Fout bij het toevoegen van de NPC</string>
+    <string name="universe_detail_error_delete_npc">Fout bij het verwijderen van de NPC</string>
+</resources>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common actions / fields shared across universe screens -->
+    <string name="common_cancel">Annulla</string>
+    <string name="common_back">Indietro</string>
+    <string name="common_close">Chiudi</string>
+    <string name="common_delete">Elimina</string>
+    <string name="common_add">Aggiungi</string>
+    <string name="field_name">Nome</string>
+    <string name="field_description">Descrizione</string>
+
+    <!-- UniverseListScreen.kt -->
+    <string name="universe_list_empty_title">Ancora nessun universo</string>
+    <string name="universe_list_empty_hint">Tocca + per crearne uno.</string>
+    <string name="universe_list_jobs_active_format">%1$d generazione/i in corso</string>
+    <string name="universe_list_jobs_ready_format">%1$d universo/i pronto/i da esaminare</string>
+    <string name="universe_list_jobs_failed_format">%1$d generazione/i non riuscita/e</string>
+
+    <!-- UniverseListScreen.kt — finestra di dettaglio di una generazione non riuscita -->
+    <string name="generation_failure_dialog_title">Generazione non riuscita</string>
+    <string name="generation_failure_category_content_policy">Bloccato dal filtro dei contenuti (contenuto che potrebbe coinvolgere un minore o atti non consensuali)</string>
+    <string name="generation_failure_category_insufficient_credits">Ofuda insufficienti</string>
+    <string name="generation_failure_category_parsing_failed">L\'IA ha risposto, ma la sua risposta non è stata compresa</string>
+    <string name="generation_failure_category_technical">Errore tecnico (rete, server…)</string>
+    <string name="generation_failure_category_unknown">Motivo sconosciuto</string>
+    <string name="generation_failure_credit_consumed">Per questo tentativo è stato consumato un Ofuda, nonostante il fallimento.</string>
+    <string name="generation_failure_credit_not_consumed">Per questo tentativo non è stato consumato alcun Ofuda.</string>
+    <string name="generation_failure_credit_unknown">Non è stato possibile determinare se per questo tentativo sia stato consumato un Ofuda.</string>
+    <string name="generation_failure_retry_button">Riprova</string>
+    <string name="generation_failure_report_button">Segnala un problema</string>
+    <string name="generation_failure_delete_button">Elimina</string>
+
+    <!-- UniverseListScreen.kt — segnalazione di un problema per una generazione non riuscita -->
+    <string name="generation_bug_report_dialog_title">Segnala un problema</string>
+    <string name="generation_bug_report_subject_label">Oggetto</string>
+    <string name="generation_bug_report_description_label">Cosa è successo?</string>
+    <string name="generation_bug_report_send_button">Invia</string>
+
+    <!-- UniverseCreationScreen.kt / UniverseCreationViewModel.kt -->
+    <string name="universe_create_title">Nuovo universo</string>
+    <string name="universe_create_proposal_count_label">Numero di proposte</string>
+    <string name="universe_create_proposal_hint">Ogni proposta è un universo completo e diverso (con fazioni, luoghi e PNG) — potrai sfogliarle e conservarne una o più.</string>
+    <string name="universe_create_manual_section_title">Oppure crea un universo manualmente</string>
+    <string name="universe_create_genre_label">Genere</string>
+    <string name="universe_create_genre_placeholder">Es.: fantasy medievale, cyberpunk, post-apocalittico...</string>
+    <string name="universe_create_visual_style_label">Stile visivo (opzionale)</string>
+    <string name="universe_create_submit">Crea</string>
+    <string name="universe_create_generating_single">Generazione dell\'universo in corso...</string>
+    <string name="universe_create_generating_multiple_format">Generazione di %1$d universi in corso...</string>
+    <string name="universe_create_generating_hint">Puoi uscire dall\'app. Una notifica ti avviserà quando sarà pronto.</string>
+    <string name="universe_create_scheduled_title">Generazione avviata in background</string>
+    <string name="universe_create_scheduled_message_format">Puoi chiudere l\'app. Torna più tardi — una notifica ti dirà quando l\'universo (basato su \"%1$s\") sarà pronto.</string>
+    <string name="universe_create_back_to_list">Torna all\'elenco</string>
+    <string name="universe_create_error_title">Generazione non riuscita</string>
+    <string name="universe_create_retry">Riprova</string>
+    <string name="universe_create_proposal_index_format">Proposta %1$d/%2$d</string>
+    <string name="universe_create_saved_count_format">%1$d salvata/e</string>
+    <string name="universe_create_previous">◀ Precedente</string>
+    <string name="universe_create_next">Successivo ▶</string>
+    <string name="universe_create_saved_check">Salvata ✓</string>
+    <string name="universe_create_select_this">Scegli questa</string>
+    <string name="universe_create_finish">Fine</string>
+    <string name="universe_create_visual_style_format">Stile visivo: %1$s</string>
+    <string name="universe_create_section_factions">Fazioni</string>
+    <string name="universe_create_section_locations">Luoghi</string>
+    <string name="universe_create_section_npcs">PNG</string>
+    <string name="universe_create_error_empty_result">Il risultato della generazione è vuoto.</string>
+    <string name="universe_create_error_generation_failed">La generazione non è riuscita.</string>
+    <string name="universe_create_error_name_required">Il nome dell\'universo è obbligatorio.</string>
+    <string name="universe_create_error_scheduling_failed">La pianificazione della generazione non è riuscita.</string>
+
+    <!-- UniverseChatCreationScreen.kt / UniverseChatCreationViewModel.kt -->
+    <string name="universe_chat_create_title">Nuova chat d\'insieme</string>
+    <string name="universe_chat_create_intro">L\'IA interpreterà tutti i personaggi selezionati insieme in un\'unica scena condivisa, facendoli interagire tra loro e con te — senza un unico protagonista.</string>
+    <string name="universe_chat_create_title_label">Titolo (opzionale)</string>
+    <string name="universe_chat_create_title_placeholder">Es.: Incontro al mercato</string>
+    <string name="universe_chat_create_characters_count_format">Personaggi (%1$d selezionato/i)</string>
+    <string name="universe_chat_create_empty_candidates">Questo universo non ha ancora nessun persona giocabile né PNG da aggiungere come personaggio.</string>
+    <string name="universe_chat_create_type_persona">Persona</string>
+    <string name="universe_chat_create_type_npc">PNG</string>
+    <string name="universe_chat_create_submit">Crea chat</string>
+    <string name="universe_chat_create_error_min_cast_format">Scegli almeno %1$d personaggi per una scena d\'insieme.</string>
+    <string name="universe_chat_create_default_title">Scena d\'insieme</string>
+
+    <!-- UniverseDetailScreen.kt / UniverseDetailViewModel.kt -->
+    <string name="universe_detail_fallback_title">Universo</string>
+    <string name="universe_detail_publish_title">Pubblica sul marketplace</string>
+    <string name="universe_detail_genre_format">Genere: %1$s</string>
+    <string name="universe_detail_locations_header_format">Luoghi (%1$d)</string>
+    <string name="universe_detail_factions_header_format">Fazioni (%1$d)</string>
+    <string name="universe_detail_npcs_header_format">PNG (%1$d)</string>
+    <string name="universe_detail_personas_header_format">Persona giocabili (%1$d)</string>
+    <string name="universe_detail_include_persona_button">Includi un persona esistente</string>
+    <string name="universe_detail_include_persona_dialog_title">Includi persona esistenti</string>
+    <string name="universe_detail_include_persona_empty">Nessun persona autonomo disponibile — tutti i tuoi persona appartengono già a un universo.</string>
+    <string name="universe_detail_include_persona_confirm">Includi (%1$d)</string>
+    <string name="universe_detail_ensemble_chats_header_format">Chat d\'insieme (%1$d)</string>
+    <string name="universe_detail_ensemble_chat_hint">Una chat senza protagonista fisso: l\'IA interpreta più persona/PNG di questo universo insieme e li fa interagire.</string>
+    <string name="universe_detail_publish_description_format">Condividi \"%1$s\" con la community Kitsune.</string>
+    <string name="universe_detail_publish_description_label">Descrizione (opzionale)</string>
+    <string name="universe_detail_publish_price_label">Prezzo in crediti (0 = gratis)</string>
+    <string name="universe_detail_publish_hint">Verranno pubblicati l\'universo, le sue fazioni, luoghi, PNG e persona.</string>
+    <string name="universe_detail_publish_success">Pubblicazione riuscita!</string>
+    <string name="universe_detail_publish_error_format">Errore: %1$s</string>
+    <string name="universe_detail_publish_confirm">Pubblica</string>
+    <string name="universe_detail_add_location_title">Aggiungi un luogo</string>
+    <string name="universe_detail_location_type_placeholder">Tipo (città, foresta, dungeon...)</string>
+    <string name="universe_detail_add_faction_title">Aggiungi una fazione</string>
+    <string name="universe_detail_faction_type_placeholder">Tipo (gilda, ordine, impero...)</string>
+    <string name="universe_detail_faction_alignment_label">Allineamento (opzionale)</string>
+    <string name="universe_detail_add_npc_title">Aggiungi un PNG</string>
+    <string name="universe_detail_npc_personality_label">Personalità</string>
+    <string name="universe_detail_npc_role_label">Ruolo</string>
+    <string name="universe_detail_npc_age_label">Età (opzionale)</string>
+    <string name="universe_detail_no_faction">Nessuna fazione</string>
+    <string name="universe_detail_faction_label">Fazione</string>
+    <string name="universe_detail_no_location">Nessun luogo</string>
+    <string name="universe_detail_location_label">Luogo</string>
+    <string name="universe_detail_error_not_found">Universo non trovato</string>
+    <string name="universe_detail_error_unknown">Errore sconosciuto</string>
+    <string name="universe_detail_error_add_location">Errore durante l\'aggiunta del luogo</string>
+    <string name="universe_detail_error_delete_location">Errore durante l\'eliminazione del luogo</string>
+    <string name="universe_detail_error_add_faction">Errore durante l\'aggiunta della fazione</string>
+    <string name="universe_detail_error_delete_faction">Errore durante l\'eliminazione della fazione</string>
+    <string name="universe_detail_error_add_npc">Errore durante l\'aggiunta del PNG</string>
+    <string name="universe_detail_error_delete_npc">Errore durante l\'eliminazione del PNG</string>
+</resources>

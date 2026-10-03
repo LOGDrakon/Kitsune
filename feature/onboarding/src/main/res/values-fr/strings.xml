@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AgeVerificationScreen -->
+    <string name="onboarding_age_verification_message">Kitsune contient du contenu réservé aux adultes. Merci d\'indiquer votre date de naissance.</string>
+    <string name="onboarding_age_day_label">Jour</string>
+    <string name="onboarding_age_month_label">Mois</string>
+    <string name="onboarding_age_year_label">Année</string>
+    <string name="onboarding_age_error_incomplete">Merci de renseigner une date complète.</string>
+    <string name="onboarding_age_error_invalid">Date invalide.</string>
+    <string name="onboarding_age_continue">Continuer</string>
+
+    <!-- PinSetupScreen -->
+    <string name="onboarding_pin_setup_message">Choisissez un code PIN pour protéger vos histoires. Une authentification biométrique ou le déverrouillage de votre appareil sera aussi demandé.</string>
+    <string name="onboarding_pin_label">Code PIN</string>
+    <string name="onboarding_pin_confirm_label">Confirmer le code PIN</string>
+    <string name="onboarding_pin_validate">Valider</string>
+
+    <!-- LanguageSelectionScreen -->
+    <string name="onboarding_language_title">Choisissez votre langue</string>
+    <string name="onboarding_language_subtitle">Vous pourrez modifier cela plus tard dans les Paramètres.</string>
+
+    <!-- UnderageScreen -->
+    <string name="onboarding_underage_message">Kitsune est réservé aux adultes. L\'application n\'est pas disponible pour votre compte.</string>
+
+    <!-- AccountChoiceScreen -->
+    <string name="onboarding_account_choice_title">Bienvenue sur Kitsune</string>
+    <string name="onboarding_account_choice_subtitle">Première visite, ou changement de téléphone ?</string>
+    <string name="onboarding_account_choice_new">Créer un nouveau compte</string>
+    <string name="onboarding_account_choice_recover">Récupérer mon ancien compte</string>
+
+    <!-- RecoverAccountScreen -->
+    <string name="onboarding_recover_scan_title">Récupérez votre compte</string>
+    <string name="onboarding_recover_scan_subtitle">Sur votre ancien téléphone, ouvrez Paramètres → \"Transférer mon compte\" et scannez le QR code affiché.</string>
+    <string name="onboarding_recover_scan_button">Scanner le QR code</string>
+    <string name="onboarding_recover_scan_prompt">Pointez votre appareil photo vers le QR code de votre ancien téléphone</string>
+    <string name="onboarding_recover_downloading">Téléchargement de vos données…</string>
+    <string name="onboarding_recover_transfer_pin_title">Code PIN de transfert</string>
+    <string name="onboarding_recover_transfer_pin_subtitle">Entrez le même PIN que celui défini sur votre ancien téléphone.</string>
+    <string name="onboarding_recover_transfer_pin_confirm">Confirmer</string>
+    <string name="onboarding_recover_decrypting">Déchiffrement et vérification…</string>
+    <string name="onboarding_recover_vault_pin_title">Protégez votre coffre</string>
+    <string name="onboarding_recover_vault_pin_subtitle">Choisissez un code PIN pour ce téléphone à partir de maintenant — distinct du PIN de transfert. Une authentification biométrique ou le déverrouillage de votre appareil sera aussi demandé.</string>
+    <string name="onboarding_recover_pins_do_not_match">Les deux codes ne correspondent pas.</string>
+    <string name="onboarding_recover_importing">Importation de vos histoires…</string>
+    <string name="onboarding_recover_error_title">Échec de la récupération</string>
+</resources>

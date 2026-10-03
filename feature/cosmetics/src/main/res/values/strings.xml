@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- CosmeticsScreen: top bar -->
+    <string name="cosmetics_title">Cosmetics</string>
+    <string name="cosmetics_back">Back</string>
+    <string name="cosmetics_error">Error: %1$s</string>
+
+    <!-- CosmeticsScreen: cosmetic card states -->
+    <string name="cosmetics_owned">Owned</string>
+    <string name="cosmetics_applied">Applied</string>
+    <string name="cosmetics_unavailable">Unavailable</string>
+    <string name="cosmetics_credits_price">%1$d Ofudas</string>
+    <string name="cosmetics_apply">Apply</string>
+    <string name="cosmetics_unlock">Unlock</string>
+    <string name="cosmetics_remove">Remove</string>
+    <string name="cosmetics_export_hint">Available in Novel Mode</string>
+
+    <!-- CosmeticsScreen: category display names -->
+    <string name="cosmetics_category_themes">Conversation themes</string>
+    <string name="cosmetics_category_animations">Message animations</string>
+    <string name="cosmetics_category_backgrounds">Animated backgrounds</string>
+    <string name="cosmetics_category_sounds">Ambient sounds</string>
+    <string name="cosmetics_category_packs">Thematic packs</string>
+    <string name="cosmetics_category_icons">App icons</string>
+    <string name="cosmetics_category_style_packs">Writing style packs</string>
+    <string name="cosmetics_category_timeline_themes">Timeline visual themes</string>
+    <string name="cosmetics_category_export">Story export</string>
+</resources>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AgeVerificationScreen -->
+    <string name="onboarding_age_verification_message">Kitsune contains adult content. Please enter your date of birth.</string>
+    <string name="onboarding_age_day_label">Day</string>
+    <string name="onboarding_age_month_label">Month</string>
+    <string name="onboarding_age_year_label">Year</string>
+    <string name="onboarding_age_error_incomplete">Please enter a complete date.</string>
+    <string name="onboarding_age_error_invalid">Invalid date.</string>
+    <string name="onboarding_age_continue">Continue</string>
+
+    <!-- PinSetupScreen -->
+    <string name="onboarding_pin_setup_message">Choose a PIN code to protect your stories. Biometric authentication or unlocking your device will also be required.</string>
+    <string name="onboarding_pin_label">PIN code</string>
+    <string name="onboarding_pin_confirm_label">Confirm PIN code</string>
+    <string name="onboarding_pin_validate">Confirm</string>
+
+    <!-- LanguageSelectionScreen -->
+    <string name="onboarding_language_title">Choose your language</string>
+    <string name="onboarding_language_subtitle">You can change this later in Settings.</string>
+
+    <!-- UnderageScreen -->
+    <string name="onboarding_underage_message">Kitsune is for adults only. The app is not available for your account.</string>
+
+    <!-- AccountChoiceScreen -->
+    <string name="onboarding_account_choice_title">Welcome to Kitsune</string>
+    <string name="onboarding_account_choice_subtitle">First time here, or moving from another phone?</string>
+    <string name="onboarding_account_choice_new">Create a new account</string>
+    <string name="onboarding_account_choice_recover">Recover my old account</string>
+
+    <!-- RecoverAccountScreen -->
+    <string name="onboarding_recover_scan_title">Recover your account</string>
+    <string name="onboarding_recover_scan_subtitle">On your old phone, open Settings → \"Transfer my account\" and scan the QR code it shows.</string>
+    <string name="onboarding_recover_scan_button">Scan QR code</string>
+    <string name="onboarding_recover_scan_prompt">Point your camera at the QR code on your old phone</string>
+    <string name="onboarding_recover_downloading">Downloading your data…</string>
+    <string name="onboarding_recover_transfer_pin_title">Transfer PIN</string>
+    <string name="onboarding_recover_transfer_pin_subtitle">Enter the same PIN you set on your old phone.</string>
+    <string name="onboarding_recover_transfer_pin_confirm">Confirm</string>
+    <string name="onboarding_recover_decrypting">Decrypting and verifying…</string>
+    <string name="onboarding_recover_vault_pin_title">Protect your vault</string>
+    <string name="onboarding_recover_vault_pin_subtitle">Choose a PIN for this phone going forward — separate from the transfer PIN. Biometric authentication or unlocking your device will also be required.</string>
+    <string name="onboarding_recover_pins_do_not_match">The two codes don\'t match.</string>
+    <string name="onboarding_recover_importing">Importing your stories…</string>
+    <string name="onboarding_recover_error_title">Recovery failed</string>
+</resources>

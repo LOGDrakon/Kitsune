@@ -1,0 +1,40 @@
+Kitsune — Source-Available License (All Rights Reserved)
+Copyright (c) 2026 Kenzo Gallauziaux. All rights reserved.
+
+This is NOT an open-source license. It is not a recognized SPDX license
+identifier, and this repository should not be treated as open source by
+any automated tool, dependency scanner, or license classifier.
+
+1. Grant of permission
+
+You are permitted to:
+  - View, read, and study the source code in this repository.
+  - Clone or fork this repository for personal, educational, reference,
+    or portfolio-evaluation purposes.
+  - Build and run the code locally for the purposes above.
+
+2. Restrictions
+
+You are NOT permitted, without the copyright holder's prior express
+written permission, to:
+  - Copy, redistribute, publish, or sublicense this code or any
+    substantial portion of it, in source or compiled form.
+  - Use this code, or any substantial portion of it, in any other
+    software product or service — commercial or non-commercial.
+  - Publish, distribute, or sell an application derived from this code,
+    in whole or in substantial part, on any app store or platform.
+  - Remove or alter this license notice from any copy of the code.
+
+3. No warranty
+
+This code is provided "as is", without warranty of any kind, express or
+implied, including but not limited to the warranties of merchantability,
+fitness for a particular purpose, and noninfringement. In no event shall
+the copyright holder be liable for any claim, damages, or other
+liability arising from, out of, or in connection with the code or the
+use or other dealings in the code.
+
+4. Contact
+
+For permission requests beyond the scope above, contact the copyright
+holder directly.

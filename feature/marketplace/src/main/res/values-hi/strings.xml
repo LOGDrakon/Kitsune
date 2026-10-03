@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MarketplaceScreen.kt - Filter chips -->
+    <string name="filter_all">सभी</string>
+    <string name="filter_type_personas">पर्सोना</string>
+    <string name="filter_type_universes">यूनिवर्स</string>
+    <string name="filter_sort_popular">लोकप्रिय</string>
+    <string name="filter_sort_recent">हाल का</string>
+
+    <!-- MarketplaceScreen.kt - Listing list state -->
+    <string name="error_message_format">त्रुटि: %1$s</string>
+    <string name="empty_listings_message">अभी तक कोई सामग्री नहीं है।\nप्रकाशित करने वाले पहले व्यक्ति बनें!</string>
+
+    <!-- MarketplaceScreen.kt - Listing card -->
+    <string name="listing_type_persona_badge">पर्सोना</string>
+    <string name="listing_type_universe_badge">यूनिवर्स</string>
+    <string name="listing_by_creator_format">%1$s द्वारा</string>
+    <string name="anonymous_creator_name">अज्ञात</string>
+    <string name="description_ellipsis">…</string>
+
+    <!-- MarketplaceScreen.kt - Listing detail screen -->
+    <string name="listing_detail_title">विवरण</string>
+    <string name="content_desc_back">वापस</string>
+    <string name="download_success_message">डाउनलोड सफल रहा!</string>
+    <string name="download_error_message">डाउनलोड के दौरान त्रुटि</string>
+    <string name="download_button_label">डाउनलोड करें</string>
+    <string name="price_free_label">मुफ़्त</string>
+    <string name="genre_label_format">शैली: %1$s</string>
+    <string name="gallery_section_title_format">गैलरी (%1$d चित्र)</string>
+    <string name="persona_sheet_title">पर्सोना विवरण</string>
+    <string name="universe_sheet_title">यूनिवर्स विवरण</string>
+    <string name="factions_section_title_format">गुट (%1$d)</string>
+    <string name="locations_section_title_format">स्थान (%1$d)</string>
+    <string name="npcs_section_title_format">पात्र (%1$d)</string>
+    <string name="playable_personas_section_title_format">खेलने योग्य पर्सोना (%1$d)</string>
+    <string name="label_name">नाम</string>
+    <string name="label_description">विवरण</string>
+    <string name="label_personality">व्यक्तित्व</string>
+    <string name="label_scenario">परिदृश्य</string>
+    <string name="label_first_message">पहला संदेश</string>
+    <string name="label_age">आयु</string>
+    <string name="label_genre">शैली</string>
+    <string name="maturity_tags_format">परिपक्वता: %1$s</string>
+    <string name="label_visual_style">दृश्य शैली</string>
+    <string name="download_count_format">%1$d डाउनलोड</string>
+    <string name="rating_reviews_format">%1$s (%2$d समीक्षाएं)</string>
+    <string name="type_label_format">प्रकार: %1$s</string>
+    <string name="alignment_suffix_format"> | झुकाव: %1$s</string>
+    <string name="role_label_format">भूमिका: %1$s</string>
+    <string name="age_suffix_format"> | आयु: %1$s</string>
+    <string name="npc_personality_format">व्यक्तित्व: %1$s</string>
+    <string name="persona_summary_age_tags_format">आयु: %1$d | %2$s</string>
+
+    <!-- MarketplaceViewModel.kt - Error fallbacks -->
+    <string name="error_failed_to_load_listings">लिस्टिंग लोड करने में विफल</string>
+    <string name="error_unknown">अज्ञात त्रुटि</string>
+
+    <!-- MarketplaceScreen.kt - Report a listing -->
+    <string name="content_desc_more_options">अधिक विकल्प</string>
+    <string name="report_listing_action">इस सामग्री की रिपोर्ट करें</string>
+    <string name="report_dialog_title">इस सामग्री की रिपोर्ट करें</string>
+    <string name="report_reason_label">कारण</string>
+    <string name="report_reason_inappropriate">अनुचित सामग्री</string>
+    <string name="report_reason_minor_content">चरित्र यौन संदर्भ में नाबालिग प्रतीत होता है</string>
+    <string name="report_reason_spam">स्पैम या भ्रामक सामग्री</string>
+    <string name="report_reason_copyright">कॉपीराइट उल्लंघन</string>
+    <string name="report_reason_other">अन्य</string>
+    <string name="report_description_label">विवरण (वैकल्पिक)</string>
+    <string name="report_send_button">रिपोर्ट भेजें</string>
+    <string name="report_success_title">रिपोर्ट भेजी गई</string>
+    <string name="report_success_message">धन्यवाद — हमारी टीम इस सामग्री की समीक्षा करेगी।</string>
+    <string name="report_error_title">त्रुटि</string>
+    <string name="report_error_message">रिपोर्ट नहीं भेजी जा सकी। कृपया पुनः प्रयास करें।</string>
+    <string name="action_ok">ठीक है</string>
+    <string name="action_cancel">रद्द करें</string>
+</resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Parent must descend from Theme.AppCompat — MainActivity extends AppCompatActivity
+         (needed for AppCompatDelegate.setApplicationLocales to actually apply on API < 33, see
+         BUGS.md BUG-066), which throws IllegalStateException in onCreate() otherwise. Actual
+         visuals come entirely from Compose (KitsuneTheme); this XML theme only satisfies the
+         Activity's window/theme requirement. -->
+    <style name="Theme.Kitsune" parent="Theme.AppCompat.Light.NoActionBar" />
+</resources>

@@ -1,0 +1,49 @@
+# Gradle build outputs
+.gradle/
+build/
+*/build/
+*/*/build/
+
+# Local configuration
+local.properties
+
+# IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+.DS_Store
+*.swp
+*~
+
+# Android Studio captures folder
+captures/
+
+# Keystore files – never commit these
+*.jks
+*.keystore
+*.p12
+keystore.properties
+
+# Room schema exports (optional – commit if you want schema history)
+**/schemas/
+
+# Profiling / benchmark outputs
+benchmark-reports/
+
+# Kotlin / Java compilation output
+out/
+
+# Built release artifacts — never commit binaries
+app/release/
+*.apk
+*.aab
+
+# Claude Code local state
+.claude/
+
+# Internal dev-collaboration logs — kept locally, never published
+CLAUDE.md
+FEATURES.md
+IDEAS.md
+BUGS.md

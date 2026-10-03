@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MarketplaceScreen.kt - Filter chips -->
+    <string name="filter_all">Alle</string>
+    <string name="filter_type_personas">Personas</string>
+    <string name="filter_type_universes">Universen</string>
+    <string name="filter_sort_popular">Beliebt</string>
+    <string name="filter_sort_recent">Neueste</string>
+
+    <!-- MarketplaceScreen.kt - Listing list state -->
+    <string name="error_message_format">Fehler: %1$s</string>
+    <string name="empty_listings_message">Noch kein Inhalt vorhanden.\nSei der Erste, der etwas veröffentlicht!</string>
+
+    <!-- MarketplaceScreen.kt - Listing card -->
+    <string name="listing_type_persona_badge">Persona</string>
+    <string name="listing_type_universe_badge">Universum</string>
+    <string name="listing_by_creator_format">von %1$s</string>
+    <string name="anonymous_creator_name">Anonym</string>
+    <string name="description_ellipsis">…</string>
+
+    <!-- MarketplaceScreen.kt - Listing detail screen -->
+    <string name="listing_detail_title">Details</string>
+    <string name="content_desc_back">Zurück</string>
+    <string name="download_success_message">Download erfolgreich!</string>
+    <string name="download_error_message">Fehler beim Download</string>
+    <string name="download_button_label">Herunterladen</string>
+    <string name="price_free_label">Kostenlos</string>
+    <string name="genre_label_format">Genre: %1$s</string>
+    <string name="gallery_section_title_format">Galerie (%1$d Bilder)</string>
+    <string name="persona_sheet_title">Persona-Profil</string>
+    <string name="universe_sheet_title">Universum-Profil</string>
+    <string name="factions_section_title_format">Fraktionen (%1$d)</string>
+    <string name="locations_section_title_format">Orte (%1$d)</string>
+    <string name="npcs_section_title_format">Charaktere (%1$d)</string>
+    <string name="playable_personas_section_title_format">Spielbare Personas (%1$d)</string>
+    <string name="label_name">Name</string>
+    <string name="label_description">Beschreibung</string>
+    <string name="label_personality">Persönlichkeit</string>
+    <string name="label_scenario">Szenario</string>
+    <string name="label_first_message">Erste Nachricht</string>
+    <string name="label_age">Alter</string>
+    <string name="label_genre">Genre</string>
+    <string name="maturity_tags_format">Alterseinstufung: %1$s</string>
+    <string name="label_visual_style">Visueller Stil</string>
+    <string name="download_count_format">%1$d Downloads</string>
+    <string name="rating_reviews_format">%1$s (%2$d Bewertungen)</string>
+    <string name="type_label_format">Typ: %1$s</string>
+    <string name="alignment_suffix_format"> | Gesinnung: %1$s</string>
+    <string name="role_label_format">Rolle: %1$s</string>
+    <string name="age_suffix_format"> | Alter: %1$s</string>
+    <string name="npc_personality_format">Persönlichkeit: %1$s</string>
+    <string name="persona_summary_age_tags_format">Alter: %1$d | %2$s</string>
+
+    <!-- MarketplaceViewModel.kt - Error fallbacks -->
+    <string name="error_failed_to_load_listings">Angebote konnten nicht geladen werden</string>
+    <string name="error_unknown">Unbekannter Fehler</string>
+
+    <!-- MarketplaceScreen.kt - Report a listing -->
+    <string name="content_desc_more_options">Weitere Optionen</string>
+    <string name="report_listing_action">Diesen Inhalt melden</string>
+    <string name="report_dialog_title">Diesen Inhalt melden</string>
+    <string name="report_reason_label">Grund</string>
+    <string name="report_reason_inappropriate">Unangemessener Inhalt</string>
+    <string name="report_reason_minor_content">Charakter scheint minderjährig in sexuellem Kontext zu sein</string>
+    <string name="report_reason_spam">Spam oder irreführender Inhalt</string>
+    <string name="report_reason_copyright">Urheberrechtsverletzung</string>
+    <string name="report_reason_other">Sonstiges</string>
+    <string name="report_description_label">Details (optional)</string>
+    <string name="report_send_button">Meldung senden</string>
+    <string name="report_success_title">Meldung gesendet</string>
+    <string name="report_success_message">Danke — unser Team wird diesen Inhalt prüfen.</string>
+    <string name="report_error_title">Fehler</string>
+    <string name="report_error_message">Die Meldung konnte nicht gesendet werden. Bitte erneut versuchen.</string>
+    <string name="action_ok">OK</string>
+    <string name="action_cancel">Abbrechen</string>
+</resources>

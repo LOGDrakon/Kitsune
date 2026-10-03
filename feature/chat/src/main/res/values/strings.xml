@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ============================================================
+         Common — shared across several screens in this module
+         ============================================================ -->
+    <string name="action_cancel">Cancel</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_save">Save</string>
+    <string name="action_close">Close</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_retry">Retry</string>
+    <string name="content_desc_back">Back</string>
+    <string name="new_conversation_label">New conversation</string>
+    <string name="chat_list_empty_title">No conversations yet</string>
+    <string name="error_conversation_not_found">Conversation not found</string>
+    <string name="scene_tools_label">Scene tools</string>
+    <string name="image_gen_title">Generate an image</string>
+    <string name="story_memory_title">Story memory</string>
+    <string name="time_just_now">just now</string>
+    <string name="time_minutes_ago">%1$d min ago</string>
+    <string name="time_hours_ago">%1$d h ago</string>
+    <string name="time_days_ago">%1$d d ago</string>
+    <string name="time_weeks_ago">%1$d wk ago</string>
+    <string name="time_months_ago">%1$d mo ago</string>
+
+    <!-- ============================================================
+         ChatScreen.kt
+         ============================================================ -->
+    <string name="chat_rewind_confirm_title">Go back to this point?</string>
+    <string name="chat_delete_message_confirm_title">Delete this message?</string>
+    <string name="chat_rewind_confirm_text">This message and every message after it will be permanently deleted. The story summary will be reset if it covered this period.</string>
+    <string name="chat_delete_message_confirm_text">This message will be permanently deleted.</string>
+    <string name="content_desc_more_options">More options</string>
+    <string name="chat_menu_add_character">Add a character</string>
+    <string name="chat_menu_background">Background</string>
+    <string name="chat_menu_novel_mode">Novel mode</string>
+    <string name="novel_export_action">Export as PDF</string>
+    <string name="novel_export_success">Novel exported successfully</string>
+    <string name="novel_export_locked_title">Illustrated Novel Export</string>
+    <string name="novel_export_locked_message">Exporting this story as an offline-readable PDF — chapters, illustrated cover, lore appendix — requires the \"Illustrated Novel Export\" cosmetic from the Store.</string>
+    <string name="novel_export_locked_action">View in Store</string>
+    <string name="chat_menu_replay_briefing">Replay briefing</string>
+    <string name="chat_menu_report_issue">Report an issue</string>
+    <string name="chat_bug_report_dialog_title">Report an issue</string>
+    <string name="chat_bug_report_subject_label">Subject</string>
+    <string name="chat_bug_report_description_label">What happened?</string>
+    <string name="chat_bug_report_attach_conversation_label">Attach this conversation to the report</string>
+    <string name="chat_bug_report_targeted_excerpt_note">The relevant passage and its context will be attached automatically — no need to include the whole conversation.</string>
+    <string name="chat_bug_report_content_policy_notice">The part of your conversation flagged by our content filter will be included in this report so we can investigate. Your first and last name are automatically redacted, exactly as shown below.</string>
+    <string name="chat_bug_report_content_policy_preview_label">Flagged excerpt (as it will be sent):</string>
+    <string name="chat_bug_report_send_button">Send</string>
+    <string name="chat_insert_asterisk_button">*</string>
+    <string name="chat_next_reply_suggestions_button">💡</string>
+    <string name="chat_next_reply_suggestions_loading">Thinking of a few options…</string>
+    <string name="chat_input_placeholder_editing">Edit message…</string>
+    <string name="chat_input_placeholder_default">Write a message… *action* (aside)</string>
+    <string name="chat_send_content_description">Send</string>
+    <string name="chat_ensemble_subtitle_singular">Group scene · %1$d character</string>
+    <string name="chat_ensemble_subtitle_plural">Group scene · %1$d characters</string>
+    <string name="chat_persona_main_subtitle">Main persona</string>
+    <string name="chat_empty_scene_message">Empty scene — write the first message yourself, or let the AI improvise an opening with %1$s.</string>
+    <string name="chat_generate_opening_scene_button">Generate an opening scene</string>
+    <string name="chat_reveal_hint">▲ Swipe up (or tap here) to see earlier messages</string>
+    <string name="content_desc_scroll_to_bottom">Scroll to bottom</string>
+    <string name="chat_pricing_info_title">How Ofuda pricing works</string>
+    <string name="chat_pricing_info_text">Each message you send costs Ofudas, Kitsune\'s in-app currency — the cost depends on the chat mode you pick at the top of the screen.</string>
+    <string name="chat_pricing_info_standard_label">Standard mode: 1 Ofuda per message</string>
+    <string name="chat_pricing_info_pro_label">Pro mode (better model, larger memory): 2 Ofudas per message</string>
+    <string name="chat_insufficient_credits_title">Not enough Ofudas</string>
+    <string name="chat_insufficient_credits_text">You don\'t have enough Ofudas to continue this conversation (current balance: %1$d, %2$d required). Buy more to keep the story going.</string>
+    <string name="chat_pro_unavailable_title">Pro mode unavailable</string>
+    <string name="chat_pro_unavailable_text">The server refused this Pro turn, so the conversation has been switched back to Standard. Your message was not charged.</string>
+    <string name="chat_buy_ofudas_button">Buy more Ofudas</string>
+    <string name="chat_first_chat_bonus_title">It\'s a gift!</string>
+    <string name="chat_first_chat_bonus_text">So your first story doesn\'t get cut short, here are 5 extra Ofudas — on the house.</string>
+    <string name="chat_first_chat_bonus_button">Continue the story</string>
+    <string name="chat_content_policy_violation_title">Content not allowed</string>
+    <string name="chat_content_policy_violation_text">Your content contains illegal acts that we do not condone, even if fictional. If you believe this is a mistake, you can report an issue and send us a report.</string>
+    <string name="chat_content_policy_violation_category_line">Detected category: %1$s</string>
+    <string name="chat_content_policy_category_minor_sexual">Sexual content involving a minor</string>
+    <string name="chat_content_policy_category_non_consensual_sexual">Non-consensual sexual content</string>
+    <string name="chat_content_policy_category_non_consensual_instructional">Instructions for a non-consensual act</string>
+    <string name="chat_content_policy_category_illegal_instructions">Instructions for an illegal activity</string>
+    <string name="chat_content_policy_category_hate_incitement">Hate incitement</string>
+    <string name="chat_content_policy_violation_report_button">Report an issue</string>
+    <string name="chat_background_picker_title">Conversation background</string>
+    <string name="chat_background_picker_description">Choose an image from this conversation, from a persona (or the universe), or from your device’s storage.</string>
+    <string name="chat_background_picker_storage_option">Storage</string>
+    <string name="chat_add_cast_dialog_title">Add a character to the scene</string>
+    <string name="chat_add_cast_framing_question">How does this character join the scene?</string>
+    <string name="chat_framing_retroactive_label">Already present</string>
+    <string name="chat_framing_arrival_label">Arrives in scene</string>
+    <string name="chat_framing_retroactive_description">The character was already there — the story just hadn’t mentioned them yet. No arrival scene is played.</string>
+    <string name="chat_framing_arrival_description">The AI improvises a short scene where the character makes their entrance.</string>
+    <string name="chat_existing_universe_characters_label">Existing characters in the universe</string>
+    <string name="chat_candidate_type_persona">Persona</string>
+    <string name="chat_candidate_type_npc">NPC</string>
+    <string name="chat_create_new_npc_label">Create a new NPC</string>
+    <string name="chat_create_new_persona_label">Create a new persona</string>
+    <string name="chat_create_new_persona_description">Opens the usual persona creation screen (with age verification); once saved, they quietly join this scene.</string>
+    <string name="chat_new_persona_button">New persona</string>
+    <string name="chat_convert_npc_section_label">Convert an NPC from the scene into a playable persona</string>
+    <string name="chat_convert_to_persona_label">Convert to persona</string>
+    <string name="chat_message_edited_suffix"> · edited</string>
+    <string name="chat_regenerate_action">Regenerate</string>
+    <string name="chat_add_to_gallery_action">Add to gallery</string>
+    <string name="chat_fork_action">Create a branch</string>
+    <string name="chat_menu_branch_tree">View branches</string>
+    <string name="chat_branch_tree_title">Story branches</string>
+    <string name="chat_branch_tree_empty">No branches yet — long-press a message and choose \"Create a branch\" to start one.</string>
+    <string name="chat_branch_tree_current_badge">Current</string>
+    <string name="chat_rewind_action">Go back to this point</string>
+    <string name="chat_delete_message_action">Delete this message</string>
+    <string name="chat_report_message_action">Report this message</string>
+    <string name="chat_gallery_target_picker_title">Add to gallery of…</string>
+
+    <!-- ============================================================
+         ChatViewModel.kt (error / in-chat system messages shown to the user)
+         ============================================================ -->
+    <string name="chat_vm_npc_generation_failed">NPC generation failed.</string>
+    <string name="chat_vm_safeword_activated">— Safe word activated: the scene has been paused. —</string>
+    <string name="chat_vm_message_blocked_by_filter">This message was blocked by the content filter.</string>
+    <string name="chat_vm_response_blocked_by_filter">— Response blocked by the content filter. —</string>
+    <string name="chat_vm_only_last_user_message_editable">Only the last user message can be edited.</string>
+    <string name="chat_vm_message_no_longer_last">This message is no longer the last user message.</string>
+    <string name="chat_vm_model_empty_response">The model returned nothing — try again.</string>
+    <string name="chat_vm_single_joined_scene">%1$s is now part of the scene.</string>
+    <string name="chat_vm_multiple_joined_scene">%1$s are now part of the scene.</string>
+    <string name="chat_vm_gallery_section_this_conversation">This conversation</string>
+    <string name="chat_vm_gallery_section_universe">Universe</string>
+
+    <!-- ============================================================
+         director/DirectorToolsDialog.kt
+         ============================================================ -->
+    <string name="director_tool_scene_change">Change scene</string>
+    <string name="director_tool_plot_twist">Plot twist</string>
+    <string name="director_tool_time_skip">Time skip</string>
+    <string name="director_tool_random_interlude">Random interlude</string>
+    <string name="director_tools_dialog_description">Injects a narrative beat directly into the conversation.</string>
+
+    <!-- ============================================================
+         Experience modes — per-chat narrative directives
+         ============================================================ -->
+    <string name="experience_modes_menu_label">Experience modes</string>
+    <string name="experience_modes_dialog_title">Experience modes</string>
+    <string name="experience_modes_dialog_description">Shape how the AI tells this specific story. Each category defaults to no special instruction — pick one only where you want a deliberate effect.</string>
+    <string name="experience_mode_default">Default</string>
+
+    <string name="story_time_anchor_label">Story time</string>
+    <string name="story_time_anchor_helper">Auto-updated by the AI as the story progresses (date, season, time of day). You can also edit it by hand — for example after importing a story, or to correct a drift.</string>
+
+    <string name="experience_mode_category_story_pace">Story type</string>
+    <string name="experience_mode_story_pace_slice_of_life">Slice of life</string>
+    <string name="experience_mode_story_pace_new_adventure">New adventure</string>
+    <string name="experience_mode_story_pace_saga">Saga</string>
+    <string name="experience_mode_story_pace_episodic">Episodic</string>
+
+    <string name="experience_mode_category_tone">General tone</string>
+    <string name="experience_mode_tone_soft_romantic">Soft romantic</string>
+    <string name="experience_mode_tone_dramatic_romance">Dramatic romance</string>
+    <string name="experience_mode_tone_dark_psychological">Dark romance</string>
+    <string name="experience_mode_tone_comedy">Comedy</string>
+
+    <string name="experience_mode_category_involvement">Involvement</string>
+    <string name="experience_mode_involvement_reader">Reader</string>
+    <string name="experience_mode_involvement_co_author">Co-author</string>
+    <string name="experience_mode_involvement_immersive_rp">Immersive RP</string>
+
+    <string name="experience_mode_category_rhythm">Pacing</string>
+    <string name="experience_mode_rhythm_slow_burn">Slow burn</string>
+    <string name="experience_mode_rhythm_fast_paced">Fast-paced</string>
+    <string name="experience_mode_rhythm_contemplative">Contemplative</string>
+
+    <string name="experience_mode_category_universe">Setting</string>
+    <string name="experience_mode_universe_fixed_setting">Fixed setting</string>
+    <string name="experience_mode_universe_multiverse">Multiverse</string>
+    <string name="experience_mode_universe_campaign">Campaign</string>
+
+    <string name="experience_mode_category_intensity">Maturity / intensity</string>
+    <string name="experience_mode_category_custom">Describe exactly what you want</string>
+    <string name="experience_mode_custom_placeholder">e.g. Write in the first person, past tense. Marc stays cold until he has forgiven her. Never describe clothing.</string>
+    <string name="experience_mode_custom_helper">Free-form instructions for this conversation only. They take priority over every setting above.</string>
+    <string name="experience_mode_intensity_soft_suggestive">Soft / suggestive</string>
+    <string name="experience_mode_intensity_intense_mature">Intense / mature</string>
+
+    <!-- ============================================================
+         imagegen/ImageGenerationScreen.kt
+         ============================================================ -->
+    <string name="image_gen_for_characters_label">For %1$s</string>
+    <string name="image_gen_description_label">Description</string>
+    <string name="image_gen_description_placeholder">E.g.: smiling in a garden at sunset</string>
+    <string name="image_gen_from_current_scene_button">From the current scene</string>
+    <string name="image_gen_auto_fill_description_hint">Automatically fills the description from what’s happening in the conversation — you can always edit it before generating.</string>
+    <string name="image_gen_inspiration_button">Out of inspiration?</string>
+    <string name="image_gen_visual_style_label">Visual style (optional)</string>
+    <string name="image_gen_aspect_ratio_label">Image format</string>
+    <string name="image_gen_use_avatar_reference_label">Use the avatar as a visual reference</string>
+    <string name="image_gen_avatar_reference_hint">Helps the model keep an appearance consistent with the persona’s current avatar.</string>
+    <string name="image_gen_generate_anyway_button">Generate anyway (suggestive version)</string>
+    <string name="image_gen_soften_hint">Slightly covers up and softens the scene to satisfy the model’s content filter, while keeping the spirit of the scene.</string>
+    <string name="image_gen_generate_button">Generate</string>
+    <string name="image_credit_cost">Cost: %1$d Ofudas</string>
+    <string name="image_credit_cost_first_free">This one\'s on the house! Your first image is free.</string>
+    <string name="image_gen_hd_quality_label">HD quality (%1$d Ofudas)</string>
+    <string name="image_gen_hd_quality_hint">Sharper, more detailed rendering on a premium model. Standard quality is plenty for most scenes.</string>
+    <string name="image_gen_generate_new_button">Generate a new image</string>
+    <string name="image_gen_sfw_fallback_notice">ℹ️ Suggestive version generated after the content filter declined — the image may differ from the exact scene.</string>
+    <string name="image_gen_regenerate_button">Regenerate (same description, different result)</string>
+    <string name="image_gen_saved_confirmation">Saved ✓</string>
+    <string name="image_gen_persona_gallery_button">Persona’s gallery</string>
+    <string name="image_gen_send_to_chat_button">Send to chat</string>
+    <string name="image_gen_aspect_auto">Auto</string>
+    <string name="image_gen_aspect_square">Square (1:1)</string>
+    <string name="image_gen_aspect_portrait_9_16">Portrait (9:16)</string>
+    <string name="image_gen_aspect_landscape_16_9">Landscape (16:9)</string>
+    <string name="image_gen_aspect_portrait_3_4">Portrait (3:4)</string>
+    <string name="image_gen_aspect_landscape_4_3">Landscape (4:3)</string>
+
+    <!-- ============================================================
+         imagegen/ImageGenerationViewModel.kt
+         ============================================================ -->
+    <string name="error_persona_not_found">Persona not found</string>
+    <string name="error_no_characters_in_scene">No characters found in this scene</string>
+    <string name="error_scene_description_failed">Scene description error</string>
+    <string name="error_image_refused_by_filter">This image was declined by the model’s content filter. You can try a suggestive version instead.</string>
+    <string name="error_image_generation_failed">Image generation error</string>
+    <string name="error_sfw_fallback_also_refused">Even the suggestive version was declined: %1$s</string>
+    <string name="error_prompt_softening_failed">Prompt softening error</string>
+
+    <!-- ============================================================
+         list/ChatListScreen.kt
+         ============================================================ -->
+    <string name="chat_list_empty_hint">Tap + to start one.</string>
+
+    <!-- ============================================================
+         list/ChatsOverviewScreen.kt
+         ============================================================ -->
+    <string name="chat_overview_empty_hint">Head to the Personas tab to start one.</string>
+    <string name="chat_overview_ensemble_chat_fallback_title">Ensemble chat</string>
+
+    <!-- ============================================================
+         lorebriefing/ChatLoreBriefingDialog.kt
+         ============================================================ -->
+    <string name="briefing_dialog_title">What the characters know</string>
+    <string name="briefing_dialog_description">Summary of the lore known at the start of this scene. These entries are also injected into the model’s context.</string>
+    <string name="briefing_no_lore_entries">No lore entries yet.</string>
+    <string name="lore_type_character">Characters</string>
+    <string name="lore_type_location">Locations</string>
+    <string name="lore_type_faction">Factions</string>
+    <string name="lore_type_event">Events</string>
+    <string name="lore_type_item">Items</string>
+    <string name="lore_type_thread">Open threads</string>
+    <string name="briefing_start_button">Start</string>
+    <string name="briefing_replay_later_button">Replay later</string>
+
+    <!-- ============================================================
+         memory/StoryMemoryScreen.kt
+         ============================================================ -->
+    <string name="story_memory_lore_count_label">Lore entries (%1$d)</string>
+    <string name="story_memory_no_lore_entries">No lore entries yet. Entries are generated automatically as the story progresses.</string>
+    <string name="story_memory_summary_title">Story summary</string>
+    <string name="story_memory_no_summary">No summary yet. The summary is generated automatically after a few exchanges.</string>
+    <string name="story_memory_auto_generated_label">Automatically generated</string>
+    <string name="story_memory_delete_entry_title">Delete this entry?</string>
+    <string name="story_memory_delete_entry_text">The entry “%1$s” will be deleted from the story memory.</string>
+    <string name="story_memory_edit_entry_title">Edit entry</string>
+    <string name="story_memory_name_label">Name</string>
+    <string name="story_memory_summary_label">Short summary</string>
+    <string name="story_memory_content_label">Detailed content</string>
+    <string name="story_memory_occurred_at_label">When it happened</string>
+    <string name="story_memory_occurred_at_helper">Free text (date, season, elapsed time) — only relevant for events. Set once automatically, then editable by hand.</string>
+
+    <!-- ============================================================
+         memory/StoryMemoryViewModel.kt
+         ============================================================ -->
+    <string name="error_unknown">Unknown error</string>
+    <string name="error_save_failed">Save error</string>
+    <string name="error_delete_failed">Delete error</string>
+
+    <!-- ============================================================
+         novel/NovelModeScreen.kt
+         ============================================================ -->
+    <string name="novel_mode_user_label">You:</string>
+
+    <!-- ============================================================
+         timeline/TimelineScreen.kt
+         ============================================================ -->
+    <string name="timeline_title">Timeline</string>
+    <string name="timeline_back">Back</string>
+    <string name="timeline_empty_title">No key moments yet</string>
+    <string name="timeline_empty_subtitle">Key moments will appear here as the story progresses.</string>
+    <string name="timeline_expand">Expand</string>
+    <string name="timeline_delete">Delete</string>
+    <string name="timeline_snippets">Snippets</string>
+    <string name="timeline_script_doctor">Where is the story going?</string>
+    <string name="timeline_menu_label">Timeline</string>
+    <string name="timeline_mood_tender">Tender</string>
+    <string name="timeline_mood_romantic">Romantic</string>
+    <string name="timeline_mood_dramatic">Dramatic</string>
+    <string name="timeline_mood_humorous">Humorous</string>
+    <string name="timeline_mood_dark">Dark</string>
+    <string name="timeline_mood_tense">Tense</string>
+    <string name="timeline_mood_melancholic">Melancholic</string>
+    <string name="timeline_mood_exciting">Exciting</string>
+    <string name="timeline_mood_neutral">Neutral</string>
+    <string name="timeline_type_first_meeting">First meeting</string>
+    <string name="timeline_type_confession">Confession</string>
+    <string name="timeline_type_breakup">Breakup</string>
+    <string name="timeline_type_nsfw_scene">Intimate scene</string>
+    <string name="timeline_type_plot_twist">Plot twist</string>
+    <string name="timeline_type_emotional_peak">Emotional peak</string>
+    <string name="timeline_type_conflict">Conflict</string>
+    <string name="timeline_type_reconciliation">Reconciliation</string>
+    <string name="timeline_type_custom">Custom</string>
+    <string name="timeline_snippets_label">Snippets</string>
+    <string name="timeline_delete_confirm_title">Delete this moment?</string>
+    <string name="timeline_delete_confirm_text">This key moment will be permanently deleted.</string>
+    <string name="timeline_auto_detected_label">Auto-detected</string>
+    <string name="timeline_script_doctor_cost">Cost: 1 Ofuda</string>
+
+    <!-- Story card (2026-08-23) -->
+    <string name="story_card_title">What kind of story do you want?</string>
+    <string name="story_card_subtitle">This shapes how the AI writes for the whole conversation. You can change it later from the menu.</string>
+    <string name="story_card_describe_title">Or describe it yourself</string>
+    <string name="story_card_describe_hint">Costs 1 Ofuda. Sets up the story and writes its opening scene.</string>
+    <string name="story_card_describe_placeholder">e.g. She is my rival at work and neither of us will admit anything</string>
+    <string name="story_card_skip">Skip</string>
+    <string name="story_card_generate">Set up my story</string>
+    <string name="preset_slow_romance">Slow romance</string>
+    <string name="preset_slow_romance_body">Close and unhurried. Feelings build over time and nothing resolves too quickly.</string>
+    <string name="preset_dark_passion">Dark passion</string>
+    <string name="preset_dark_passion_body">Obsession, power and ambivalence. Heavy, adult, and never softened.</string>
+    <string name="preset_adventure">Adventure</string>
+    <string name="preset_adventure_body">Things keep happening. Short, brisk replies and a story that moves.</string>
+    <string name="preset_light_comedy">Light comedy</string>
+    <string name="preset_light_comedy_body">Misunderstandings, bad timing and characters who refuse to be solemn.</string>
+    <string name="preset_long_saga">Long saga</string>
+    <string name="preset_long_saga_body">A broad story over time, with a returning cast and threads that pay off later.</string>
+    <string name="preset_chamber_piece">Chamber piece</string>
+    <string name="preset_chamber_piece_body">One place, few people, long descriptive replies. Contemplative and slow.</string>
+    <string name="experience_mode_category_length">Reply length</string>
+    <string name="experience_mode_category_balance">Dialogue vs narration</string>
+    <string name="experience_mode_category_voice">Person and tense</string>
+    <string name="experience_mode_category_style_pack">Writing style pack</string>
+    <string name="style_pack_none">None</string>
+    <string name="reply_length_brief">Brief</string>
+    <string name="reply_length_medium">Medium</string>
+    <string name="reply_length_long">Long</string>
+    <string name="reply_length_unbounded">No limit</string>
+    <string name="narration_balance_dialogue">Mostly spoken</string>
+    <string name="narration_balance_even">Even</string>
+    <string name="narration_balance_narration">Mostly narration</string>
+    <string name="voice_second_present">You, present</string>
+    <string name="voice_third_past">She/he, past</string>
+    <string name="voice_third_present">She/he, present</string>
+    <string name="voice_first_past">I, past</string>
+    <string name="story_card_authored_badge">Written for this character</string>
+    <!-- Story shelf (2026-08-25) -->
+    <string name="shelf_untitled_story">Untitled story</string>
+    <string name="shelf_empty_title">Your shelf is empty</string>
+    <string name="shelf_empty_body">Create a character and start a story. It will appear here, with its cover and its chapters.</string>
+    <string name="shelf_chapter_count">%1$d chapter(s)</string>
+    <string name="shelf_not_started">Not started yet</string>
+    <string name="shelf_something_happened">· something happened</string>
+    <string name="shelf_delete_title">Delete “%1$s”?</string>
+    <string name="shelf_delete_message">This is permanent. The story and all its messages will be erased from this device.</string>
+    <string name="chat_continue_action">Continue this reply</string>
+    <!-- v2 chat chrome: the story-tools sheet that replaced the 15-entry overflow dropdown. -->
+    <string name="chat_tools_sheet_title">Story tools</string>
+    <string name="chat_tools_section_scene">Scene</string>
+    <string name="chat_tools_section_read">Read</string>
+    <string name="chat_tools_section_help">Help</string>
+    <string name="chat_mode_standard">Standard</string>
+    <string name="chat_mode_pro">Pro</string>
+</resources>

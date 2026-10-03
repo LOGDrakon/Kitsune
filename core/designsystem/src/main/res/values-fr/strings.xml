@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Announcement dialog -->
+    <string name="designsystem_announcement_dismiss">J\'ai compris</string>
+    <string name="designsystem_announcement_reward">🎁 +%1$d crédits offerts en fermant cette annonce</string>
+    <string name="designsystem_user_message_dismiss">Compris</string>
+
+    <!-- AI quick generate -->
+    <string name="designsystem_ai_quick_generate_label">Décrire ce que vous voulez (optionnel)</string>
+    <string name="designsystem_ai_quick_generate_placeholder">Laissez vide pour laisser l\'IA improviser</string>
+    <string name="designsystem_ai_quick_generate_button">Générer avec l\'IA</string>
+
+    <!-- Bug report privacy dialog -->
+    <string name="designsystem_bug_report_sending_title">Envoi du rapport</string>
+    <string name="designsystem_bug_report_sending_message">Vos données personnelles ont été censurées, le rapport sera supprimé une fois le problème identifié et résolu.</string>
+
+    <!-- Welcome dialog -->
+    <string name="designsystem_welcome_title">Bienvenue sur Kitsune !</string>
+    <string name="designsystem_welcome_page1_title">Respect de votre vie privée</string>
+    <string name="designsystem_welcome_page1_desc">Kitsune met un point d\'honneur au respect de votre vie privée. Nous ne stockons ni ne conservons vos conversations sur nos serveurs — elles sont chiffrées sur votre appareil et transmises uniquement à nos fournisseurs d\'IA en temps réel, pour générer une réponse. Chaque fournisseur applique sa propre durée de conservation, détaillée dans notre politique de confidentialité.</string>
+    <string name="designsystem_welcome_page2_title">Conversations en local</string>
+    <string name="designsystem_welcome_page2_desc">Toutes vos conversations sont en LOCAL. Si vous désinstallez Kitsune sans exporter les données au préalable, il n\'existera aucun moyen de récupérer vos données.</string>
+    <string name="designsystem_welcome_page3_title">Expérience immersive</string>
+    <string name="designsystem_welcome_page3_desc">Kitsune met l\'accent sur l\'immersif. Vous aurez l\'occasion de le constater mais Kitsune a une série de technologies uniques en son genre pour rendre votre expérience la plus immersive possible. En cas de problème il sera toujours possible de créer un rapport de bug anonyme.</string>
+    <string name="designsystem_welcome_page_personal_info_title">Personnalisez votre histoire</string>
+    <string name="designsystem_welcome_page_personal_info_desc">Dans les Paramètres, vous pouvez renseigner votre prénom, votre nom, votre âge et d\'autres détails pour que les personas s\'adressent à vous personnellement dans l\'histoire. Ces informations ne servent qu\'à personnaliser vos propres conversations (transmises en contexte à l\'IA pour générer des réponses vous concernant) — elles ne sont jamais journalisées, stockées ou conservées par nous au-delà de votre appareil.</string>
+    <string name="designsystem_welcome_page_personal_info_action">Renseigner mes informations</string>
+    <string name="designsystem_welcome_page4_title">Développement indépendant</string>
+    <string name="designsystem_welcome_page4_desc">Je développe Kitsune seul, sur mon temps libre. J\'essaie de maintenir des prix bas et compétitifs par rapport aux autres applications de RP IA. Je prends toutes vos suggestions via l\'onglet \"Améliorez Kitsune\" et vous pouvez voter pour les propositions que vous préférez. Si vous en avez les moyens et que vous souhaitez m\'accompagner dans l\'aventure Kitsune AI vous pouvez me faire un don via l\'application et Google Play.</string>
+    <string name="designsystem_welcome_prev">Précédent</string>
+    <string name="designsystem_welcome_next">Suivant</string>
+    <string name="designsystem_welcome_start">Commencer</string>
+    <string name="designsystem_welcome_skip">Passer</string>
+    <string name="designsystem_welcome_start_persona">Créer mon premier personnage</string>
+    <string name="designsystem_welcome_later">Plus tard</string>
+
+    <!-- Welcome guide screen -->
+    <string name="designsystem_guide_title">Guide de Kitsune</string>
+    <string name="designsystem_guide_back">Retour</string>
+    <string name="designsystem_guide_about_title">À propos de Kitsune</string>
+    <string name="designsystem_guide_about_body">Kitsune est une application de jeu de rôle et de narration assistée par IA, développée avec passion par un seul développeur indépendant.</string>
+    <string name="designsystem_guide_privacy_title">Confidentialité et sécurité</string>
+    <string name="designsystem_guide_privacy_body">• Toutes vos données sont stockées localement sur votre appareil, chiffrées\n• Aucun contenu n\'est envoyé à des serveurs tiers sans votre consentement\n• Les conversations sont transmises de façon sécurisée (HTTPS/TLS) à nos fournisseurs d\'IA uniquement pour générer une réponse — jamais stockées ni journalisées de notre côté, mais chaque fournisseur applique sa propre durée de conservation (voir notre politique de confidentialité)\n• Vous avez un contrôle total sur vos données</string>
+    <string name="designsystem_guide_features_title">Fonctionnalités principales</string>
+    <string name="designsystem_guide_features_body">• Création de personas et d\'univers personnalisés\n• Conversations immersives avec l\'IA\n• Système de mémoire pour des histoires cohérentes\n• Marketplace pour partager et découvrir du contenu\n• Système de propositions pour améliorer l\'application</string>
+    <string name="designsystem_guide_support_title">Soutenir le développement</string>
+    <string name="designsystem_guide_support_body">Kitsune est gratuit et le restera. Cependant, le développement nécessite du temps et des ressources. Vous pouvez soutenir le projet de plusieurs façons :\n\n• Acheter des Ofudas dans la boutique\n• Faire un don via la section \'Soutenir\'\n• Proposer des améliorations et voter\n• Partager l\'application avec vos amis</string>
+    <string name="designsystem_guide_contact_title">Contact et retours</string>
+    <string name="designsystem_guide_contact_body">Vos retours sont essentiels pour améliorer Kitsune. N\'hésitez pas à :\n\n• Utiliser la section \'Améliorez Kitsune\' pour proposer des idées\n• Signaler des bugs via le menu d\'aide\n• Partager vos expériences avec la communauté</string>
+    <string name="designsystem_guide_start_button">Commencer à utiliser Kitsune</string>
+
+    <!-- Image cropper -->
+    <string name="designsystem_image_cropper_validate">Valider le cadrage</string>
+
+    <!-- Swipe to delete -->
+    <string name="designsystem_swipe_delete">Supprimer</string>
+
+    <!-- Badges créateur -->
+    <string name="designsystem_badge_downloads_10_label">10 téléchargements</string>
+    <string name="designsystem_badge_downloads_10_desc">Atteindre 10 téléchargements cumulés sur vos annonces</string>
+    <string name="designsystem_badge_downloads_50_label">50 téléchargements</string>
+    <string name="designsystem_badge_downloads_50_desc">Atteindre 50 téléchargements cumulés sur vos annonces</string>
+    <string name="designsystem_badge_downloads_100_label">100 téléchargements</string>
+    <string name="designsystem_badge_downloads_100_desc">Atteindre 100 téléchargements cumulés sur vos annonces</string>
+    <string name="designsystem_badge_downloads_500_label">500 téléchargements</string>
+    <string name="designsystem_badge_downloads_500_desc">Atteindre 500 téléchargements cumulés sur vos annonces</string>
+    <string name="designsystem_badge_rating_4plus_label">4+ étoiles</string>
+    <string name="designsystem_badge_rating_4plus_desc">Maintenir une note moyenne de 4,0+ (annonces avec 5 avis ou plus)</string>
+    <string name="designsystem_badge_rating_top_label">Mieux noté</string>
+    <string name="designsystem_badge_rating_top_desc">Avoir une annonce notée 4,5+ avec au moins 10 avis</string>
+    <string name="designsystem_badge_prolific_label">Prolifique</string>
+    <string name="designsystem_badge_prolific_desc">Publier 20 annonces ou plus</string>
+    <string name="designsystem_badge_pioneer_label">Pionnier</string>
+    <string name="designsystem_badge_pioneer_desc">Faire partie des 100 premiers inscrits sur Kitsune</string>
+    <string name="designsystem_badge_unknown_label">Badge</string>
+    <string name="designsystem_badge_unknown_desc">Un badge de créateur</string>
+</resources>

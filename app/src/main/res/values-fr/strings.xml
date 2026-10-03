@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kitsune</string>
+
+    <!-- Home -->
+    <string name="settings">Paramètres</string>
+    <string name="content_desc_open_store">Boutique</string>
+    <string name="marketplace">Marketplace</string>
+    <string name="chats">Chats</string>
+    <string name="personas">Personas</string>
+    <string name="universes">Univers</string>
+    <string name="create_persona">Créer un persona</string>
+    <string name="create_universe">Créer un univers</string>
+    <string name="home_create_manually_title">Décrire moi-même</string>
+    <string name="home_create_manually_subtitle">Écris ta propre description et laisse l\'IA générer</string>
+    <string name="home_create_inspiration_title">Manque d\'inspiration ?</string>
+    <string name="home_create_inspiration_subtitle">Quelques questions pour t\'aider à trouver une idée</string>
+
+    <!-- Inspiration wizard ("Je ne sais pas quoi créer") -->
+    <string name="inspiration_wizard_title_persona">En quête d\'inspiration</string>
+    <string name="inspiration_wizard_title_universe">En quête d\'inspiration</string>
+    <string name="inspiration_wizard_title_image">En quête d\'inspiration</string>
+    <string name="inspiration_wizard_loading_question">Recherche d\'une question…</string>
+    <string name="inspiration_wizard_synthesizing">Mise en forme de ton idée…</string>
+    <string name="inspiration_wizard_progress_format">Question %1$d/%2$d</string>
+    <string name="inspiration_wizard_answer_label">Ta réponse</string>
+    <string name="inspiration_wizard_answer_placeholder">Réponds librement, ou passe si rien ne te vient…</string>
+    <string name="inspiration_wizard_skip_button">Je n\'ai pas d\'idée</string>
+    <string name="inspiration_wizard_next_button">Suivant</string>
+    <string name="inspiration_wizard_finish_button">Générer mon idée</string>
+    <string name="inspiration_wizard_error_fallback">Un problème est survenu pendant le brainstorming. Réessaie.</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Paramètres</string>
+    <string name="improve_kitsune">Améliorez Kitsune</string>
+    <string name="improve_kitsune_desc">Proposer et voter pour des améliorations</string>
+    <string name="user_profile">Profil utilisateur</string>
+    <string name="user_profile_desc">Utilisé pour que les personas s\'adressent correctement à vous.</string>
+    <string name="first_name">Prénom</string>
+    <string name="last_name">Nom</string>
+    <string name="pronoun">Pronom</string>
+    <string name="pronoun_hint">Ex : elle, il, iel</string>
+    <string name="age_optional">Âge (optionnel)</string>
+    <string name="physical_desc">Description physique (optionnel)</string>
+    <string name="sexual_orientation">Orientation sexuelle (optionnel)</string>
+    <string name="sexual_orientation_hint">Ex : hétérosexuel, gay, lesbienne, bisexuel, pansexuel, asexuel…</string>
+    <string name="credits_store">Crédits &amp; Boutique</string>
+    <string name="credit_balance">%1$d crédits disponibles</string>
+    <string name="username">Nom d\'utilisateur</string>
+    <string name="username_undefined">Non défini</string>
+    <string name="choose_username">Choisir un nom d\'utilisateur</string>
+    <string name="username_hint">Votre pseudonyme est public sur la marketplace. 3 à 30 caractères : lettres, chiffres, _ et -.</string>
+    <string name="pseudonym">Pseudonyme</string>
+    <string name="saving">Enregistrement…</string>
+    <string name="min_chars">Minimum 3 caractères</string>
+    <string name="available">Disponible !</string>
+    <string name="already_taken">Déjà pris</string>
+    <string name="user_id">ID utilisateur</string>
+    <string name="copied">Copié !</string>
+    <string name="copy_id">Copier l\'ID</string>
+    <string name="buy_credits">Acheter des crédits</string>
+    <string name="buy_credits_desc">Packs de crédits, abonnement Kitsune+, tips</string>
+    <string name="cosmetics">Cosmétiques</string>
+    <string name="cosmetics_desc">Thèmes, animations, fonds animés, sons d\'ambiance</string>
+    <string name="moderation">Modération</string>
+    <string name="safe_word">Safe word</string>
+    <string name="safe_word_hint">Ex : pomme rouge</string>
+    <string name="safe_word_desc">Tapez ce mot dans une conversation pour interrompre immédiatement une scène.</string>
+    <string name="security">Sécurité</string>
+    <string name="auto_lock_minutes">Verrouillage automatique (minutes)</string>
+    <string name="screenshot_protection">Anti-capture d\'écran</string>
+    <string name="screenshot_protection_desc">Ce changement prend effet au prochain lancement de l\'application.</string>
+    <string name="vault_lock">Verrouillage du coffre</string>
+    <string name="vault_lock_desc">Au moins un des deux facteurs doit toujours rester actif.</string>
+    <string name="panic_pin_desc">PIN de panique : entré à la place du vrai code, ouvre un faux contenu au lieu du vrai coffre.</string>
+    <string name="configure_panic_pin">Configurer le PIN de panique</string>
+    <string name="panic_pin_saved">PIN de panique enregistré.</string>
+    <string name="security_updated">Mode de sécurité mis à jour.</string>
+    <string name="privacy">Vie privée</string>
+    <string name="discreet_mode">Mode discret permanent</string>
+    <string name="discreet_mode_desc">Active le thème discret (faible contraste, police réduite) de manière permanente. Prend effet immédiatement en revenant à l\'accueil. Désactivez-le pour revenir au thème normal.</string>
+    <string name="assistance">Assistance</string>
+    <string name="advanced_tracing">Traçage avancé pour les rapports de bugs</string>
+    <string name="advanced_tracing_desc">Enregistre en mémoire (jamais sur disque, jamais transmis) les événements internes de l\'application pour produire un rapport plus détaillé. Activez-le juste avant de reproduire un problème, puis générez le rapport ci-dessous.</string>
+    <string name="bug_report_desc">Génère un rapport anonyme (aucune clé API, aucun safe word, aucun identifiant personnel) à copier et joindre à un signalement.</string>
+    <string name="generate_bug_report">Générer un rapport de bug</string>
+    <string name="save">Enregistrer</string>
+    <string name="cancel">Annuler</string>
+
+    <!-- Store -->
+    <string name="store_title">Boutique</string>
+    <string name="credits_label">%1$d crédits</string>
+    <string name="credit_packs">Packs de crédits</string>
+    <string name="support_developer">Soutenir le développeur</string>
+    <string name="subscription">Abonnement</string>
+    <string name="kitsune_plus">Kitsune+</string>
+    <string name="kitsune_plus_desc">+20% crédits bonus, 50 crédits gratuits/mois, accès anticipé</string>
+    <string name="per_month">/mois</string>
+    <string name="purchase_success">Achat réussi ! Crédits ajoutés.</string>
+    <string name="product_not_found">Produit introuvable sur Google Play</string>
+    <string name="claim_free_credits">Réclamez vos crédits gratuits</string>
+    <string name="claim_20_credits">Réclamer 20 crédits</string>
+    <string name="maybe_later">Plus tard</string>
+
+    <!-- Cosmetics -->
+    <string name="cosmetics_title">Cosmétiques</string>
+    <string name="unavailable">Indisponible</string>
+    <string name="apply">Appliquer</string>
+    <string name="remove">Retirer</string>
+    <string name="owned">Possédé</string>
+    <string name="applied">Appliqué</string>
+    <string name="cat_themes">Thèmes de conversation</string>
+    <string name="cat_animations">Animations de messages</string>
+    <string name="cat_backgrounds">Fonds animés</string>
+    <string name="cat_sounds">Sons d\'ambiance</string>
+    <string name="cat_packs">Packs thématiques</string>
+    <string name="cat_icons">Icônes d\'app</string>
+
+    <!-- Welcome -->
+    <string name="welcome_skip">Passer</string>
+    <string name="welcome_prev">Précédent</string>
+    <string name="welcome_next">Suivant</string>
+    <string name="welcome_start">Commencer</string>
+
+    <!-- Chat -->
+    <string name="back">Retour</string>
+    <string name="more_options">Plus d\'options</string>
+    <string name="scroll_to_bottom">Aller en bas</string>
+    <string name="delete">Supprimer</string>
+    <string name="edit">Modifier</string>
+
+<!-- Account lock -->
+    <string name="account_banned_title">Compte banni</string>
+    <string name="account_banned_body">Votre compte a été banni pour non-respect des règles d\'utilisation. Si vous pensez qu\'il s\'agit d\'une erreur, contactez le support.</string>
+    <string name="account_suspended_title">Compte suspendu</string>
+    <string name="account_suspended_body">Votre compte est temporairement suspendu pendant qu\'une vérification est en cours. Contactez le support pour plus d\'informations.</string>
+
+    <!-- Common -->
+    <string name="loading">Chargementâ?¦</string>
+    <string name="error_prefix">Erreur : %1$s</string>
+    <string name="retry">Réessayer</string>
+    <!-- Daily login bonus (HomeScreen) -->
+    <string name="daily_bonus_title">+%1$d Ofudas offerts !</string>
+    <string name="daily_bonus_message">Chaque jour où vous ouvrez Kitsune, on vous offre 3 Ofudas. Ils s\'ajoutent à votre solde et n\'expirent jamais — ceux que vous n\'utilisez pas restent sur votre compte.</string>
+    <string name="daily_bonus_remaining">Il reste %1$d Ofudas gratuits à récupérer sur ce compte.</string>
+    <string name="daily_bonus_action">Super, merci !</string>
+    <!-- Inspiration wizard: exploration mode (2026-08-24) -->
+    <string name="inspiration_wizard_mode_title">Comment veux-tu trouver ton idée ?</string>
+    <string name="inspiration_wizard_mode_interview_title">Répondre à quelques questions</string>
+    <string name="inspiration_wizard_mode_interview_body">Quatre questions courtes sur ce dont tu as envie. Idéal si tu sais à peu près ce que tu veux.</string>
+    <string name="inspiration_wizard_mode_explore_title">Explorer des propositions</string>
+    <string name="inspiration_wizard_mode_explore_body">Décris vaguement, puis choisis l\'idée qui te plaît le plus. Chaque tour affine. Idéal si tu n\'as encore aucune idée.</string>
+    <string name="inspiration_wizard_brief_title">Tu cherches quoi, en gros ?</string>
+    <string name="inspiration_wizard_brief_hint">Quelques mots suffisent. Tu affineras en choisissant, pas en écrivant.</string>
+    <string name="inspiration_wizard_brief_placeholder">ex. quelqu\'un qui m\'agace mais que je ne peux pas éviter</string>
+    <string name="inspiration_wizard_brief_submit">Montre-moi des idées</string>
+    <string name="inspiration_wizard_loading_sketches">Recherche d\'idées…</string>
+    <string name="inspiration_wizard_sketch_title">Laquelle s\'en rapproche le plus ?</string>
+    <string name="inspiration_wizard_sketch_hint">Choisis celle qui te plaît le plus. Dis ce qu\'il faut changer, et tu auras de nouvelles idées autour.</string>
+    <string name="inspiration_wizard_sketch_note_label">Qu\'est-ce que tu changerais ? (optionnel)</string>
+    <string name="inspiration_wizard_sketch_note_placeholder">ex. plus âgée, et moins sûre d\'elle</string>
+    <string name="inspiration_wizard_sketch_refine">Plus proche, mais…</string>
+    <string name="inspiration_wizard_sketch_build">Je prends celle-là</string>
+    <string name="inspiration_wizard_sketch_last_round">Dernier tour — choisis celle que tu veux créer.</string>
+    <string name="my_stories">Mes histoires</string>
+</resources>

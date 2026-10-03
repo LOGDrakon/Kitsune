@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common actions / fields shared across universe screens -->
+    <string name="common_cancel">İptal</string>
+    <string name="common_back">Geri</string>
+    <string name="common_close">Kapat</string>
+    <string name="common_delete">Sil</string>
+    <string name="common_add">Ekle</string>
+    <string name="field_name">Ad</string>
+    <string name="field_description">Açıklama</string>
+
+    <!-- UniverseListScreen.kt -->
+    <string name="universe_list_empty_title">Henüz evren yok</string>
+    <string name="universe_list_empty_hint">Bir tane oluşturmak için + öğesine dokunun.</string>
+    <string name="universe_list_jobs_active_format">%1$d üretim devam ediyor</string>
+    <string name="universe_list_jobs_ready_format">İncelenmeye hazır %1$d evren</string>
+    <string name="universe_list_jobs_failed_format">%1$d üretim başarısız oldu</string>
+
+    <!-- UniverseListScreen.kt — başarısız üretim ayrıntı iletişim kutusu -->
+    <string name="generation_failure_dialog_title">Üretim başarısız oldu</string>
+    <string name="generation_failure_category_content_policy">İçerik filtresi tarafından engellendi (reşit olmayan biri veya rıza dışı eylemler içerebilecek içerik)</string>
+    <string name="generation_failure_category_insufficient_credits">Yetersiz Ofuda</string>
+    <string name="generation_failure_category_parsing_failed">Yapay zeka yanıt verdi, ancak yanıtı anlaşılamadı</string>
+    <string name="generation_failure_category_technical">Teknik hata (ağ, sunucu…)</string>
+    <string name="generation_failure_category_unknown">Bilinmeyen neden</string>
+    <string name="generation_failure_credit_consumed">Başarısız olmasına rağmen bu deneme için bir Ofuda harcandı.</string>
+    <string name="generation_failure_credit_not_consumed">Bu deneme için Ofuda harcanmadı.</string>
+    <string name="generation_failure_credit_unknown">Bu deneme için Ofuda harcanıp harcanmadığı belirlenemedi.</string>
+    <string name="generation_failure_retry_button">Yeniden dene</string>
+    <string name="generation_failure_report_button">Sorun bildir</string>
+    <string name="generation_failure_delete_button">Sil</string>
+
+    <!-- UniverseListScreen.kt — başarısız üretim için hata bildirimi -->
+    <string name="generation_bug_report_dialog_title">Sorun bildir</string>
+    <string name="generation_bug_report_subject_label">Konu</string>
+    <string name="generation_bug_report_description_label">Ne oldu?</string>
+    <string name="generation_bug_report_send_button">Gönder</string>
+
+    <!-- UniverseCreationScreen.kt / UniverseCreationViewModel.kt -->
+    <string name="universe_create_title">Yeni evren</string>
+    <string name="universe_create_proposal_count_label">Öneri sayısı</string>
+    <string name="universe_create_proposal_hint">Her öneri, tamamen farklı, eksiksiz bir evrendir (hizipler, mekanlar ve NPC\'lerle) — bunlara göz atıp bir veya birkaçını saklayabilirsiniz.</string>
+    <string name="universe_create_manual_section_title">Ya da bir evreni elle oluşturun</string>
+    <string name="universe_create_genre_label">Tür</string>
+    <string name="universe_create_genre_placeholder">Örn.: ortaçağ fantazisi, cyberpunk, kıyamet sonrası...</string>
+    <string name="universe_create_visual_style_label">Görsel stil (isteğe bağlı)</string>
+    <string name="universe_create_submit">Oluştur</string>
+    <string name="universe_create_generating_single">Evren oluşturuluyor...</string>
+    <string name="universe_create_generating_multiple_format">%1$d evren oluşturuluyor...</string>
+    <string name="universe_create_generating_hint">Uygulamadan çıkabilirsiniz. Hazır olduğunda bir bildirim sizi bilgilendirecek.</string>
+    <string name="universe_create_scheduled_title">Oluşturma arka planda başlatıldı</string>
+    <string name="universe_create_scheduled_message_format">Uygulamayı kapatabilirsiniz. Daha sonra geri dönün — evren (\"%1$s\" temel alınarak) hazır olduğunda bir bildirim sizi bilgilendirecek.</string>
+    <string name="universe_create_back_to_list">Listeye dön</string>
+    <string name="universe_create_error_title">Oluşturma başarısız oldu</string>
+    <string name="universe_create_retry">Tekrar dene</string>
+    <string name="universe_create_proposal_index_format">Öneri %1$d/%2$d</string>
+    <string name="universe_create_saved_count_format">%1$d kaydedildi</string>
+    <string name="universe_create_previous">◀ Önceki</string>
+    <string name="universe_create_next">Sonraki ▶</string>
+    <string name="universe_create_saved_check">Kaydedildi ✓</string>
+    <string name="universe_create_select_this">Bunu seç</string>
+    <string name="universe_create_finish">Bitti</string>
+    <string name="universe_create_visual_style_format">Görsel stil: %1$s</string>
+    <string name="universe_create_section_factions">Hizipler</string>
+    <string name="universe_create_section_locations">Mekanlar</string>
+    <string name="universe_create_section_npcs">NPC\'ler</string>
+    <string name="universe_create_error_empty_result">Oluşturma sonucu boş.</string>
+    <string name="universe_create_error_generation_failed">Oluşturma başarısız oldu.</string>
+    <string name="universe_create_error_name_required">Evren adı zorunludur.</string>
+    <string name="universe_create_error_scheduling_failed">Oluşturmanın zamanlanması başarısız oldu.</string>
+
+    <!-- UniverseChatCreationScreen.kt / UniverseChatCreationViewModel.kt -->
+    <string name="universe_chat_create_title">Yeni ortak sohbet</string>
+    <string name="universe_chat_create_intro">Yapay zeka, seçilen tüm karakterleri tek bir ortak sahnede birlikte canlandıracak ve onları birbirleriyle ve sizinle etkileşime sokacak — tek bir başkahraman yok.</string>
+    <string name="universe_chat_create_title_label">Başlık (isteğe bağlı)</string>
+    <string name="universe_chat_create_title_placeholder">Örn.: Pazarda buluşma</string>
+    <string name="universe_chat_create_characters_count_format">Karakterler (%1$d seçildi)</string>
+    <string name="universe_chat_create_empty_candidates">Bu evrende karakter olarak eklenebilecek henüz oynanabilir bir persona veya NPC yok.</string>
+    <string name="universe_chat_create_type_persona">Persona</string>
+    <string name="universe_chat_create_type_npc">NPC</string>
+    <string name="universe_chat_create_submit">Sohbet oluştur</string>
+    <string name="universe_chat_create_error_min_cast_format">Ortak bir sahne için en az %1$d karakter seçin.</string>
+    <string name="universe_chat_create_default_title">Ortak sahne</string>
+
+    <!-- UniverseDetailScreen.kt / UniverseDetailViewModel.kt -->
+    <string name="universe_detail_fallback_title">Evren</string>
+    <string name="universe_detail_publish_title">Marketplace\'te yayınla</string>
+    <string name="universe_detail_genre_format">Tür: %1$s</string>
+    <string name="universe_detail_locations_header_format">Mekanlar (%1$d)</string>
+    <string name="universe_detail_factions_header_format">Hizipler (%1$d)</string>
+    <string name="universe_detail_npcs_header_format">NPC\'ler (%1$d)</string>
+    <string name="universe_detail_personas_header_format">Oynanabilir personalar (%1$d)</string>
+    <string name="universe_detail_include_persona_button">Var olan bir personayı dahil et</string>
+    <string name="universe_detail_include_persona_dialog_title">Var olan personaları dahil et</string>
+    <string name="universe_detail_include_persona_empty">Kullanılabilir bağımsız persona yok — tüm personalarınız zaten bir evrene ait.</string>
+    <string name="universe_detail_include_persona_confirm">Dahil et (%1$d)</string>
+    <string name="universe_detail_ensemble_chats_header_format">Ortak sohbetler (%1$d)</string>
+    <string name="universe_detail_ensemble_chat_hint">Sabit bir başkahramanı olmayan bir sohbet: yapay zeka bu evrenden birden çok persona/NPC\'yi birlikte canlandırır ve onları etkileşime sokar.</string>
+    <string name="universe_detail_publish_description_format">\"%1$s\" öğesini Kitsune topluluğuyla paylaşın.</string>
+    <string name="universe_detail_publish_description_label">Açıklama (isteğe bağlı)</string>
+    <string name="universe_detail_publish_price_label">Kredi cinsinden fiyat (0 = ücretsiz)</string>
+    <string name="universe_detail_publish_hint">Evren, hizipleri, mekanları, NPC\'leri ve personaları yayınlanacak.</string>
+    <string name="universe_detail_publish_success">Yayınlama başarılı!</string>
+    <string name="universe_detail_publish_error_format">Hata: %1$s</string>
+    <string name="universe_detail_publish_confirm">Yayınla</string>
+    <string name="universe_detail_add_location_title">Mekan ekle</string>
+    <string name="universe_detail_location_type_placeholder">Tür (şehir, orman, zindan...)</string>
+    <string name="universe_detail_add_faction_title">Hizip ekle</string>
+    <string name="universe_detail_faction_type_placeholder">Tür (lonca, tarikat, imparatorluk...)</string>
+    <string name="universe_detail_faction_alignment_label">Eğilim (isteğe bağlı)</string>
+    <string name="universe_detail_add_npc_title">NPC ekle</string>
+    <string name="universe_detail_npc_personality_label">Kişilik</string>
+    <string name="universe_detail_npc_role_label">Rol</string>
+    <string name="universe_detail_npc_age_label">Yaş (isteğe bağlı)</string>
+    <string name="universe_detail_no_faction">Hizip yok</string>
+    <string name="universe_detail_faction_label">Hizip</string>
+    <string name="universe_detail_no_location">Mekan yok</string>
+    <string name="universe_detail_location_label">Mekan</string>
+    <string name="universe_detail_error_not_found">Evren bulunamadı</string>
+    <string name="universe_detail_error_unknown">Bilinmeyen hata</string>
+    <string name="universe_detail_error_add_location">Mekan eklenirken hata oluştu</string>
+    <string name="universe_detail_error_delete_location">Mekan silinirken hata oluştu</string>
+    <string name="universe_detail_error_add_faction">Hizip eklenirken hata oluştu</string>
+    <string name="universe_detail_error_delete_faction">Hizip silinirken hata oluştu</string>
+    <string name="universe_detail_error_add_npc">NPC eklenirken hata oluştu</string>
+    <string name="universe_detail_error_delete_npc">NPC silinirken hata oluştu</string>
+</resources>

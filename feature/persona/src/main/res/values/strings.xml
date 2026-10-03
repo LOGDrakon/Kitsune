@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Shared actions/labels reused across several screens in this module -->
+    <string name="action_cancel">Cancel</string>
+    <string name="action_save">Save</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_back">Back</string>
+    <string name="action_generate">Generate</string>
+    <string name="action_create">Create</string>
+    <string name="action_export">Export</string>
+    <string name="action_import">Import</string>
+    <string name="action_retry">Retry</string>
+    <string name="action_ok">OK</string>
+    <string name="label_error">Error</string>
+
+    <!-- create/PersonaCreationScreen.kt — DescribeStep -->
+    <string name="persona_create_profile_gate_title">Set up your profile first</string>
+    <string name="persona_create_profile_gate_body">Before creating your first persona, tell us a little about you in Settings (first name, age, a short description…) so personas can address you personally in the story. None of this information is ever collected or retained by us or by any service we use (including the AI) — it stays only on your device.</string>
+    <string name="persona_create_profile_gate_action">Set up my profile</string>
+    <string name="persona_create_describe_title">Describe your persona in a few words</string>
+    <string name="persona_create_description_label">Free description</string>
+    <string name="persona_create_visual_style_label">Visual style (optional)</string>
+    <string name="persona_create_proposal_count_label">Number of proposals</string>
+    <string name="persona_create_proposal_count_hint">You\'ll be able to browse the %1$d generated sheets and choose the one you prefer.</string>
+    <string name="persona_create_cost_confirm_title">Generate persona?</string>
+    <string name="persona_create_cost_confirm_text">This will cost %1$d Ofuda(s).</string>
+    <string name="persona_create_first_free_title">This one\'s on the house!</string>
+    <string name="persona_create_first_free_text">Your first persona or universe creation is free, no Ofudas needed.</string>
+
+    <!-- create/PersonaCreationScreen.kt — GeneratingStep -->
+    <string name="persona_create_generating_single">Creating your sheet…</string>
+    <string name="persona_create_generating_multiple">Creating %1$d sheets…</string>
+    <string name="persona_create_generating_hint">You can leave the app. A notification will let you know when it\'s ready.</string>
+
+    <!-- create/PersonaCreationScreen.kt — ScheduledStep -->
+    <string name="persona_create_scheduled_title">Generation started in the background</string>
+    <string name="persona_create_scheduled_message">You can close the app. Come back later — a notification will tell you when the sheet (based on \"%1$s\") is ready.</string>
+    <string name="persona_create_back_to_list_button">Back to list</string>
+
+    <!-- create/PersonaCreationScreen.kt — BrowsingStep -->
+    <string name="persona_create_proposal_counter">Proposal %1$d/%2$d</string>
+    <string name="persona_create_scenario_label">Scenario: %1$s</string>
+    <string name="persona_create_first_message_label">First message: %1$s</string>
+    <string name="persona_create_previous_button">◀ Previous</string>
+    <string name="persona_create_next_button">Next ▶</string>
+    <string name="persona_create_choose_button">Choose this one</string>
+    <string name="persona_create_saved_count_format">%1$d saved</string>
+    <string name="persona_create_saved_check">Saved ✓</string>
+    <string name="persona_create_finish_button">Done</string>
+
+    <!-- create/PersonaCreationScreen.kt — ErrorStep -->
+    <string name="persona_create_error_title">Generation failed</string>
+
+    <!-- create/PersonaCreationScreen.kt — ReviewStep -->
+    <string name="persona_review_age_label">Persona age (required, 18+)</string>
+    <string name="persona_review_tags_label">Tags</string>
+    <string name="tags_add_placeholder">Add a tag…</string>
+    <string name="persona_review_visual_sheet_label">Visual sheet (reused in every generated image for consistency)</string>
+    <string name="persona_review_physical_traits_label">Physical traits</string>
+    <string name="persona_review_art_style_label">Art style</string>
+    <string name="persona_review_color_palette_label">Color palette</string>
+    <string name="persona_review_default_outfit_label">Default outfit</string>
+
+    <!-- create/PersonaCreationViewModel.kt — user-facing error messages -->
+    <string name="persona_create_error_empty_result">The generation result is empty.</string>
+    <string name="persona_create_error_generation_failed">Generation failed.</string>
+    <string name="persona_create_error_schedule_failed">Scheduling the generation failed.</string>
+    <string name="persona_review_error_age_minimum">Persona age must be a whole number of %1$d or older.</string>
+    <string name="persona_limit_reached_title">Persona limit reached</string>
+    <string name="persona_limit_reached_text">Free accounts are limited to %1$d personas. Subscribe to Kitsune+ from the Store for unlimited personas (creating one still costs Ofudas).</string>
+
+    <!-- detail/PersonaDetailScreen.kt — dialogs -->
+    <string name="persona_detail_generate_image_label">Generate an image</string>
+    <string name="persona_detail_generate_image_placeholder">Describe the image to generate…</string>
+    <string name="persona_detail_delete_confirm_title">Delete %1$s?</string>
+    <string name="persona_detail_delete_confirm_message">This action is permanent and will also delete its conversations.</string>
+    <string name="persona_detail_avatar_dialog_title">Profile picture</string>
+    <string name="persona_detail_avatar_dialog_message">Choose an existing image, or generate one with AI.</string>
+    <string name="persona_detail_generate_with_ai_button">Generate with AI</string>
+    <string name="persona_detail_choose_from_gallery_button">Choose from gallery</string>
+
+    <!-- detail/PersonaDetailScreen.kt — top bar and header -->
+    <string name="persona_detail_public_label">Public</string>
+    <string name="persona_detail_avatar_content_description">Avatar of %1$s</string>
+
+    <!-- detail/PersonaDetailScreen.kt — entry scenes section -->
+    <string name="persona_detail_entry_scenes_title">Entry scenes</string>
+    <string name="persona_detail_create_scene_content_description">Create a scene</string>
+    <string name="persona_detail_no_scenes_message">No scene configured yet. The persona\'s default message will be used.</string>
+    <string name="persona_detail_default_scene_label">Default</string>
+    <string name="persona_detail_delete_scene_title">Delete \"%1$s\"?</string>
+    <string name="persona_detail_quoted_text">\"%1$s\"</string>
+
+    <!-- detail/PersonaDetailScreen.kt — gallery section -->
+    <string name="persona_detail_gallery_title">Gallery</string>
+    <string name="persona_detail_no_gallery_images_message">No images in the gallery yet.</string>
+    <string name="persona_detail_delete_image_title">Delete this image?</string>
+    <string name="persona_detail_delete_image_message">Tap the image to crop it, or long-press to delete it.</string>
+
+    <!-- detail/PersonaDetailScreen.kt — footer / create scene dialog -->
+    <string name="persona_detail_start_chat_button">Start a conversation</string>
+    <string name="persona_detail_new_scene_dialog_title">New entry scene</string>
+    <string name="persona_detail_scene_title_label">Title</string>
+    <string name="persona_detail_scene_scenario_label">Scenario</string>
+    <string name="persona_detail_scene_first_message_label">First message</string>
+
+    <!-- detail/PersonaDetailViewModel.kt — user-facing error messages -->
+    <string name="persona_detail_error_not_found">Persona not found</string>
+    <string name="persona_detail_error_image_generation_fallback">Image generation error</string>
+    <string name="persona_detail_error_publish_format">Publish error: %1$s</string>
+    <string name="persona_detail_error_unpublish_format">Error: %1$s</string>
+
+    <!-- imagegen/PersonaImageGenerationScreen.kt -->
+    <string name="persona_image_gen_title">Generate an image</string>
+    <string name="persona_image_gen_for_persona_label">For %1$s</string>
+    <string name="persona_image_gen_description_label">Description</string>
+    <string name="persona_image_gen_description_placeholder">E.g.: smiling in a garden at sunset</string>
+    <string name="persona_image_gen_inspiration_button">Out of inspiration?</string>
+    <string name="persona_image_gen_visual_style_label">Visual style (optional)</string>
+    <string name="persona_image_gen_aspect_ratio_label">Image format</string>
+    <string name="persona_image_gen_use_avatar_reference_label">Use the avatar as a visual reference</string>
+    <string name="persona_image_gen_generate_anyway_button">Generate anyway (suggestive version)</string>
+    <string name="persona_image_gen_generate_new_button">Generate a new image</string>
+    <string name="persona_image_gen_sfw_fallback_notice">ℹ️ Suggestive version generated after a content filter refusal — the image may differ from the exact scene.</string>
+    <string name="persona_image_gen_regenerate_button">Regenerate (same description, different result)</string>
+    <string name="persona_image_gen_save_button">Save to gallery</string>
+    <string name="persona_image_gen_refused_message">This image was refused by the model\'s content filter. You can try a suggestive version instead.</string>
+    <string name="persona_image_gen_sfw_also_refused">Even the suggestive version was refused: %1$s</string>
+    <string name="persona_image_gen_soften_error">Error while softening the prompt</string>
+
+    <!-- list/PersonaListScreen.kt — empty states -->
+    <string name="persona_list_empty_title">No personas yet</string>
+    <string name="persona_list_empty_hint">Tap + to create one.</string>
+    <string name="persona_list_empty_filtered_message">No personas match the selected filters</string>
+
+    <!-- list/PersonaListScreen.kt — generation jobs banner -->
+    <string name="persona_list_active_generation_single">%1$d generation in progress</string>
+    <string name="persona_list_active_generations_plural">%1$d generations in progress</string>
+    <string name="persona_list_ready_single">%1$d sheet ready to review</string>
+    <string name="persona_list_ready_plural">%1$d sheets ready to review</string>
+    <string name="persona_list_failed_single">%1$d generation failed</string>
+    <string name="persona_list_failed_plural">%1$d generations failed</string>
+
+    <!-- list/PersonaListScreen.kt — avatar -->
+    <string name="persona_list_avatar_content_description">Avatar of %1$s</string>
+
+    <!-- list/PersonaListScreen.kt — failed generation detail dialog -->
+    <string name="action_close">Close</string>
+    <string name="generation_failure_dialog_title">Generation failed</string>
+    <string name="generation_failure_category_content_policy">Blocked by the content filter (content possibly involving a minor or non-consensual acts)</string>
+    <string name="generation_failure_category_insufficient_credits">Not enough Ofudas</string>
+    <string name="generation_failure_category_parsing_failed">The AI responded, but its answer could not be understood</string>
+    <string name="generation_failure_category_technical">Technical error (network, server…)</string>
+    <string name="generation_failure_category_unknown">Unknown reason</string>
+    <string name="generation_failure_credit_consumed">An Ofuda was consumed for this attempt, even though it failed.</string>
+    <string name="generation_failure_credit_not_consumed">No Ofuda was consumed for this attempt.</string>
+    <string name="generation_failure_credit_unknown">Whether an Ofuda was consumed for this attempt could not be determined.</string>
+    <string name="generation_failure_retry_button">Retry</string>
+    <string name="generation_failure_report_button">Report a bug</string>
+    <string name="generation_failure_delete_button">Delete</string>
+
+    <!-- list/PersonaListScreen.kt — bug report dialog for a failed generation -->
+    <string name="generation_bug_report_dialog_title">Report a bug</string>
+    <string name="generation_bug_report_subject_label">Subject</string>
+    <string name="generation_bug_report_description_label">What happened?</string>
+    <string name="generation_bug_report_send_button">Send</string>
+
+    <!-- exportimport/PersonaExportImportScreen.kt -->
+    <string name="persona_export_import_title">Export / Import</string>
+    <string name="persona_export_section_title">Export \"%1$s\"</string>
+    <string name="persona_export_description">Export the persona with all its images into an encrypted JSON file.</string>
+    <string name="persona_import_section_title">Import a persona</string>
+    <string name="persona_import_description">Import a persona from a previously exported JSON file.</string>
+    <string name="persona_import_json_content_label">JSON content</string>
+
+    <!-- exportimport/PersonaExportImportViewModel.kt — user-facing status/error messages -->
+    <string name="persona_export_success_message">Persona exported successfully</string>
+    <string name="persona_export_error_format">Export error: %1$s</string>
+    <string name="persona_import_success_format">Persona imported successfully (ID: %1$s)</string>
+    <string name="persona_import_error_format">Import error: %1$s</string>
+    <!-- Intériorité dramatique (2026-08-22) -->
+    <string name="persona_interiority_section">Inner drives</string>
+    <string name="persona_interiority_explainer">What drives this character underneath. These shape how they act in a scene — they are never announced out loud.</string>
+    <string name="persona_interiority_desire">Wants</string>
+    <string name="persona_interiority_desire_hint">What they are chasing</string>
+    <string name="persona_interiority_fear">Fears</string>
+    <string name="persona_interiority_fear_hint">What they are running from</string>
+    <string name="persona_interiority_flaw">Flaw</string>
+    <string name="persona_interiority_flaw_hint">How they get in their own way</string>
+    <string name="persona_interiority_moral_line">Will never</string>
+    <string name="persona_interiority_moral_line_hint">The line they refuse to cross</string>
+    <string name="persona_interiority_secret">Hides</string>
+    <string name="persona_interiority_secret_hint">What they keep to themselves</string>
+    <!-- Tone cards (2026-08-24) -->
+    <string name="tone_cards_section_title">Story tones</string>
+    <string name="tone_cards_section_description">Saved ways of telling stories with this character. They are offered when a new conversation starts, and travel with the persona when you export or publish it.</string>
+    <string name="tone_cards_add">New tone</string>
+    <string name="tone_cards_empty">No tone saved yet.</string>
+    <string name="tone_card_delete_confirm">Delete this tone?</string>
+    <string name="tone_card_dialog_title">Story tone</string>
+    <string name="tone_card_dialog_description">Describe one way of telling stories with this character. You can save several and pick one when starting a conversation.</string>
+    <string name="tone_card_name_label">Name</string>
+    <string name="tone_card_name_placeholder">e.g. Office rivalry</string>
+    <string name="tone_card_description_label">Description (optional)</string>
+    <string name="tone_card_category_story_pace">Story type</string>
+    <string name="tone_card_category_tone">Tone</string>
+    <string name="tone_card_category_involvement">Involvement</string>
+    <string name="tone_card_category_rhythm">Rhythm</string>
+    <string name="tone_card_category_universe">Setting</string>
+    <string name="tone_card_category_intensity">Maturity</string>
+    <string name="tone_card_category_length">Reply length</string>
+    <string name="tone_card_category_balance">Dialogue vs narration</string>
+    <string name="tone_card_category_voice">Person and tense</string>
+    <string name="tone_card_category_directive">Specific instruction</string>
+    <string name="tone_card_directive_placeholder">e.g. She stays cold with him until he apologises</string>
+    <string name="tone_card_default">Default</string>
+    <string name="tone_card_pace_slice_of_life">Slice of life</string>
+    <string name="tone_card_pace_new_adventure">New adventure</string>
+    <string name="tone_card_pace_saga">Saga</string>
+    <string name="tone_card_pace_episodic">Episodic</string>
+    <string name="tone_card_tone_soft_romantic">Soft romantic</string>
+    <string name="tone_card_tone_dramatic_romance">Dramatic romance</string>
+    <string name="tone_card_tone_dark">Dark romance</string>
+    <string name="tone_card_tone_comedy">Comedy</string>
+    <string name="tone_card_involvement_reader">Reader</string>
+    <string name="tone_card_involvement_co_author">Co-author</string>
+    <string name="tone_card_involvement_immersive">Immersive RP</string>
+    <string name="tone_card_rhythm_slow_burn">Slow burn</string>
+    <string name="tone_card_rhythm_fast">Fast-paced</string>
+    <string name="tone_card_rhythm_contemplative">Contemplative</string>
+    <string name="tone_card_universe_fixed">Fixed setting</string>
+    <string name="tone_card_universe_multiverse">Multiverse</string>
+    <string name="tone_card_universe_campaign">Campaign</string>
+    <string name="tone_card_intensity_suggestive">Suggestive</string>
+    <string name="tone_card_intensity_explicit">Explicit</string>
+    <string name="tone_card_length_brief">Brief</string>
+    <string name="tone_card_length_medium">Medium</string>
+    <string name="tone_card_length_long">Long</string>
+    <string name="tone_card_length_unbounded">No limit</string>
+    <string name="tone_card_balance_dialogue">Mostly spoken</string>
+    <string name="tone_card_balance_even">Even</string>
+    <string name="tone_card_balance_narration">Mostly narration</string>
+    <string name="tone_card_voice_second_present">You, present</string>
+    <string name="tone_card_voice_third_past">She/he, past</string>
+    <string name="tone_card_voice_third_present">She/he, present</string>
+    <string name="tone_card_voice_first_past">I, past</string>
+    <!-- Tone library (2026-08-24) -->
+    <string name="tone_library_title">My story tones</string>
+    <string name="tone_library_description">How you like stories told, whoever you are talking to. These are offered every time you start a conversation, alongside the tones written for the character itself.</string>
+    <string name="tone_library_add">New tone</string>
+    <string name="tone_library_empty">No tone saved yet. Create one and it will be offered on every new conversation.</string>
+    <!-- Character cards (2026-08-25) -->
+    <string name="card_section_title">Character card</string>
+    <string name="card_section_description">The format used by Chub, SillyTavern, Agnai and RisuAI. Bring a character you already have, or take yours elsewhere. Everything happens on this device.</string>
+    <string name="card_import_action">Import a card</string>
+    <string name="card_export_action">Export as a card</string>
+    <string name="card_import_success">Character imported. Check its age on the persona sheet.</string>
+    <string name="card_import_not_a_card">This file carries no character card.</string>
+    <string name="card_export_success">Card exported.</string>
+    <string name="card_export_needs_avatar">This persona needs an avatar: a card is an image carrying its data.</string>
+</resources>

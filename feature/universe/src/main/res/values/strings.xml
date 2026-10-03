@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common actions / fields shared across universe screens -->
+    <string name="common_cancel">Cancel</string>
+    <string name="common_back">Back</string>
+    <string name="common_close">Close</string>
+    <string name="common_delete">Delete</string>
+    <string name="common_add">Add</string>
+    <string name="field_name">Name</string>
+    <string name="field_description">Description</string>
+
+    <!-- UniverseListScreen.kt -->
+    <string name="universe_list_empty_title">No universes yet</string>
+    <string name="universe_list_empty_hint">Tap + to create one.</string>
+    <string name="universe_list_jobs_active_format">%1$d generation(s) in progress</string>
+    <string name="universe_list_jobs_ready_format">%1$d universe(s) ready to review</string>
+    <string name="universe_list_jobs_failed_format">%1$d generation(s) failed</string>
+
+    <!-- UniverseListScreen.kt — failed generation detail dialog -->
+    <string name="generation_failure_dialog_title">Generation failed</string>
+    <string name="generation_failure_category_content_policy">Blocked by the content filter (content possibly involving a minor or non-consensual acts)</string>
+    <string name="generation_failure_category_insufficient_credits">Not enough Ofudas</string>
+    <string name="generation_failure_category_parsing_failed">The AI responded, but its answer could not be understood</string>
+    <string name="generation_failure_category_technical">Technical error (network, server…)</string>
+    <string name="generation_failure_category_unknown">Unknown reason</string>
+    <string name="generation_failure_credit_consumed">An Ofuda was consumed for this attempt, even though it failed.</string>
+    <string name="generation_failure_credit_not_consumed">No Ofuda was consumed for this attempt.</string>
+    <string name="generation_failure_credit_unknown">Whether an Ofuda was consumed for this attempt could not be determined.</string>
+    <string name="generation_failure_retry_button">Retry</string>
+    <string name="generation_failure_report_button">Report a bug</string>
+    <string name="generation_failure_delete_button">Delete</string>
+
+    <!-- UniverseListScreen.kt — bug report dialog for a failed generation -->
+    <string name="generation_bug_report_dialog_title">Report a bug</string>
+    <string name="generation_bug_report_subject_label">Subject</string>
+    <string name="generation_bug_report_description_label">What happened?</string>
+    <string name="generation_bug_report_send_button">Send</string>
+
+    <!-- UniverseCreationScreen.kt / UniverseCreationViewModel.kt -->
+    <string name="universe_create_title">New universe</string>
+    <string name="universe_create_proposal_count_label">Number of proposals</string>
+    <string name="universe_create_proposal_hint">Each proposal is a complete, different universe (with factions, locations and NPCs) — you\'ll be able to browse them and keep one or more.</string>
+    <string name="universe_create_tags_label">Tags</string>
+    <string name="universe_tags_add_placeholder">Add a tag…</string>
+    <string name="universe_create_cost_confirm_title">Generate universe?</string>
+    <string name="universe_create_cost_confirm_text">This will cost %1$d Ofuda(s).</string>
+    <string name="universe_create_first_free_title">This one\'s on the house!</string>
+    <string name="universe_create_first_free_text">Your first persona or universe creation is free, no Ofudas needed.</string>
+    <string name="universe_create_manual_section_title">Or create a universe manually</string>
+    <string name="universe_create_genre_label">Genre</string>
+    <string name="universe_create_genre_placeholder">E.g.: medieval fantasy, cyberpunk, post-apocalyptic...</string>
+    <string name="universe_create_visual_style_label">Visual style (optional)</string>
+    <string name="universe_create_submit">Create</string>
+    <string name="universe_create_generating_single">Generating the universe...</string>
+    <string name="universe_create_generating_multiple_format">Generating %1$d universes...</string>
+    <string name="universe_create_generating_hint">You can leave the app. A notification will let you know when it\'s ready.</string>
+    <string name="universe_create_scheduled_title">Generation started in the background</string>
+    <string name="universe_create_scheduled_message_format">You can close the app. Come back later — a notification will tell you when the universe (based on \"%1$s\") is ready.</string>
+    <string name="universe_create_back_to_list">Back to list</string>
+    <string name="universe_create_error_title">Generation failed</string>
+    <string name="universe_create_retry">Retry</string>
+    <string name="universe_create_proposal_index_format">Proposal %1$d/%2$d</string>
+    <string name="universe_create_saved_count_format">%1$d saved</string>
+    <string name="universe_create_previous">◀ Previous</string>
+    <string name="universe_create_next">Next ▶</string>
+    <string name="universe_create_saved_check">Saved ✓</string>
+    <string name="universe_create_select_this">Choose this one</string>
+    <string name="universe_create_finish">Done</string>
+    <string name="universe_create_visual_style_format">Visual style: %1$s</string>
+    <string name="universe_create_section_factions">Factions</string>
+    <string name="universe_create_section_locations">Locations</string>
+    <string name="universe_create_section_npcs">NPCs</string>
+    <string name="universe_create_error_empty_result">The generation result is empty.</string>
+    <string name="universe_create_error_generation_failed">The generation failed.</string>
+    <string name="universe_create_error_name_required">The universe name is required.</string>
+    <string name="universe_limit_reached_title">Universe limit reached</string>
+    <string name="universe_limit_reached_text">Free accounts are limited to %1$d universes. Subscribe to Kitsune+ from the Store for unlimited universes (creating one still costs Ofudas).</string>
+    <string name="universe_create_error_scheduling_failed">Scheduling the generation failed.</string>
+
+    <!-- UniverseChatCreationScreen.kt / UniverseChatCreationViewModel.kt -->
+    <string name="universe_chat_create_title">New ensemble chat</string>
+    <string name="universe_chat_create_intro">The AI will play all the selected characters together in one shared scene, making them interact with each other and with you — there\'s no single protagonist.</string>
+    <string name="universe_chat_create_title_label">Title (optional)</string>
+    <string name="universe_chat_create_title_placeholder">E.g.: Meeting at the market</string>
+    <string name="universe_chat_create_characters_count_format">Characters (%1$d selected)</string>
+    <string name="universe_chat_create_empty_candidates">This universe doesn\'t have any playable persona or NPC yet to add as a character.</string>
+    <string name="universe_chat_create_type_persona">Persona</string>
+    <string name="universe_chat_create_type_npc">NPC</string>
+    <string name="universe_chat_create_submit">Create chat</string>
+    <string name="universe_chat_create_error_min_cast_format">Choose at least %1$d characters for an ensemble scene.</string>
+    <string name="universe_chat_create_default_title">Ensemble scene</string>
+
+    <!-- UniverseDetailScreen.kt / UniverseDetailViewModel.kt -->
+    <string name="universe_detail_fallback_title">Universe</string>
+    <string name="universe_detail_publish_title">Publish to the marketplace</string>
+    <string name="universe_detail_genre_format">Genre: %1$s</string>
+    <string name="universe_detail_locations_header_format">Locations (%1$d)</string>
+    <string name="universe_detail_factions_header_format">Factions (%1$d)</string>
+    <string name="universe_detail_npcs_header_format">NPCs (%1$d)</string>
+    <string name="universe_detail_personas_header_format">Playable personas (%1$d)</string>
+    <string name="universe_detail_include_persona_button">Include an existing persona</string>
+    <string name="universe_detail_include_persona_dialog_title">Include existing personas</string>
+    <string name="universe_detail_include_persona_empty">No standalone persona available — every persona you\'ve created already belongs to a universe.</string>
+    <string name="universe_detail_include_persona_confirm">Include (%1$d)</string>
+    <string name="universe_detail_ensemble_chats_header_format">Ensemble chats (%1$d)</string>
+    <string name="universe_detail_ensemble_chat_hint">A chat with no fixed protagonist: the AI plays several personas/NPCs from this universe together and makes them interact.</string>
+    <string name="universe_detail_publish_description_format">Share \"%1$s\" with the Kitsune community.</string>
+    <string name="universe_detail_publish_description_label">Description (optional)</string>
+    <string name="universe_detail_publish_hint">The universe, its factions, locations, NPCs and personas will be published.</string>
+    <string name="universe_detail_public_label">Public</string>
+    <string name="universe_detail_publish_success">Publication successful!</string>
+    <string name="universe_detail_publish_error_format">Error: %1$s</string>
+    <string name="universe_detail_publish_confirm">Publish</string>
+    <string name="universe_detail_add_location_title">Add a location</string>
+    <string name="universe_detail_location_type_placeholder">Type (city, forest, dungeon...)</string>
+    <string name="universe_detail_add_faction_title">Add a faction</string>
+    <string name="universe_detail_faction_type_placeholder">Type (guild, order, empire...)</string>
+    <string name="universe_detail_faction_alignment_label">Alignment (optional)</string>
+    <string name="universe_detail_add_npc_title">Add an NPC</string>
+    <string name="universe_detail_npc_personality_label">Personality</string>
+    <string name="universe_detail_npc_role_label">Role</string>
+    <string name="universe_detail_npc_physical_description_label">Physical description (optional, for visual consistency)</string>
+    <string name="universe_detail_npc_age_label">Age (optional)</string>
+    <string name="universe_detail_no_faction">No faction</string>
+    <string name="universe_detail_faction_label">Faction</string>
+    <string name="universe_detail_no_location">No location</string>
+    <string name="universe_detail_location_label">Location</string>
+    <string name="universe_detail_error_not_found">Universe not found</string>
+    <string name="universe_detail_error_unknown">Unknown error</string>
+    <string name="universe_detail_error_add_location">Error while adding the location</string>
+    <string name="universe_detail_error_delete_location">Error while deleting the location</string>
+    <string name="universe_detail_error_add_faction">Error while adding the faction</string>
+    <string name="universe_detail_error_delete_faction">Error while deleting the faction</string>
+    <string name="universe_detail_error_add_npc">Error while adding the NPC</string>
+    <string name="universe_detail_error_delete_npc">Error while deleting the NPC</string>
+    <string name="universe_detail_type_format">Type: %1$s</string>
+    <string name="universe_detail_type_alignment_format">Type: %1$s · Alignment: %2$s</string>
+    <string name="universe_detail_role_format">Role: %1$s</string>
+    <string name="universe_detail_role_age_format">Role: %1$s · Age: %2$s</string>
+    <string name="universe_detail_avatar_content_description">Avatar of %1$s</string>
+    <string name="universe_detail_avatar_dialog_title">Universe avatar</string>
+    <string name="universe_detail_avatar_dialog_message">Choose how to set the cover image for this universe.</string>
+    <string name="universe_detail_generate_with_ai_button">Generate with AI</string>
+    <string name="universe_detail_choose_from_universe_gallery_button">Choose from universe gallery</string>
+    <string name="universe_detail_choose_from_device_button">Choose from device</string>
+    <string name="universe_detail_generate_avatar_title">Generate a cover image</string>
+    <string name="universe_detail_generate_npc_portrait_title">Generate a portrait for %1$s</string>
+    <string name="universe_detail_generate_location_image_title">Generate an illustration for %1$s</string>
+    <string name="universe_detail_generate_image_placeholder">Describe the image...</string>
+    <string name="universe_detail_action_generate">Generate</string>
+    <string name="universe_detail_error_title">Error</string>
+    <string name="universe_detail_error_ok">OK</string>
+    <string name="universe_detail_generate_portrait_content_description">Generate an image</string>
+</resources>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MarketplaceScreen.kt - Filter chips -->
+    <string name="filter_all">すべて</string>
+    <string name="filter_type_personas">ペルソナ</string>
+    <string name="filter_type_universes">世界観</string>
+    <string name="filter_sort_popular">人気順</string>
+    <string name="filter_sort_recent">新着順</string>
+
+    <!-- MarketplaceScreen.kt - Listing list state -->
+    <string name="error_message_format">エラー: %1$s</string>
+    <string name="empty_listings_message">まだコンテンツがありません。\n最初に投稿してみましょう！</string>
+
+    <!-- MarketplaceScreen.kt - Listing card -->
+    <string name="listing_type_persona_badge">ペルソナ</string>
+    <string name="listing_type_universe_badge">世界観</string>
+    <string name="listing_by_creator_format">%1$s より</string>
+    <string name="anonymous_creator_name">匿名</string>
+    <string name="description_ellipsis">…</string>
+
+    <!-- MarketplaceScreen.kt - Listing detail screen -->
+    <string name="listing_detail_title">詳細</string>
+    <string name="content_desc_back">戻る</string>
+    <string name="download_success_message">ダウンロードに成功しました！</string>
+    <string name="download_error_message">ダウンロード中にエラーが発生しました</string>
+    <string name="download_button_label">ダウンロード</string>
+    <string name="price_free_label">無料</string>
+    <string name="genre_label_format">ジャンル: %1$s</string>
+    <string name="gallery_section_title_format">ギャラリー（%1$d枚）</string>
+    <string name="persona_sheet_title">ペルソナ設定</string>
+    <string name="universe_sheet_title">世界観設定</string>
+    <string name="factions_section_title_format">勢力（%1$d）</string>
+    <string name="locations_section_title_format">場所（%1$d）</string>
+    <string name="npcs_section_title_format">登場人物（%1$d）</string>
+    <string name="playable_personas_section_title_format">プレイ可能なペルソナ（%1$d）</string>
+    <string name="label_name">名前</string>
+    <string name="label_description">説明</string>
+    <string name="label_personality">性格</string>
+    <string name="label_scenario">シナリオ</string>
+    <string name="label_first_message">最初のメッセージ</string>
+    <string name="label_age">年齢</string>
+    <string name="label_genre">ジャンル</string>
+    <string name="maturity_tags_format">対象年齢: %1$s</string>
+    <string name="label_visual_style">ビジュアルスタイル</string>
+    <string name="download_count_format">%1$d ダウンロード</string>
+    <string name="rating_reviews_format">%1$s（%2$d件のレビュー）</string>
+    <string name="type_label_format">タイプ: %1$s</string>
+    <string name="alignment_suffix_format"> | 陣営: %1$s</string>
+    <string name="role_label_format">役割: %1$s</string>
+    <string name="age_suffix_format"> | 年齢: %1$s</string>
+    <string name="npc_personality_format">性格: %1$s</string>
+    <string name="persona_summary_age_tags_format">年齢: %1$d | %2$s</string>
+
+    <!-- MarketplaceViewModel.kt - Error fallbacks -->
+    <string name="error_failed_to_load_listings">出品情報の読み込みに失敗しました</string>
+    <string name="error_unknown">不明なエラー</string>
+
+    <!-- MarketplaceScreen.kt - Report a listing -->
+    <string name="content_desc_more_options">その他のオプション</string>
+    <string name="report_listing_action">このコンテンツを報告</string>
+    <string name="report_dialog_title">このコンテンツを報告</string>
+    <string name="report_reason_label">理由</string>
+    <string name="report_reason_inappropriate">不適切なコンテンツ</string>
+    <string name="report_reason_minor_content">性的な文脈で未成年に見えるキャラクター</string>
+    <string name="report_reason_spam">スパムまたは誤解を招くコンテンツ</string>
+    <string name="report_reason_copyright">著作権侵害</string>
+    <string name="report_reason_other">その他</string>
+    <string name="report_description_label">詳細（任意）</string>
+    <string name="report_send_button">報告を送信</string>
+    <string name="report_success_title">報告を送信しました</string>
+    <string name="report_success_message">ありがとうございます。チームがこのコンテンツを確認します。</string>
+    <string name="report_error_title">エラー</string>
+    <string name="report_error_message">報告を送信できませんでした。もう一度お試しください。</string>
+    <string name="action_ok">OK</string>
+    <string name="action_cancel">キャンセル</string>
+</resources>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common / shared actions (used across dialogs in this module) -->
+    <string name="action_cancel">Abbrechen</string>
+    <string name="action_save">Speichern</string>
+    <string name="action_close">Schließen</string>
+    <string name="action_back">Zurück</string>
+    <string name="error_generic">Fehler</string>
+
+    <!-- SettingsScreen: top bar & language -->
+    <string name="settings_title">Einstellungen</string>
+    <string name="language_label">Sprache</string>
+    <string name="language_selected_checkmark">✓</string>
+
+    <!-- SettingsScreen: "Improve Kitsune" entry (also used as ProposalsScreen title) -->
+    <string name="improve_kitsune_title">Kitsune verbessern</string>
+    <string name="improve_kitsune_subtitle">Verbesserungen vorschlagen und abstimmen</string>
+
+    <!-- SettingsScreen: Eintrag "Meine Nachrichten" + MessagesScreen.kt -->
+    <string name="messages_title">Meine Nachrichten</string>
+    <string name="messages_subtitle">Nachrichten vom Moderationsteam</string>
+    <string name="messages_empty">Keine Nachrichten.</string>
+    <string name="messages_unread_content_description">Ungelesen</string>
+
+    <!-- SettingsScreen: Hinweis bei gesperrtem Konto -->
+    <string name="account_banned_notice_title">Konto gesperrt</string>
+    <string name="account_banned_notice_body">Sie haben weiterhin Zugriff auf Ihre bestehenden Chats und Einstellungen, können aber keine neuen Inhalte mehr erstellen (Nachrichten, Personas, Universen, Bilder).</string>
+    <string name="account_banned_notice_body_with_reason">Sie haben weiterhin Zugriff auf Ihre bestehenden Chats und Einstellungen, können aber keine neuen Inhalte mehr erstellen (Nachrichten, Personas, Universen, Bilder).\n\nGrund: %1$s</string>
+
+    <!-- SettingsScreen: Abschnittsüberschriften für das Karten-Layout (IDEAS.md 2026-07-03) -->
+    <string name="account_section_title">Konto</string>
+    <string name="creativity_section_title">Kreativität</string>
+
+    <!-- SettingsScreen: Link zur öffentlichen Seite zur Datentransparenz -->
+    <string name="data_transparency_label">Transparenz über die Erhebung Ihrer Daten</string>
+    <string name="data_transparency_description">Genau sehen, welche Daten erhoben werden, von uns oder den von uns genutzten Diensten</string>
+
+    <!-- SettingsScreen: user profile section -->
+    <string name="profile_section_title">Benutzerprofil</string>
+    <string name="profile_section_description">Damit Personas dich korrekt ansprechen.</string>
+    <string name="profile_section_confidentiality_notice">Diese Angaben werden nicht auf unseren Servern erfasst oder gespeichert. Sie werden jedoch bei jeder Nachricht an die KI übermittelt — nur so können dich die Charaktere mit deinem Namen ansprechen. Lass das Feld leer, wenn sie dein Gerät nicht verlassen sollen.</string>
+    <string name="profile_first_name_label">Vorname</string>
+    <string name="profile_last_name_label">Nachname</string>
+    <string name="profile_pronoun_label">Pronomen</string>
+    <string name="profile_pronoun_placeholder">z. B. sie, er, they</string>
+    <string name="profile_age_label">Alter (optional)</string>
+    <string name="profile_physical_description_label">Körperliche Beschreibung (optional)</string>
+    <string name="profile_sexual_orientation_label">Sexuelle Orientierung (optional)</string>
+    <string name="profile_sexual_orientation_placeholder">z. B. heterosexuell, schwul, lesbisch, bisexuell, pansexuell, asexuell...</string>
+
+    <!-- SettingsScreen: credits & store section -->
+    <string name="credits_section_title">Credits &amp; Shop</string>
+    <string name="credits_balance_label">Guthaben</string>
+    <string name="credits_balance_available">%1$d Credits verfügbar</string>
+    <string name="buy_credits_label">Credits kaufen</string>
+    <string name="buy_credits_description">Credit-Pakete, Kitsune+ Abo, Trinkgelder</string>
+    <string name="cosmetics_label">Kosmetik</string>
+    <string name="cosmetics_description">Themes, Animationen, animierte Hintergründe, Umgebungsgeräusche</string>
+
+    <!-- SettingsScreen: username -->
+    <string name="username_label">Benutzername</string>
+    <string name="username_not_set">Nicht festgelegt</string>
+    <string name="username_dialog_title">Benutzernamen wählen</string>
+    <string name="username_dialog_description">Dein Pseudonym ist öffentlich auf dem Marktplatz sichtbar. 3 bis 30 Zeichen: Buchstaben, Ziffern, _ und -.</string>
+    <string name="username_field_label">Pseudonym</string>
+    <string name="username_saving">Wird gespeichert...</string>
+    <string name="username_min_length_hint">Mindestens 3 Zeichen</string>
+    <string name="username_available">Verfügbar!</string>
+    <string name="username_taken">Bereits vergeben</string>
+
+    <!-- SettingsScreen: user id -->
+    <string name="user_id_label">Benutzer-ID</string>
+    <string name="copied_confirmation">Kopiert!</string>
+    <string name="copy_id_content_description">ID kopieren</string>
+
+    <!-- SettingsScreen: moderation section -->
+    <string name="moderation_section_title">Moderation</string>
+    <string name="safe_word_label">Safeword</string>
+    <string name="safe_word_placeholder">z. B. roter Apfel</string>
+    <string name="safe_word_description">Gib dieses Wort in einem Gespräch ein, um eine Szene sofort zu unterbrechen.</string>
+
+    <!-- SettingsScreen: security section -->
+    <string name="security_section_title">Sicherheit</string>
+    <string name="auto_lock_label">Automatische Sperre (Minuten)</string>
+    <string name="screenshot_protection_label">Schutz vor Bildschirmaufnahmen</string>
+    <string name="screenshot_protection_description">Diese Änderung wird beim nächsten Start der App wirksam.</string>
+    <string name="vault_lock_title">Tresorsperre</string>
+    <string name="vault_lock_description">Mindestens einer der beiden Faktoren muss immer aktiv bleiben.</string>
+    <string name="security_mode_updated">Sicherheitsmodus aktualisiert.</string>
+    <string name="panic_pin_description">Panik-PIN: Wird anstelle des echten Codes eingegeben und öffnet einen falschen Inhalt statt des echten Tresors.</string>
+    <string name="panic_pin_configure_button">Panik-PIN konfigurieren</string>
+    <string name="panic_pin_saved">Panik-PIN gespeichert.</string>
+
+    <!-- SettingsScreen: privacy section -->
+    <string name="privacy_section_title">Datenschutz</string>
+    <string name="discreet_mode_label">Dauerhafter dezenter Modus</string>
+    <string name="discreet_mode_description">Aktiviert dauerhaft das dezente Theme (geringer Kontrast, kleinere Schrift). Wird sofort wirksam, sobald du zur Startseite zurückkehrst. Deaktiviere ihn, um zum normalen Theme zurückzukehren.</string>
+
+    <!-- SettingsScreen: support section -->
+    <string name="support_section_title">Support</string>
+    <string name="bug_report_description">Beschreiben Sie, was passiert ist — wir erstellen einen anonymen Bericht (keine API-Schlüssel, kein Safeword, Vor-/Nachname im Verlauf geschwärzt), verschlüsselt und automatisch gesendet. Wird nach Behebung des Problems gelöscht.</string>
+    <string name="generate_bug_report_button">Fehlerbericht senden</string>
+    <string name="bug_report_dialog_title">Problem melden</string>
+    <string name="bug_report_subject_label">Betreff</string>
+    <string name="bug_report_description_label">Was ist passiert?</string>
+    <string name="bug_report_send_button">Senden</string>
+
+    <!-- SettingsScreen: panic PIN setup dialog -->
+    <string name="panic_pin_setup_title">Panik-PIN konfigurieren</string>
+    <string name="panic_pin_setup_description">Wird anstelle des echten Codes eingegeben; dieser PIN öffnet falsche Inhalte statt des echten Tresors.</string>
+
+    <!-- SettingsScreen: PIN dialogs (PinPromptDialog / NewPinDialog) -->
+    <string name="pin_field_label">PIN-Code</string>
+    <string name="new_pin_field_label">Neuer PIN-Code</string>
+    <string name="confirm_pin_field_label">Code bestätigen</string>
+    <string name="error_pins_do_not_match">Die beiden Codes stimmen nicht überein.</string>
+
+    <!-- SettingsViewModel: security/panic PIN error messages -->
+    <string name="error_security_mode_change_failed">Die Änderung ist fehlgeschlagen (%1$s) — der aktuelle Sicherheitsmodus wurde nicht geändert.</string>
+    <string name="error_wrong_pin">Falscher PIN-Code.</string>
+    <string name="error_missing_new_pin">Interner Fehler: neuer Code fehlt.</string>
+    <string name="error_panic_pin_too_short">Der Code muss mindestens %1$d Ziffern enthalten.</string>
+
+    <!-- ProposalsScreen -->
+    <string name="create_proposal_content_description">Vorschlag erstellen</string>
+    <string name="proposals_empty_title">Noch keine Vorschläge</string>
+    <string name="proposals_empty_subtitle">Sei der Erste, der eine Verbesserung vorschlägt!</string>
+    <string name="proposal_created_on">Vorgeschlagen am %1$s</string>
+    <string name="proposal_score_label">Punkte: %1$d</string>
+    <string name="vote_up_content_description">Positiv bewerten</string>
+    <string name="vote_down_content_description">Negativ bewerten</string>
+    <string name="create_proposal_dialog_title">Neuer Vorschlag</string>
+    <string name="proposal_title_label">Titel</string>
+    <string name="proposal_description_label">Beschreibung</string>
+    <string name="action_create">Erstellen</string>
+
+    <!-- TelemetryScreen -->
+    <string name="telemetry_title">Telemetrie</string>
+    <string name="telemetry_users_with_activity_title">Benutzer mit Aktivität</string>
+    <string name="telemetry_no_activity">Keine Aktivität erfasst</string>
+    <string name="telemetry_user_id_short">ID: %1$s...</string>
+    <string name="telemetry_back_to_list">Zurück zur Liste</string>
+    <string name="telemetry_user_stats_title">Benutzerstatistiken</string>
+    <string name="telemetry_section_general_activity">Allgemeine Aktivität</string>
+    <string name="telemetry_total_events">Ereignisse insgesamt</string>
+    <string name="telemetry_first_event">Erstes Ereignis</string>
+    <string name="telemetry_last_event">Letztes Ereignis</string>
+    <string name="telemetry_not_available">N/A</string>
+    <string name="telemetry_section_conversations">Unterhaltungen</string>
+    <string name="telemetry_messages_sent">Gesendete Nachrichten</string>
+    <string name="telemetry_messages_received">Empfangene Nachrichten</string>
+    <string name="telemetry_images_generated">Generierte Bilder</string>
+    <string name="telemetry_section_creations">Erstellungen</string>
+    <string name="telemetry_personas_created">Erstellte Personas</string>
+    <string name="telemetry_universes_created">Erstellte Universen</string>
+    <string name="telemetry_section_marketplace">Marktplatz</string>
+    <string name="telemetry_listings_published">Veröffentlichte Angebote</string>
+    <string name="telemetry_listings_downloaded">Heruntergeladene Angebote</string>
+    <string name="telemetry_section_economy">Wirtschaft</string>
+    <string name="telemetry_credits_purchased">Gekaufte Credits</string>
+    <string name="telemetry_credits_spent">Ausgegebene Credits</string>
+    <string name="telemetry_section_social">Soziales</string>
+    <string name="telemetry_proposals_created">Erstellte Vorschläge</string>
+    <string name="telemetry_votes_cast">Abgegebene Stimmen</string>
+    <string name="telemetry_cosmetics_purchased">Gekaufte Kosmetik</string>
+    <string name="telemetry_cosmetics_applied">Angewendete Kosmetik</string>
+</resources>

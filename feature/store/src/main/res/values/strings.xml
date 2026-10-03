@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- StoreScreen: top bar -->
+    <string name="store_title">Store</string>
+    <string name="store_back">Back</string>
+    <string name="store_credits_count">%1$d Ofudas</string>
+    <string name="store_error">Error: %1$s</string>
+    <string name="store_purchase_success">Purchase successful: %1$s</string>
+
+    <!-- StoreScreen: sections -->
+    <string name="store_credit_packs">Ofuda packs</string>
+    <string name="store_support_developer">Support the developer</string>
+    <string name="store_subscription">Subscription</string>
+
+    <!-- StoreScreen: subscription card -->
+    <string name="store_kitsune_plus">Kitsune+</string>
+    <string name="store_kitsune_max">Kitsune Max</string>
+    <string name="store_subscription_benefits">Pro chat mode at 1 Ofuda per message instead of 2 (richer memory, more elevated writing), unlimited personas &amp; universes, %1$d free Ofudas every month</string>
+    <string name="store_subscription_current">Your current plan</string>
+    <string name="store_subscription_rollover_title">Your Ofudas are never lost</string>
+    <string name="store_subscription_rollover_text">The Ofudas your subscription grants each month are added to your balance and never expire. Whatever you don\'t use this month is still there next month — unlike most other apps, nothing is reset.</string>
+    <string name="store_price_per_month">%1$s/month</string>
+
+    <!-- ClaimFreeCreditsDialog -->
+    <string name="store_claim_free_credits_title">Claim your free Ofudas</string>
+    <string name="store_claim_free_credits_message">Welcome to Kitsune! You have 20 free Ofudas to start chatting and generating images. Claim them now to add them to your balance.</string>
+    <string name="store_claim_credits_button">Claim 20 Ofudas</string>
+    <string name="store_later">Later</string>
+
+    <!-- SupportDeveloperDialog -->
+    <string name="store_support_kitsune_title">Support Kitsune</string>
+    <string name="store_support_developer_message">I develop Kitsune alone and try to keep prices competitive while protecting your privacy. If you enjoy the app, you can support me — even a small gesture helps a lot.</string>
+    <string name="store_support_button">Support</string>
+    <string name="store_dont_show_again">Don\'t show again</string>
+</resources>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MarketplaceScreen.kt - Filter chips -->
+    <string name="filter_all">الكل</string>
+    <string name="filter_type_personas">الشخصيات</string>
+    <string name="filter_type_universes">الأكوان</string>
+    <string name="filter_sort_popular">الأكثر شعبية</string>
+    <string name="filter_sort_recent">الأحدث</string>
+
+    <!-- MarketplaceScreen.kt - Listing list state -->
+    <string name="error_message_format">خطأ: %1$s</string>
+    <string name="empty_listings_message">لا يوجد محتوى بعد.\nكن أول من ينشر!</string>
+
+    <!-- MarketplaceScreen.kt - Listing card -->
+    <string name="listing_type_persona_badge">شخصية</string>
+    <string name="listing_type_universe_badge">كون</string>
+    <string name="listing_by_creator_format">بواسطة %1$s</string>
+    <string name="anonymous_creator_name">مجهول</string>
+    <string name="description_ellipsis">…</string>
+
+    <!-- MarketplaceScreen.kt - Listing detail screen -->
+    <string name="listing_detail_title">التفاصيل</string>
+    <string name="content_desc_back">رجوع</string>
+    <string name="download_success_message">تم التنزيل بنجاح!</string>
+    <string name="download_error_message">خطأ أثناء التنزيل</string>
+    <string name="download_button_label">تنزيل</string>
+    <string name="price_free_label">مجاني</string>
+    <string name="genre_label_format">النوع: %1$s</string>
+    <string name="gallery_section_title_format">المعرض (%1$d صورة)</string>
+    <string name="persona_sheet_title">بطاقة الشخصية</string>
+    <string name="universe_sheet_title">بطاقة الكون</string>
+    <string name="factions_section_title_format">الفصائل (%1$d)</string>
+    <string name="locations_section_title_format">الأماكن (%1$d)</string>
+    <string name="npcs_section_title_format">الشخصيات (%1$d)</string>
+    <string name="playable_personas_section_title_format">الشخصيات القابلة للعب (%1$d)</string>
+    <string name="label_name">الاسم</string>
+    <string name="label_description">الوصف</string>
+    <string name="label_personality">الشخصية</string>
+    <string name="label_scenario">السيناريو</string>
+    <string name="label_first_message">الرسالة الأولى</string>
+    <string name="label_age">العمر</string>
+    <string name="label_genre">النوع</string>
+    <string name="maturity_tags_format">التصنيف العمري: %1$s</string>
+    <string name="label_visual_style">النمط البصري</string>
+    <string name="download_count_format">%1$d تنزيل</string>
+    <string name="rating_reviews_format">‏%1$s (%2$d تقييم)</string>
+    <string name="type_label_format">النوع: %1$s</string>
+    <string name="alignment_suffix_format"> | التوجه: %1$s</string>
+    <string name="role_label_format">الدور: %1$s</string>
+    <string name="age_suffix_format"> | العمر: %1$s</string>
+    <string name="npc_personality_format">الشخصية: %1$s</string>
+    <string name="persona_summary_age_tags_format">العمر: %1$d | %2$s</string>
+
+    <!-- MarketplaceViewModel.kt - Error fallbacks -->
+    <string name="error_failed_to_load_listings">فشل تحميل القوائم</string>
+    <string name="error_unknown">خطأ غير معروف</string>
+
+    <!-- MarketplaceScreen.kt - Report a listing -->
+    <string name="content_desc_more_options">خيارات إضافية</string>
+    <string name="report_listing_action">الإبلاغ عن هذا المحتوى</string>
+    <string name="report_dialog_title">الإبلاغ عن هذا المحتوى</string>
+    <string name="report_reason_label">السبب</string>
+    <string name="report_reason_inappropriate">محتوى غير لائق</string>
+    <string name="report_reason_minor_content">تبدو الشخصية قاصرًا في سياق جنسي</string>
+    <string name="report_reason_spam">رسائل مزعجة أو محتوى مضلل</string>
+    <string name="report_reason_copyright">انتهاك حقوق النشر</string>
+    <string name="report_reason_other">أخرى</string>
+    <string name="report_description_label">التفاصيل (اختياري)</string>
+    <string name="report_send_button">إرسال البلاغ</string>
+    <string name="report_success_title">تم إرسال البلاغ</string>
+    <string name="report_success_message">شكرًا لك — سيقوم فريقنا بمراجعة هذا المحتوى.</string>
+    <string name="report_error_title">خطأ</string>
+    <string name="report_error_message">تعذر إرسال البلاغ. يرجى المحاولة مرة أخرى.</string>
+    <string name="action_ok">موافق</string>
+    <string name="action_cancel">إلغاء</string>
+</resources>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common / shared actions (used across dialogs in this module) -->
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_save">Guardar</string>
+    <string name="action_close">Cerrar</string>
+    <string name="action_back">Atrás</string>
+    <string name="error_generic">Error</string>
+
+    <!-- SettingsScreen: top bar & language -->
+    <string name="settings_title">Ajustes</string>
+    <string name="language_label">Idioma</string>
+    <string name="language_selected_checkmark">✓</string>
+
+    <!-- SettingsScreen: "Improve Kitsune" entry (also used as ProposalsScreen title) -->
+    <string name="improve_kitsune_title">Mejora Kitsune</string>
+    <string name="improve_kitsune_subtitle">Propón y vota mejoras</string>
+
+    <!-- SettingsScreen: entrada "Mis mensajes" + MessagesScreen.kt -->
+    <string name="messages_title">Mis mensajes</string>
+    <string name="messages_subtitle">Mensajes del equipo de moderación</string>
+    <string name="messages_empty">Sin mensajes.</string>
+    <string name="messages_unread_content_description">No leído</string>
+
+    <!-- SettingsScreen: aviso de cuenta baneada -->
+    <string name="account_banned_notice_title">Cuenta baneada</string>
+    <string name="account_banned_notice_body">Sigues teniendo acceso a tus chats existentes y a los ajustes, pero ya no puedes generar contenido nuevo (mensajes, personajes, universos, imágenes).</string>
+    <string name="account_banned_notice_body_with_reason">Sigues teniendo acceso a tus chats existentes y a los ajustes, pero ya no puedes generar contenido nuevo (mensajes, personajes, universos, imágenes).\n\nMotivo: %1$s</string>
+
+    <!-- SettingsScreen: encabezados de sección para el diseño en tarjetas (IDEAS.md 2026-07-03) -->
+    <string name="account_section_title">Cuenta</string>
+    <string name="creativity_section_title">Creatividad</string>
+
+    <!-- SettingsScreen: enlace a la página pública de transparencia sobre la recopilación de datos -->
+    <string name="data_transparency_label">Transparencia sobre la recopilación de tus datos</string>
+    <string name="data_transparency_description">Ver exactamente qué datos se recopilan, por nosotros o por los servicios que utilizamos</string>
+
+    <!-- SettingsScreen: user profile section -->
+    <string name="profile_section_title">Perfil de usuario</string>
+    <string name="profile_section_description">Se usa para que los personajes se dirijan a ti correctamente.</string>
+    <string name="profile_section_confidentiality_notice">Esta información no se recopila ni se almacena en nuestros servidores. Sin embargo, se envía a la IA con cada mensaje: es lo que permite que los personajes te llamen por tu nombre. Déjala vacía si prefieres que no salga de tu dispositivo.</string>
+    <string name="profile_first_name_label">Nombre</string>
+    <string name="profile_last_name_label">Apellido</string>
+    <string name="profile_pronoun_label">Pronombre</string>
+    <string name="profile_pronoun_placeholder">Ej.: ella, él, elle</string>
+    <string name="profile_age_label">Edad (opcional)</string>
+    <string name="profile_physical_description_label">Descripción física (opcional)</string>
+    <string name="profile_sexual_orientation_label">Orientación sexual (opcional)</string>
+    <string name="profile_sexual_orientation_placeholder">Ej.: heterosexual, gay, lesbiana, bisexual, pansexual, asexual...</string>
+
+    <!-- SettingsScreen: credits & store section -->
+    <string name="credits_section_title">Créditos y tienda</string>
+    <string name="credits_balance_label">Saldo de créditos</string>
+    <string name="credits_balance_available">%1$d créditos disponibles</string>
+    <string name="buy_credits_label">Comprar créditos</string>
+    <string name="buy_credits_description">Paquetes de créditos, suscripción Kitsune+, propinas</string>
+    <string name="cosmetics_label">Cosméticos</string>
+    <string name="cosmetics_description">Temas, animaciones, fondos animados, sonidos ambientales</string>
+
+    <!-- SettingsScreen: username -->
+    <string name="username_label">Nombre de usuario</string>
+    <string name="username_not_set">Sin definir</string>
+    <string name="username_dialog_title">Elegir un nombre de usuario</string>
+    <string name="username_dialog_description">Tu seudónimo es público en el marketplace. De 3 a 30 caracteres: letras, dígitos, _ y -.</string>
+    <string name="username_field_label">Seudónimo</string>
+    <string name="username_saving">Guardando...</string>
+    <string name="username_min_length_hint">Mínimo 3 caracteres</string>
+    <string name="username_available">¡Disponible!</string>
+    <string name="username_taken">Ya en uso</string>
+
+    <!-- SettingsScreen: user id -->
+    <string name="user_id_label">ID de usuario</string>
+    <string name="copied_confirmation">¡Copiado!</string>
+    <string name="copy_id_content_description">Copiar ID</string>
+
+    <!-- SettingsScreen: moderation section -->
+    <string name="moderation_section_title">Moderación</string>
+    <string name="safe_word_label">Palabra de seguridad</string>
+    <string name="safe_word_placeholder">Ej.: manzana roja</string>
+    <string name="safe_word_description">Escribe esta palabra en una conversación para detener inmediatamente una escena.</string>
+
+    <!-- SettingsScreen: security section -->
+    <string name="security_section_title">Seguridad</string>
+    <string name="auto_lock_label">Bloqueo automático (minutos)</string>
+    <string name="screenshot_protection_label">Protección contra capturas de pantalla</string>
+    <string name="screenshot_protection_description">Este cambio surtirá efecto en el próximo inicio de la aplicación.</string>
+    <string name="vault_lock_title">Bloqueo de la bóveda</string>
+    <string name="vault_lock_description">Al menos uno de los dos factores debe permanecer siempre activo.</string>
+    <string name="security_mode_updated">Modo de seguridad actualizado.</string>
+    <string name="panic_pin_description">PIN de pánico: introducido en lugar del código real, abre un contenido falso en vez de la bóveda real.</string>
+    <string name="panic_pin_configure_button">Configurar PIN de pánico</string>
+    <string name="panic_pin_saved">PIN de pánico guardado.</string>
+
+    <!-- SettingsScreen: privacy section -->
+    <string name="privacy_section_title">Privacidad</string>
+    <string name="discreet_mode_label">Modo discreto permanente</string>
+    <string name="discreet_mode_description">Activa el tema discreto (bajo contraste, letra reducida) de forma permanente. Surte efecto de inmediato al volver al inicio. Desactívalo para volver al tema normal.</string>
+
+    <!-- SettingsScreen: support section -->
+    <string name="support_section_title">Asistencia</string>
+    <string name="bug_report_description">Describe lo que pasó y generaremos un informe anónimo (sin claves API, sin palabra de seguridad, tu nombre/apellido censurados en la transcripción), cifrado y enviado automáticamente. Se elimina una vez resuelto el problema.</string>
+    <string name="generate_bug_report_button">Enviar un informe de error</string>
+    <string name="bug_report_dialog_title">Informar de un problema</string>
+    <string name="bug_report_subject_label">Asunto</string>
+    <string name="bug_report_description_label">¿Qué ha pasado?</string>
+    <string name="bug_report_send_button">Enviar</string>
+
+    <!-- SettingsScreen: panic PIN setup dialog -->
+    <string name="panic_pin_setup_title">Configurar PIN de pánico</string>
+    <string name="panic_pin_setup_description">Introducido en lugar del código real, este PIN abre contenido falso en vez de la bóveda real.</string>
+
+    <!-- SettingsScreen: PIN dialogs (PinPromptDialog / NewPinDialog) -->
+    <string name="pin_field_label">Código PIN</string>
+    <string name="new_pin_field_label">Nuevo código PIN</string>
+    <string name="confirm_pin_field_label">Confirmar código</string>
+    <string name="error_pins_do_not_match">Los dos códigos no coinciden.</string>
+
+    <!-- SettingsViewModel: security/panic PIN error messages -->
+    <string name="error_security_mode_change_failed">El cambio falló (%1$s) — el modo de seguridad actual no se modificó.</string>
+    <string name="error_wrong_pin">Código PIN incorrecto.</string>
+    <string name="error_missing_new_pin">Error interno: falta el nuevo código.</string>
+    <string name="error_panic_pin_too_short">El código debe contener al menos %1$d dígitos.</string>
+
+    <!-- ProposalsScreen -->
+    <string name="create_proposal_content_description">Crear una propuesta</string>
+    <string name="proposals_empty_title">Todavía no hay propuestas</string>
+    <string name="proposals_empty_subtitle">¡Sé el primero en proponer una mejora!</string>
+    <string name="proposal_created_on">Propuesto el %1$s</string>
+    <string name="proposal_score_label">Puntuación: %1$d</string>
+    <string name="vote_up_content_description">Voto positivo</string>
+    <string name="vote_down_content_description">Voto negativo</string>
+    <string name="create_proposal_dialog_title">Nueva propuesta</string>
+    <string name="proposal_title_label">Título</string>
+    <string name="proposal_description_label">Descripción</string>
+    <string name="action_create">Crear</string>
+
+    <!-- TelemetryScreen -->
+    <string name="telemetry_title">Telemetría</string>
+    <string name="telemetry_users_with_activity_title">Usuarios con actividad</string>
+    <string name="telemetry_no_activity">No se registró actividad</string>
+    <string name="telemetry_user_id_short">ID: %1$s...</string>
+    <string name="telemetry_back_to_list">Volver a la lista</string>
+    <string name="telemetry_user_stats_title">Estadísticas del usuario</string>
+    <string name="telemetry_section_general_activity">Actividad general</string>
+    <string name="telemetry_total_events">Total de eventos</string>
+    <string name="telemetry_first_event">Primer evento</string>
+    <string name="telemetry_last_event">Último evento</string>
+    <string name="telemetry_not_available">N/A</string>
+    <string name="telemetry_section_conversations">Conversaciones</string>
+    <string name="telemetry_messages_sent">Mensajes enviados</string>
+    <string name="telemetry_messages_received">Mensajes recibidos</string>
+    <string name="telemetry_images_generated">Imágenes generadas</string>
+    <string name="telemetry_section_creations">Creaciones</string>
+    <string name="telemetry_personas_created">Personas creados</string>
+    <string name="telemetry_universes_created">Universos creados</string>
+    <string name="telemetry_section_marketplace">Marketplace</string>
+    <string name="telemetry_listings_published">Anuncios publicados</string>
+    <string name="telemetry_listings_downloaded">Anuncios descargados</string>
+    <string name="telemetry_section_economy">Economía</string>
+    <string name="telemetry_credits_purchased">Créditos comprados</string>
+    <string name="telemetry_credits_spent">Créditos gastados</string>
+    <string name="telemetry_section_social">Social</string>
+    <string name="telemetry_proposals_created">Propuestas creadas</string>
+    <string name="telemetry_votes_cast">Votos emitidos</string>
+    <string name="telemetry_cosmetics_purchased">Cosméticos comprados</string>
+    <string name="telemetry_cosmetics_applied">Cosméticos aplicados</string>
+</resources>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MarketplaceScreen.kt - Filter chips -->
+    <string name="filter_all">All</string>
+    <string name="filter_type_personas">Personas</string>
+    <string name="filter_type_universes">Universes</string>
+    <string name="filter_sort_popular">Popular</string>
+    <string name="filter_sort_recent">Recent</string>
+    <string name="marketplace_search_placeholder">Search by name, description or tag…</string>
+    <string name="action_clear_search">Clear search</string>
+
+    <!-- MarketplaceScreen.kt - Listing list state -->
+    <string name="error_message_format">Error: %1$s</string>
+    <string name="empty_listings_message">No content yet.\nBe the first to publish!</string>
+
+    <!-- MarketplaceScreen.kt - Listing card -->
+    <string name="listing_type_persona_badge">Persona</string>
+    <string name="listing_type_universe_badge">Universe</string>
+    <string name="listing_by_creator_format">by %1$s</string>
+    <string name="anonymous_creator_name">Anonymous</string>
+    <string name="description_ellipsis">…</string>
+    <string name="follow_creator_button">Follow</string>
+    <string name="unfollow_creator_button">Following</string>
+    <string name="my_follows_title">My follows</string>
+    <string name="my_follows_empty">You\'re not following any creators yet. Follow one from a listing\'s page to see their new publications here.</string>
+    <string name="my_follows_listing_count_format">%1$d listing(s)</string>
+    <string name="creator_listings_title_fallback">Creator\'s listings</string>
+
+    <!-- MarketplaceScreen.kt - Listing detail screen -->
+    <string name="listing_detail_title">Details</string>
+    <string name="content_desc_back">Back</string>
+    <string name="listing_detail_translate_action">Translate</string>
+    <string name="listing_detail_error_translation_fallback">Translation error</string>
+    <string name="download_success_message">Download successful!</string>
+    <string name="download_already_owned_message">Already in your collection</string>
+    <string name="download_error_message">Error during download</string>
+    <string name="download_button_label">Download</string>
+    <string name="price_free_label">Free</string>
+    <string name="genre_label_format">Genre: %1$s</string>
+    <string name="gallery_section_title_format">Gallery (%1$d images)</string>
+    <string name="persona_sheet_title">Persona sheet</string>
+    <string name="universe_sheet_title">Universe sheet</string>
+    <string name="factions_section_title_format">Factions (%1$d)</string>
+    <string name="locations_section_title_format">Locations (%1$d)</string>
+    <string name="npcs_section_title_format">Characters (%1$d)</string>
+    <string name="playable_personas_section_title_format">Playable personas (%1$d)</string>
+    <string name="label_name">Name</string>
+    <string name="label_description">Description</string>
+    <string name="label_personality">Personality</string>
+    <string name="label_scenario">Scenario</string>
+    <string name="label_first_message">First message</string>
+    <string name="label_age">Age</string>
+    <string name="label_genre">Genre</string>
+    <string name="maturity_tags_format">Maturity: %1$s</string>
+    <string name="label_visual_style">Visual style</string>
+    <string name="download_count_format">%1$d downloads</string>
+    <string name="rating_reviews_format">%1$s (%2$d reviews)</string>
+    <string name="type_label_format">Type: %1$s</string>
+    <string name="alignment_suffix_format"> | Alignment: %1$s</string>
+    <string name="role_label_format">Role: %1$s</string>
+    <string name="age_suffix_format"> | Age: %1$s</string>
+    <string name="npc_personality_format">Personality: %1$s</string>
+    <string name="persona_summary_age_tags_format">Age: %1$d | %2$s</string>
+
+    <!-- MarketplaceViewModel.kt - Error fallbacks -->
+    <string name="error_failed_to_load_listings">Failed to load listings</string>
+    <string name="error_unknown">Unknown error</string>
+
+    <!-- MarketplaceScreen.kt - Report a listing -->
+    <string name="content_desc_more_options">More options</string>
+    <string name="report_listing_action">Report this content</string>
+    <string name="report_dialog_title">Report this content</string>
+    <string name="report_reason_label">Reason</string>
+    <string name="report_reason_inappropriate">Inappropriate content</string>
+    <string name="report_reason_minor_content">Character appears to depict a minor in a sexual context</string>
+    <string name="report_reason_spam">Spam or misleading content</string>
+    <string name="report_reason_copyright">Copyright infringement</string>
+    <string name="report_reason_other">Other</string>
+    <string name="report_description_label">Details (optional)</string>
+    <string name="report_send_button">Send report</string>
+    <string name="report_success_title">Report sent</string>
+    <string name="report_success_message">Thank you — our team will review this content.</string>
+    <string name="report_error_title">Error</string>
+    <string name="report_error_message">The report could not be sent. Please try again.</string>
+    <string name="action_ok">OK</string>
+    <string name="action_cancel">Cancel</string>
+
+    <!-- MyBadgesScreen.kt / CreatorListingsScreen.kt - Badges & creator profile -->
+    <string name="my_badges_title">My badges</string>
+    <string name="my_badges_error">Couldn\'t load your badges. Please try again.</string>
+    <string name="my_badges_downloads_section_title">Downloads</string>
+    <string name="my_badges_other_section_title">Other badges</string>
+    <string name="my_badges_rating_progress_format">%1$.1f / %2$.1f ★</string>
+    <string name="my_badges_prolific_progress_format">%1$d / %2$d listings</string>
+    <string name="my_badges_pioneer_rank_format">You\'re signup #%1$d — the first %2$d get this badge</string>
+    <string name="stat_listings_label">Listings</string>
+    <string name="stat_downloads_label">Downloads</string>
+    <string name="stat_rating_label">Rating</string>
+    <string name="stat_followers_label">Followers</string>
+    <string name="creator_profile_loading">Loading profile…</string>
+</resources>

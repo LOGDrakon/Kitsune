@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Model picker dialog -->
+    <string name="model_picker_sort_label">Sort: %1$s</string>
+    <string name="model_picker_error_loading">Unable to load catalog: %1$s</string>
+    <string name="model_picker_retry">Retry</string>
+    <string name="model_picker_no_results">No models match these filters.</string>
+
+    <!-- Model capability filter -->
+    <string name="model_capability_chat_title">Choose a chat model</string>
+    <string name="model_capability_image_title">Choose an image model</string>
+
+    <!-- Model cost filter -->
+    <string name="model_cost_any">Any cost</string>
+    <string name="model_cost_under_1">≤ $1/M</string>
+    <string name="model_cost_under_5">≤ $5/M</string>
+    <string name="model_cost_under_20">≤ $20/M</string>
+
+    <!-- Model context filter -->
+    <string name="model_context_any">Any context</string>
+    <string name="model_context_32k">≥ 32k</string>
+    <string name="model_context_128k">≥ 128k</string>
+    <string name="model_context_500k">≥ 500k</string>
+
+    <!-- Model sort option -->
+    <string name="model_sort_quality">Quality</string>
+    <string name="model_sort_cost">Cost</string>
+    <string name="model_sort_context">Context</string>
+    <string name="model_sort_speed">Speed</string>
+
+    <!-- Model catalog -->
+    <string name="model_catalog_unknown_error">Unknown error</string>
+
+    <!-- Model info format -->
+    <string name="model_tokens_k">%1$dk tokens</string>
+    <string name="model_tokens_count">%1$d tokens</string>
+    <string name="model_cost_format">$%1$s / $%2$s per M tokens (input/output)</string>
+</resources>

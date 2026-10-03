@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+        This module had no manifest at all, which made `:core:background:lintDebug` fail (pre-existing
+        in v1, same error). `GenerationWorker` calls `setForegroundAsync`, and androidx.work's
+        SpecifyForegroundServiceType check requires the module that does so to declare the type — the
+        app module declaring it was enough for the merged manifest to be correct at runtime, but not
+        for the library to lint cleanly in isolation.
+
+        Declaring it here rather than suppressing the check: the requirement is real (the foreground
+        service genuinely is a data sync), and both declarations are identical, so manifest merge
+        unifies them without conflict.
+    -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+
+    <application>
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="dataSync"
+            tools:node="merge" />
+    </application>
+</manifest>

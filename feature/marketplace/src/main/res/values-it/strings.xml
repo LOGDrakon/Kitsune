@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MarketplaceScreen.kt - Filter chips -->
+    <string name="filter_all">Tutti</string>
+    <string name="filter_type_personas">Persona</string>
+    <string name="filter_type_universes">Universi</string>
+    <string name="filter_sort_popular">Popolari</string>
+    <string name="filter_sort_recent">Recenti</string>
+
+    <!-- MarketplaceScreen.kt - Listing list state -->
+    <string name="error_message_format">Errore: %1$s</string>
+    <string name="empty_listings_message">Ancora nessun contenuto.\nSii il primo a pubblicare!</string>
+
+    <!-- MarketplaceScreen.kt - Listing card -->
+    <string name="listing_type_persona_badge">Persona</string>
+    <string name="listing_type_universe_badge">Universo</string>
+    <string name="listing_by_creator_format">di %1$s</string>
+    <string name="anonymous_creator_name">Anonimo</string>
+    <string name="description_ellipsis">…</string>
+
+    <!-- MarketplaceScreen.kt - Listing detail screen -->
+    <string name="listing_detail_title">Dettagli</string>
+    <string name="content_desc_back">Indietro</string>
+    <string name="download_success_message">Download riuscito!</string>
+    <string name="download_error_message">Errore durante il download</string>
+    <string name="download_button_label">Scarica</string>
+    <string name="price_free_label">Gratuito</string>
+    <string name="genre_label_format">Genere: %1$s</string>
+    <string name="gallery_section_title_format">Galleria (%1$d immagini)</string>
+    <string name="persona_sheet_title">Scheda del persona</string>
+    <string name="universe_sheet_title">Scheda dell\'universo</string>
+    <string name="factions_section_title_format">Fazioni (%1$d)</string>
+    <string name="locations_section_title_format">Luoghi (%1$d)</string>
+    <string name="npcs_section_title_format">Personaggi (%1$d)</string>
+    <string name="playable_personas_section_title_format">Persona giocabili (%1$d)</string>
+    <string name="label_name">Nome</string>
+    <string name="label_description">Descrizione</string>
+    <string name="label_personality">Personalità</string>
+    <string name="label_scenario">Scenario</string>
+    <string name="label_first_message">Primo messaggio</string>
+    <string name="label_age">Età</string>
+    <string name="label_genre">Genere</string>
+    <string name="maturity_tags_format">Maturità: %1$s</string>
+    <string name="label_visual_style">Stile visivo</string>
+    <string name="download_count_format">%1$d download</string>
+    <string name="rating_reviews_format">%1$s (%2$d recensioni)</string>
+    <string name="type_label_format">Tipo: %1$s</string>
+    <string name="alignment_suffix_format"> | Allineamento: %1$s</string>
+    <string name="role_label_format">Ruolo: %1$s</string>
+    <string name="age_suffix_format"> | Età: %1$s</string>
+    <string name="npc_personality_format">Personalità: %1$s</string>
+    <string name="persona_summary_age_tags_format">Età: %1$d | %2$s</string>
+
+    <!-- MarketplaceViewModel.kt - Error fallbacks -->
+    <string name="error_failed_to_load_listings">Impossibile caricare gli annunci</string>
+    <string name="error_unknown">Errore sconosciuto</string>
+
+    <!-- MarketplaceScreen.kt - Report a listing -->
+    <string name="content_desc_more_options">Altre opzioni</string>
+    <string name="report_listing_action">Segnala questo contenuto</string>
+    <string name="report_dialog_title">Segnala questo contenuto</string>
+    <string name="report_reason_label">Motivo</string>
+    <string name="report_reason_inappropriate">Contenuto inappropriato</string>
+    <string name="report_reason_minor_content">Il personaggio sembra minorenne in un contesto sessuale</string>
+    <string name="report_reason_spam">Spam o contenuto ingannevole</string>
+    <string name="report_reason_copyright">Violazione del copyright</string>
+    <string name="report_reason_other">Altro</string>
+    <string name="report_description_label">Dettagli (facoltativo)</string>
+    <string name="report_send_button">Invia segnalazione</string>
+    <string name="report_success_title">Segnalazione inviata</string>
+    <string name="report_success_message">Grazie — il nostro team esaminerà questo contenuto.</string>
+    <string name="report_error_title">Errore</string>
+    <string name="report_error_message">Impossibile inviare la segnalazione. Riprova.</string>
+    <string name="action_ok">OK</string>
+    <string name="action_cancel">Annulla</string>
+</resources>
