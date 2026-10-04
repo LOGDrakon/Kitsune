@@ -52,7 +52,7 @@
     <string name="label_genre">Genre</string>
     <string name="maturity_tags_format">Maturity: %1$s</string>
     <string name="label_visual_style">Visual style</string>
-    <string name="download_count_format">%1$d downloads</string>
+    <string name="download_count_format">Downloads: %1$d</string>
     <string name="rating_reviews_format">%1$s (%2$d reviews)</string>
     <string name="type_label_format">Type: %1$s</string>
     <string name="alignment_suffix_format"> | Alignment: %1$s</string>

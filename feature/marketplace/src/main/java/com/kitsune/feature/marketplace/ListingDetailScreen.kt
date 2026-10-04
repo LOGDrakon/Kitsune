@@ -1,5 +1,6 @@
 ﻿package com.kitsune.feature.marketplace
 
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -434,18 +435,18 @@ private fun ListingDetailContent(
             Spacer(Modifier.height(48.dp))
             
             // Title section
-            Text(listing.title, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = if (bgImageUrl != null) Color.White else MaterialTheme.colorScheme.onSurface)
+            Text(listing.title, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
                     stringResource(R.string.listing_by_creator_format, listing.creatorName ?: stringResource(R.string.anonymous_creator_name)),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = if (bgImageUrl != null) Color.White.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.clickable { onOpenCreator(listing.creatorId) }
                 )
                 TextButton(onClick = { onToggleFollow(listing.creatorId, listing.isFollowingCreator) }) {
                     Text(
                         stringResource(if (listing.isFollowingCreator) R.string.unfollow_creator_button else R.string.follow_creator_button),
-                        color = if (bgImageUrl != null) Color.White else MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }
@@ -459,7 +460,6 @@ private fun ListingDetailContent(
             
             // Download button
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                Text(stringResource(R.string.price_free_label), style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.tertiary, fontWeight = FontWeight.Bold)
                 Button(onClick = onDownload, enabled = !isDownloading) {
                     if (isDownloading) { CircularProgressIndicator(Modifier.size(16.dp), strokeWidth = 2.dp) } else { Text(stringResource(R.string.download_button_label)) }
                 }
@@ -506,7 +506,7 @@ private fun ListingDetailContent(
                     }
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.KeyboardArrowDown, null)
+                    Icon(Icons.Default.Download, null)
                     Spacer(Modifier.width(4.dp))
                     Text(stringResource(R.string.download_count_format, listing.downloadCount), style = MaterialTheme.typography.bodyMedium)
                 }
@@ -521,18 +521,21 @@ private fun ListingDetailContent(
                     expanded = galleryExpanded,
                     onToggle = { galleryExpanded = !galleryExpanded }
                 ) {
-                    listing.imageUrls.drop(1).forEachIndexed { index, url ->
-                        AsyncImage(
-                            model = url,
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(180.dp)
-                                .clip(RoundedCornerShape(12.dp))
-                                .clickable { viewerIndex = index + 1 }
-                        )
-                        Spacer(Modifier.height(8.dp))
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.horizontalScroll(rememberScrollState())
+                    ) {
+                        listing.imageUrls.drop(1).forEachIndexed { index, url ->
+                            AsyncImage(
+                                model = url,
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(width = 120.dp, height = 160.dp)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .clickable { viewerIndex = index + 1 }
+                            )
+                        }
                     }
                 }
             }

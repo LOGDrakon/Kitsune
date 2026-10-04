@@ -90,7 +90,7 @@ fun PersonaCreationScreen(
 }
 
 /** Shown instead of the normal creation flow when this would be the user's very first persona and
- * their own profile (Paramètres > Profil) is still blank — see `PersonaCreationViewModel.init`. */
+ * their own profile (Réglages > Profil et langue) is still blank — see `PersonaCreationViewModel.init`. */
 @Composable
 private fun RequiresProfileSetupStep(
     onOpenSettings: () -> Unit,

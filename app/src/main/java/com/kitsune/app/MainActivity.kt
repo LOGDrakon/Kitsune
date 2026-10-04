@@ -71,7 +71,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (secureStorage.getInt(SecureStorage.KEY_FLAG_SECURE_ENABLED, 1) == 1) {
+        // Debug builds only: `adb shell am start -n com.kitsune.app/.MainActivity --ez debug_allow_capture true`
+        // lifts the screenshot block for UI testing. A release build is never debuggable, so the extra
+        // is ignored there whatever sends it.
+        val debugCapture = (applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0 &&
+            intent?.getBooleanExtra("debug_allow_capture", false) == true
+        if (!debugCapture && secureStorage.getInt(SecureStorage.KEY_FLAG_SECURE_ENABLED, 1) == 1) {
             window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
         }
 

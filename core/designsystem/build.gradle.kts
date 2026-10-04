@@ -37,4 +37,5 @@ dependencies {
     api(libs.androidx.material3)
     api(libs.androidx.material.icons.extended)
     implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation(libs.androidx.core.ktx)
 }

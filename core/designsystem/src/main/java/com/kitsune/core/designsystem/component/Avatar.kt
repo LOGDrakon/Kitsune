@@ -64,6 +64,8 @@ fun KitsuneAvatar(
     name: String,
     modifier: Modifier = Modifier,
     imageBytes: ByteArray? = null,
+    /** A remote image (marketplace preview), used when there are no local [imageBytes]. */
+    imageUrl: String? = null,
     size: AvatarSize = AvatarSize.Medium,
     shape: Shape = CircleShape,
     /** Draws an accent ring — for the persona a chat currently belongs to, or a live universe cast. */
@@ -76,7 +78,7 @@ fun KitsuneAvatar(
         modifier = modifier
             .size(size.dp)
             .clip(shape)
-            .background(if (imageBytes != null) colors.surfaceVariant else tint)
+            .background(if (imageBytes != null || imageUrl != null) colors.surfaceVariant else tint)
             .then(
                 if (highlighted) Modifier.border(1.5.dp, colors.accent, shape)
                 else Modifier.border(1.dp, colors.outline, shape)
@@ -89,13 +91,22 @@ fun KitsuneAvatar(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize().clip(shape)
             )
+        } else if (imageUrl != null) {
+            coil.compose.AsyncImage(
+                model = imageUrl,
+                contentDescription = name,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize().clip(shape)
+            )
         } else {
             Text(
                 text = initialsOf(name),
                 fontSize = size.fontSize.sp,
                 fontWeight = FontWeight.Medium,
                 fontFamily = KitsuneSerif,
-                color = colors.text.copy(alpha = 0.82f)
+                // The fallback tints are deep in both themes, so the initials are always light; the
+                // theme's text colour made them dark-on-dark in the light theme.
+                color = Color(0xFFF3ECE4).copy(alpha = 0.9f)
             )
         }
     }

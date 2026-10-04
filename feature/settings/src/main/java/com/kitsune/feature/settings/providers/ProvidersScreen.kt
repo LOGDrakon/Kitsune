@@ -530,18 +530,10 @@ private fun EndpointCard(
 }
 
 @Composable
-private fun ToggleRow(title: String, subtitle: String, checked: Boolean, onChange: (Boolean) -> Unit) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth().padding(vertical = KitsuneTheme.spacing.xs)
-    ) {
-        Column(Modifier.weight(1f)) {
-            Text(title, style = MaterialTheme.typography.bodyLarge)
-            Text(subtitle, style = MaterialTheme.typography.bodySmall, color = KitsuneTheme.colors.textDim)
-        }
-        Switch(checked = checked, onCheckedChange = onChange)
-    }
-}
+private fun ToggleRow(title: String, subtitle: String, checked: Boolean, onChange: (Boolean) -> Unit) =
+    com.kitsune.core.designsystem.component.KitsuneSwitchRow(
+        title = title, description = subtitle, checked = checked, onCheckedChange = onChange
+    )
 
 private fun slugs(raw: String): List<String> =
     raw.split(',', ' ', '\n').map { it.trim().lowercase(Locale.ROOT) }.filter { it.isNotEmpty() }.distinct()

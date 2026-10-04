@@ -9,17 +9,17 @@
     <string name="inspiration_wizard_title_universe">En quête d\'inspiration</string>
     <string name="inspiration_wizard_title_image">En quête d\'inspiration</string>
     <string name="inspiration_wizard_loading_question">Recherche d\'une question…</string>
-    <string name="inspiration_wizard_synthesizing">Mise en forme de ton idée…</string>
+    <string name="inspiration_wizard_synthesizing">Mise en forme de votre idée…</string>
     <string name="inspiration_wizard_progress_format">Question %1$d/%2$d</string>
     <string name="inspiration_wizard_answer_label">Ta réponse</string>
-    <string name="inspiration_wizard_answer_placeholder">Réponds librement, ou passe si rien ne te vient…</string>
+    <string name="inspiration_wizard_answer_placeholder">Répondez librement, ou passez si rien ne vous vient…</string>
     <string name="inspiration_wizard_skip_button">Je n\'ai pas d\'idée</string>
     <string name="inspiration_wizard_next_button">Suivant</string>
     <string name="inspiration_wizard_finish_button">Générer mon idée</string>
     <string name="inspiration_wizard_error_fallback">Un problème est survenu pendant le brainstorming. Réessaie.</string>
 
     <!-- Settings -->
-    <string name="settings_title">Paramètres</string>
+    <string name="settings_title">Réglages</string>
     <string name="panic_pin_saved">PIN de panique enregistré.</string>
     <string name="cancel">Annuler</string>
 
@@ -42,23 +42,23 @@
     <string name="retry">Réessayer</string>
     <!-- Daily login bonus (HomeScreen) -->
     <!-- Inspiration wizard: exploration mode (2026-08-24) -->
-    <string name="inspiration_wizard_mode_title">Comment veux-tu trouver ton idée ?</string>
+    <string name="inspiration_wizard_mode_title">Comment voulez-vous trouver votre idée ?</string>
     <string name="inspiration_wizard_mode_interview_title">Répondre à quelques questions</string>
-    <string name="inspiration_wizard_mode_interview_body">Quatre questions courtes sur ce dont tu as envie. Idéal si tu sais à peu près ce que tu veux.</string>
+    <string name="inspiration_wizard_mode_interview_body">Quatre questions courtes sur ce dont vous avez envie. Idéal si vous savez à peu près ce que vous voulez.</string>
     <string name="inspiration_wizard_mode_explore_title">Explorer des propositions</string>
-    <string name="inspiration_wizard_mode_explore_body">Décris vaguement, puis choisis l\'idée qui te plaît le plus. Chaque tour affine. Idéal si tu n\'as encore aucune idée.</string>
+    <string name="inspiration_wizard_mode_explore_body">Décrivez vaguement, puis choisissez l’idée qui vous plaît le plus. Chaque tour affine. Idéal si vous n’avez encore aucune idée.</string>
     <string name="inspiration_wizard_brief_title">Tu cherches quoi, en gros ?</string>
     <string name="inspiration_wizard_brief_hint">Quelques mots suffisent. Tu affineras en choisissant, pas en écrivant.</string>
     <string name="inspiration_wizard_brief_placeholder">ex. quelqu\'un qui m\'agace mais que je ne peux pas éviter</string>
     <string name="inspiration_wizard_brief_submit">Montre-moi des idées</string>
     <string name="inspiration_wizard_loading_sketches">Recherche d\'idées…</string>
     <string name="inspiration_wizard_sketch_title">Laquelle s\'en rapproche le plus ?</string>
-    <string name="inspiration_wizard_sketch_hint">Choisis celle qui te plaît le plus. Dis ce qu\'il faut changer, et tu auras de nouvelles idées autour.</string>
-    <string name="inspiration_wizard_sketch_note_label">Qu\'est-ce que tu changerais ? (optionnel)</string>
+    <string name="inspiration_wizard_sketch_hint">Choisissez celle qui vous plaît le plus. Dites ce qu’il faut changer, et vous aurez de nouvelles idées autour.</string>
+    <string name="inspiration_wizard_sketch_note_label">Que changeriez-vous ? (facultatif)</string>
     <string name="inspiration_wizard_sketch_note_placeholder">ex. plus âgée, et moins sûre d\'elle</string>
     <string name="inspiration_wizard_sketch_refine">Plus proche, mais…</string>
     <string name="inspiration_wizard_sketch_build">Je prends celle-là</string>
-    <string name="inspiration_wizard_sketch_last_round">Dernier tour — choisis celle que tu veux créer.</string>
+    <string name="inspiration_wizard_sketch_last_round">Dernier tour — choisissez celle que vous voulez créer.</string>
     <string name="shell_needs_provider">Ajoutez la clé API de votre fournisseur d’IA pour commencer à écrire des histoires.</string>
     <string name="shell_needs_provider_action">Ajouter</string>
     <string name="break_reminder_title">Une pause ?</string>

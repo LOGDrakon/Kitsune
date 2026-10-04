@@ -1,5 +1,8 @@
 package com.kitsune.feature.settings
 
+import androidx.compose.material.icons.filled.Memory
+import androidx.compose.material.icons.filled.Hub
+import androidx.compose.material.icons.filled.Key
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Settings
@@ -145,6 +148,8 @@ fun SettingsScreen(
     /** False when Settings is rendered as a shell tab rather than pushed: there is nothing to go
      *  back to, so drawing a back arrow that pops the whole shell would be a trap. */
     showBack: Boolean = true,
+    /** Opens straight on the profile page; back then leaves Settings instead of showing the hub. */
+    startOnProfile: Boolean = false,
     onAccountDeleted: () -> Unit = {},
     onOpenProviders: () -> Unit = {},
     onOpenModels: () -> Unit = {},
@@ -183,8 +188,8 @@ fun SettingsScreen(
     var showBugReportDialog by remember { mutableStateOf(false) }
     // Settings is a hub (2026-10-04): the home lists the areas, each area is its own page. One long
     // scroll of a dozen cards made every setting equally (un)findable.
-    var page by rememberSaveable { mutableStateOf(SettingsPage.HOME) }
-    androidx.activity.compose.BackHandler(enabled = page != SettingsPage.HOME) { page = SettingsPage.HOME }
+    var page by rememberSaveable { mutableStateOf(if (startOnProfile) SettingsPage.PROFILE else SettingsPage.HOME) }
+    androidx.activity.compose.BackHandler(enabled = page != SettingsPage.HOME && !startOnProfile) { page = SettingsPage.HOME }
 
     LaunchedEffect(deleteAccountState) {
         if (deleteAccountState is DeleteAccountState.Success) {
@@ -353,6 +358,7 @@ fun SettingsScreen(
     KitsunePage(
         title = pageTitle,
         onBack = when {
+            startOnProfile -> onBack
             page != SettingsPage.HOME -> ({ page = SettingsPage.HOME })
             showBack -> onBack
             else -> null
@@ -407,18 +413,24 @@ fun SettingsScreen(
                         subtitle = if (providers.isEmpty()) stringResource(R.string.ai_providers_none)
                             else providers.joinToString(", ") { it.name },
                         card = false,
+                        leading = { Icon(Icons.Filled.Key, contentDescription = null, tint = KitsuneTheme.colors.textSecondary) },
+                        trailing = { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = KitsuneTheme.colors.textFaint) },
                         onClick = onOpenProviders
                     )
                     KitsuneRow(
                         title = stringResource(R.string.ai_models_row),
                         subtitle = stringResource(R.string.ai_models_row_hint),
                         card = false,
+                        leading = { Icon(Icons.Filled.Hub, contentDescription = null, tint = KitsuneTheme.colors.textSecondary) },
+                        trailing = { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = KitsuneTheme.colors.textFaint) },
                         onClick = onOpenModels
                     )
                     KitsuneRow(
                         title = stringResource(R.string.ai_generation_row),
                         subtitle = stringResource(R.string.ai_generation_row_hint),
                         card = false,
+                        leading = { Icon(Icons.Filled.Memory, contentDescription = null, tint = KitsuneTheme.colors.textSecondary) },
+                        trailing = { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = KitsuneTheme.colors.textFaint) },
                         onClick = onOpenGeneration
                     )
                 }
@@ -443,6 +455,74 @@ fun SettingsScreen(
                         },
                         onClick = { page = target },
                         modifier = Modifier.padding(bottom = KitsuneTheme.spacing.sm)
+                    )
+                }
+            }
+
+            if (page == SettingsPage.PROFILE) {
+                SettingsSectionCard(title = stringResource(R.string.profile_section_title), icon = Icons.Filled.Person) {
+                    Text(
+                        stringResource(R.string.profile_section_description),
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Card(
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth().padding(12.dp)) {
+                            Icon(
+                                Icons.Filled.PrivacyTip,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(top = 2.dp, end = 8.dp)
+                            )
+                            Text(
+                                stringResource(R.string.profile_section_confidentiality_notice),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                    Row(modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
+                        OutlinedTextField(
+                            value = state.userFirstName,
+                            onValueChange = viewModel::setUserFirstName,
+                            label = { Text(stringResource(R.string.profile_first_name_label)) },
+                            modifier = Modifier.weight(1f)
+                        )
+                        OutlinedTextField(
+                            value = state.userLastName,
+                            onValueChange = viewModel::setUserLastName,
+                            label = { Text(stringResource(R.string.profile_last_name_label)) },
+                            modifier = Modifier.weight(1f).padding(start = 8.dp)
+                        )
+                    }
+                    OutlinedTextField(
+                        value = state.userPronoun,
+                        onValueChange = viewModel::setUserPronoun,
+                        label = { Text(stringResource(R.string.profile_pronoun_label)) },
+                        placeholder = { Text(stringResource(R.string.profile_pronoun_placeholder)) },
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                    )
+                    OutlinedTextField(
+                        value = state.userAge,
+                        onValueChange = viewModel::setUserAge,
+                        label = { Text(stringResource(R.string.profile_age_label)) },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                    )
+                    OutlinedTextField(
+                        value = state.userPhysicalDescription,
+                        onValueChange = viewModel::setUserPhysicalDescription,
+                        label = { Text(stringResource(R.string.profile_physical_description_label)) },
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                    )
+                    OutlinedTextField(
+                        value = state.userSexualOrientation,
+                        onValueChange = viewModel::setUserSexualOrientation,
+                        label = { Text(stringResource(R.string.profile_sexual_orientation_label)) },
+                        placeholder = { Text(stringResource(R.string.profile_sexual_orientation_placeholder)) },
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
                     )
                 }
             }
@@ -557,74 +637,6 @@ fun SettingsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { uriHandler.openUri(DATA_TRANSPARENCY_URL) }
-                    )
-                }
-            }
-
-            if (page == SettingsPage.PROFILE) {
-                SettingsSectionCard(title = stringResource(R.string.profile_section_title), icon = Icons.Filled.Person) {
-                    Text(
-                        stringResource(R.string.profile_section_description),
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                    Card(
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
-                    ) {
-                        Row(modifier = Modifier.fillMaxWidth().padding(12.dp)) {
-                            Icon(
-                                Icons.Filled.PrivacyTip,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.padding(top = 2.dp, end = 8.dp)
-                            )
-                            Text(
-                                stringResource(R.string.profile_section_confidentiality_notice),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                    Row(modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
-                        OutlinedTextField(
-                            value = state.userFirstName,
-                            onValueChange = viewModel::setUserFirstName,
-                            label = { Text(stringResource(R.string.profile_first_name_label)) },
-                            modifier = Modifier.weight(1f)
-                        )
-                        OutlinedTextField(
-                            value = state.userLastName,
-                            onValueChange = viewModel::setUserLastName,
-                            label = { Text(stringResource(R.string.profile_last_name_label)) },
-                            modifier = Modifier.weight(1f).padding(start = 8.dp)
-                        )
-                    }
-                    OutlinedTextField(
-                        value = state.userPronoun,
-                        onValueChange = viewModel::setUserPronoun,
-                        label = { Text(stringResource(R.string.profile_pronoun_label)) },
-                        placeholder = { Text(stringResource(R.string.profile_pronoun_placeholder)) },
-                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
-                    )
-                    OutlinedTextField(
-                        value = state.userAge,
-                        onValueChange = viewModel::setUserAge,
-                        label = { Text(stringResource(R.string.profile_age_label)) },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
-                    )
-                    OutlinedTextField(
-                        value = state.userPhysicalDescription,
-                        onValueChange = viewModel::setUserPhysicalDescription,
-                        label = { Text(stringResource(R.string.profile_physical_description_label)) },
-                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
-                    )
-                    OutlinedTextField(
-                        value = state.userSexualOrientation,
-                        onValueChange = viewModel::setUserSexualOrientation,
-                        label = { Text(stringResource(R.string.profile_sexual_orientation_label)) },
-                        placeholder = { Text(stringResource(R.string.profile_sexual_orientation_placeholder)) },
-                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
                     )
                 }
             }

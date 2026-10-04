@@ -14,10 +14,10 @@
     <string name="label_error">Erreur</string>
 
     <!-- create/PersonaCreationScreen.kt — DescribeStep -->
-    <string name="persona_create_profile_gate_title">Configurez d\'abord votre profil</string>
-    <string name="persona_create_profile_gate_body">Avant de créer votre premier persona, parlez-nous un peu de vous dans les Paramètres (prénom, âge, une courte description…) pour que les personas puissent s\'adresser à vous personnellement dans l\'histoire. Aucune de ces informations n\'est collectée ni conservée par nous ou par un service que nous utilisons (y compris l\'IA) — elles restent uniquement sur votre appareil.</string>
-    <string name="persona_create_profile_gate_action">Configurer mon profil</string>
-    <string name="persona_create_describe_title">Décrivez votre persona en quelques mots</string>
+    <string name="persona_create_profile_gate_title">D’abord, qui êtes-vous ?</string>
+    <string name="persona_create_profile_gate_body">Avant votre premier personnage, dites-en un peu sur vous : prénom, pronom, une courte description. Les personnages pourront ainsi s’adresser à vous correctement. Ces informations restent sur ce téléphone ; elles sont envoyées à votre fournisseur d’IA avec vos messages, comme le reste de l’histoire.</string>
+    <string name="persona_create_profile_gate_action">Remplir mon profil</string>
+    <string name="persona_create_describe_title">Décrivez votre personnage en quelques mots</string>
     <string name="persona_create_description_label">Description libre</string>
     <string name="persona_create_visual_style_label">Style visuel (optionnel)</string>
     <string name="persona_create_proposal_count_label">Nombre de propositions</string>
@@ -48,7 +48,7 @@
     <string name="persona_create_error_title">Échec de la génération</string>
 
     <!-- create/PersonaCreationScreen.kt — ReviewStep -->
-    <string name="persona_review_age_label">Âge du persona (requis, 18+)</string>
+    <string name="persona_review_age_label">Âge du personnage (requis, 18+)</string>
     <string name="persona_review_tags_label">Tags</string>
     <string name="tags_add_placeholder">Ajouter un tag…</string>
     <string name="persona_review_visual_sheet_label">Fiche visuelle (réutilisée dans chaque image générée pour la cohérence)</string>
@@ -61,7 +61,7 @@
     <string name="persona_create_error_empty_result">Le résultat de la génération est vide.</string>
     <string name="persona_create_error_generation_failed">La génération a échoué.</string>
     <string name="persona_create_error_schedule_failed">La planification de la génération a échoué.</string>
-    <string name="persona_review_error_age_minimum">L\'âge du persona doit être un nombre entier de %1$d ou plus.</string>
+    <string name="persona_review_error_age_minimum">L\'âge du personnage doit être un nombre entier de %1$d ou plus.</string>
 
     <!-- detail/PersonaDetailScreen.kt — dialogs -->
     <string name="persona_detail_generate_image_label">Générer une image</string>
@@ -79,7 +79,7 @@
     <!-- detail/PersonaDetailScreen.kt — entry scenes section -->
     <string name="persona_detail_entry_scenes_title">Scènes d\'entrée</string>
     <string name="persona_detail_create_scene_content_description">Créer une scène</string>
-    <string name="persona_detail_no_scenes_message">Aucune scène configurée. Le message par défaut du persona sera utilisé.</string>
+    <string name="persona_detail_no_scenes_message">Aucune scène configurée. Le message par défaut du personnage sera utilisé.</string>
     <string name="persona_detail_default_scene_label">Défaut</string>
     <string name="persona_detail_delete_scene_title">Supprimer \"%1$s\" ?</string>
     <string name="persona_detail_quoted_text">\"%1$s\"</string>
@@ -98,7 +98,7 @@
     <string name="persona_detail_scene_first_message_label">Premier message</string>
 
     <!-- detail/PersonaDetailViewModel.kt — user-facing error messages -->
-    <string name="persona_detail_error_not_found">Persona introuvable</string>
+    <string name="persona_detail_error_not_found">Personnage introuvable</string>
     <string name="persona_detail_error_image_generation_fallback">Erreur de génération d\'image</string>
     <string name="persona_detail_error_publish_format">Erreur publication : %1$s</string>
     <string name="persona_detail_error_unpublish_format">Erreur : %1$s</string>
@@ -122,9 +122,9 @@
     <string name="persona_image_gen_soften_error">Erreur lors de l\'adoucissement du prompt</string>
 
     <!-- list/PersonaListScreen.kt — empty states -->
-    <string name="persona_list_empty_title">Aucun persona pour l\'instant</string>
+    <string name="persona_list_empty_title">Aucun personnage pour l\'instant</string>
     <string name="persona_list_empty_hint">Appuyez sur + pour en créer un.</string>
-    <string name="persona_list_empty_filtered_message">Aucun persona ne correspond aux filtres sélectionnés</string>
+    <string name="persona_list_empty_filtered_message">Aucun personnage ne correspond aux filtres sélectionnés</string>
 
     <!-- list/PersonaListScreen.kt — generation jobs banner -->
     <string name="persona_list_active_generation_single">%1$d génération en cours</string>
@@ -158,15 +158,15 @@
     <!-- exportimport/PersonaExportImportScreen.kt -->
     <string name="persona_export_import_title">Export / Import</string>
     <string name="persona_export_section_title">Exporter \"%1$s\"</string>
-    <string name="persona_export_description">Exporte le persona avec toutes ses images dans un fichier JSON chiffré.</string>
-    <string name="persona_import_section_title">Importer un persona</string>
-    <string name="persona_import_description">Importe un persona depuis un fichier JSON exporté précédemment.</string>
+    <string name="persona_export_description">Exporte le personnage avec toutes ses images dans un fichier JSON chiffré.</string>
+    <string name="persona_import_section_title">Importer un personnage</string>
+    <string name="persona_import_description">Importe un personnage depuis un fichier JSON exporté précédemment.</string>
     <string name="persona_import_json_content_label">Contenu JSON</string>
 
     <!-- exportimport/PersonaExportImportViewModel.kt — user-facing status/error messages -->
-    <string name="persona_export_success_message">Persona exporté avec succès</string>
+    <string name="persona_export_success_message">Personnage exporté avec succès</string>
     <string name="persona_export_error_format">Erreur d\'export : %1$s</string>
-    <string name="persona_import_success_format">Persona importé avec succès (ID : %1$s)</string>
+    <string name="persona_import_success_format">Personnage importé avec succès (ID : %1$s)</string>
     <string name="persona_import_error_format">Erreur d\'import : %1$s</string>
     <!-- Intériorité dramatique (2026-08-22) -->
     <string name="persona_interiority_section">Ressorts intimes</string>
@@ -183,12 +183,12 @@
     <string name="persona_interiority_secret_hint">Ce qu\'il garde pour lui</string>
     <!-- Tone cards (2026-08-24) -->
     <string name="tone_cards_section_title">Tons de récit</string>
-    <string name="tone_cards_section_description">Façons de raconter enregistrées pour ce personnage. Elles sont proposées au démarrage d\'une conversation, et voyagent avec le persona quand tu l\'exportes ou le publies.</string>
+    <string name="tone_cards_section_description">Façons de raconter enregistrées pour ce personnage. Elles sont proposées au démarrage d’une conversation, et voyagent avec le personnage quand vous l’exportez ou le publies.</string>
     <string name="tone_cards_add">Nouveau ton</string>
     <string name="tone_cards_empty">Aucun ton enregistré.</string>
     <string name="tone_card_delete_confirm">Supprimer ce ton ?</string>
     <string name="tone_card_dialog_title">Ton de récit</string>
-    <string name="tone_card_dialog_description">Décris une façon de raconter avec ce personnage. Tu peux en enregistrer plusieurs et en choisir une au démarrage d\'une conversation.</string>
+    <string name="tone_card_dialog_description">Décrivez une façon de raconter avec ce personnage. Vous pouvez en enregistrer plusieurs et en choisir une au démarrage d’une conversation.</string>
     <string name="tone_card_name_label">Nom</string>
     <string name="tone_card_name_placeholder">ex. Rivalité de bureau</string>
     <string name="tone_card_description_label">Description (optionnelle)</string>
@@ -236,18 +236,18 @@
     <string name="tone_card_voice_first_past">Je, passé</string>
     <!-- Tone library (2026-08-24) -->
     <string name="tone_library_title">Mes tons de récit</string>
-    <string name="tone_library_description">La façon dont tu aimes qu\'on te raconte les histoires, quel que soit le personnage. Ces fiches sont proposées à chaque nouvelle conversation, à côté des tons écrits pour le personnage lui-même.</string>
+    <string name="tone_library_description">La façon dont vous aimez qu’on vous raconte les histoires, quel que soit le personnage. Ces fiches sont proposées à chaque nouvelle conversation, à côté des tons écrits pour le personnage lui-même.</string>
     <string name="tone_library_add">Nouveau ton</string>
-    <string name="tone_library_empty">Aucun ton enregistré. Crées-en un et il sera proposé à chaque nouvelle conversation.</string>
+    <string name="tone_library_empty">Aucun ton enregistré. Créez-en un : il sera proposé à chaque nouvelle conversation.</string>
     <!-- Character cards (2026-08-25) -->
     <string name="card_section_title">Carte de personnage</string>
-    <string name="card_section_description">Le format utilisé par Chub, SillyTavern, Agnai et RisuAI. Amène un personnage que tu as déjà, ou emporte le tien ailleurs. Tout se passe sur cet appareil.</string>
+    <string name="card_section_description">Le format utilisé par Chub, SillyTavern, Agnai et RisuAI. Importez un personnage que vous avez déjà, ou emportez le vôtre ailleurs. Tout se passe sur cet appareil.</string>
     <string name="card_import_action">Importer une carte</string>
     <string name="card_export_action">Exporter en carte</string>
     <string name="card_import_success">Personnage importé. Vérifie son âge sur sa fiche.</string>
     <string name="card_import_not_a_card">Ce fichier ne contient aucune carte de personnage.</string>
     <string name="card_export_success">Carte exportée.</string>
-    <string name="card_export_needs_avatar">Ce persona a besoin d\'un avatar : une carte est une image qui porte ses données.</string>
+    <string name="card_export_needs_avatar">Ce personnage a besoin d\'un avatar : une carte est une image qui porte ses données.</string>
     <string name="marketplace_publish_in_review">Envoyé en validation : vos premières publications sont vérifiées par les modérateurs du serveur avant d’apparaître.</string>
     <string name="tone_pack_share">Partager en pack</string>
     <string name="tone_pack_share_hint">Publie les tons choisis sur la marketplace, où chacun peut les ajouter à sa propre bibliothèque. 20 tons au plus.</string>

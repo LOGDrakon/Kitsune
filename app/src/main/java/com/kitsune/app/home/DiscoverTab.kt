@@ -95,7 +95,7 @@ fun DiscoverTab(
             Column(
                 Modifier.fillMaxSize().padding(padding).padding(horizontal = KitsuneTheme.spacing.gutter)
             ) {
-                PageTitle(text = "Découvrir", subtitle = "Personnages et univers publiés par la communauté")
+                PageTitle(text = "Découvrir", subtitle = "Personnages, univers et packs de tons partagés par la communauté")
                 KitsuneEmptyState(
                     icon = Icons.Outlined.Explore,
                     title = "Marketplace désactivée",
@@ -142,7 +142,7 @@ fun DiscoverTab(
                     Column(Modifier.padding(horizontal = KitsuneTheme.spacing.gutter)) {
                         PageTitle(
                             text = "Découvrir",
-                            subtitle = "Personnages et univers publiés par la communauté"
+                            subtitle = "Personnages, univers et packs de tons partagés par la communauté"
                         )
                         // Said once, before the first request creates an anonymous account there.
                         if (authState == com.kitsune.core.backend.KitsuneBackendClient.AuthState.UNAUTHENTICATED) {
@@ -160,7 +160,7 @@ fun DiscoverTab(
                         )
                         Spacer(Modifier.height(KitsuneTheme.spacing.md))
                         KitsuneSegmented(
-                            options = listOf("Tout", "Personnages", "Univers", "Packs"),
+                            options = listOf("Tout", "Persos", "Univers", "Packs"),
                             selectedIndex = typeSegment,
                             onSelect = { typeSegment = it }
                         )
@@ -242,6 +242,7 @@ private fun ListingCard(
         Row {
             KitsuneAvatar(
                 name = listing.title,
+                imageUrl = listing.previewImageUrl,
                 size = AvatarSize.Large,
                 shape = if (listing.type == "UNIVERSE") KitsuneTheme.shape.sm else KitsuneTheme.shape.md
             )

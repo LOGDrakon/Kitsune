@@ -1,5 +1,10 @@
 package com.kitsune.core.designsystem
 
+import androidx.core.view.WindowCompat
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.runtime.SideEffect
+import android.content.ContextWrapper
+import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
@@ -315,6 +320,22 @@ fun KitsuneTheme(
         else -> LightColors
     }
     val typography: Typography = if (discreet) KitsuneDiscreetTypography else KitsuneTypography
+
+    // The app draws edge to edge, so the system bars sit on our own background: their icons must be
+    // dark on the light theme, or the clock and battery vanish into the cream.
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            var context = view.context
+            while (context is ContextWrapper && context !is Activity) context = context.baseContext
+            (context as? Activity)?.window?.let { window ->
+                WindowCompat.getInsetsController(window, view).apply {
+                    isAppearanceLightStatusBars = !darkTheme
+                    isAppearanceLightNavigationBars = !darkTheme
+                }
+            }
+        }
+    }
 
     CompositionLocalProvider(
         LocalDiscreetMode provides discreet,

@@ -98,6 +98,8 @@ object Routes {
     // -----------------------------------------------------------------------------------------
 
     const val SETTINGS = "settings"
+    /** Settings opened directly on the profile page (from the first-character gate). */
+    const val SETTINGS_PROFILE = "settings_profile"
 
     // -----------------------------------------------------------------------------------------
     // Builders

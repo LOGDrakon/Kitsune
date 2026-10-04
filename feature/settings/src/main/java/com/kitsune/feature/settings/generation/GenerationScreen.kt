@@ -12,7 +12,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,7 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kitsune.core.designsystem.KitsuneTheme
 import com.kitsune.core.designsystem.component.KitsuneNotice
 import com.kitsune.core.designsystem.component.KitsunePage
-import com.kitsune.core.designsystem.component.KitsuneRow
+import com.kitsune.core.designsystem.component.KitsuneSwitchRow
 import com.kitsune.core.designsystem.component.KitsuneSegmented
 import com.kitsune.core.designsystem.component.PageTitle
 import com.kitsune.core.designsystem.component.SectionHeader
@@ -98,21 +97,19 @@ fun GenerationScreen(
 
             Spacer(Modifier.height(KitsuneTheme.spacing.lg))
             SectionHeader(title = stringResource(R.string.generation_writing_section))
-            KitsuneRow(
+            KitsuneSwitchRow(
                 title = stringResource(R.string.generation_craft_label),
-                meta = stringResource(R.string.generation_craft_hint),
-                card = false,
-                trailing = { Switch(checked = state.enhancedCraft, onCheckedChange = viewModel::setEnhancedCraft) },
-                onClick = { viewModel.setEnhancedCraft(!state.enhancedCraft) }
+                description = stringResource(R.string.generation_craft_hint),
+                checked = state.enhancedCraft,
+                onCheckedChange = viewModel::setEnhancedCraft
             )
 
             Spacer(Modifier.height(KitsuneTheme.spacing.lg))
-            KitsuneRow(
+            KitsuneSwitchRow(
                 title = stringResource(R.string.generation_advanced),
-                meta = stringResource(R.string.generation_advanced_hint),
-                card = false,
-                trailing = { Switch(checked = advanced, onCheckedChange = { advanced = it }) },
-                onClick = { advanced = !advanced }
+                description = stringResource(R.string.generation_advanced_hint),
+                checked = advanced,
+                onCheckedChange = { advanced = it }
             )
             if (advanced) {
                 NumberSlider(

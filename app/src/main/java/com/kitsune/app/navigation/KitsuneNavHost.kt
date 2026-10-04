@@ -256,7 +256,7 @@ fun KitsuneNavHost(
             PersonaCreationScreen(
                 onSaved = { navController.popBackStack() },
                 onCancel = { navController.popBackStack() },
-                onOpenSettings = { navController.navigate(Routes.SETTINGS) }
+                onOpenSettings = { navController.navigate(Routes.SETTINGS_PROFILE) }
             )
         }
         screen(Routes.PERSONA_DETAIL_PATTERN, listOf(navArgument("personaId") { type = NavType.StringType })) {
@@ -408,6 +408,16 @@ fun KitsuneNavHost(
         // route stays registered here and the tab renders the same screen without a back arrow.
         // -------------------------------------------------------------------------------------
 
+        screen(Routes.SETTINGS_PROFILE) {
+            com.kitsune.feature.settings.SettingsScreen(
+                onBack = { navController.popBackStack() },
+                startOnProfile = true,
+                onAccountDeleted = { navController.navigate(Routes.LOCK) { popUpTo(0) } },
+                onOpenProviders = { navController.navigate(Routes.providers()) },
+                onOpenModels = { navController.navigate(Routes.models()) },
+                onOpenGeneration = { navController.navigate(Routes.generation()) }
+            )
+        }
         screen(Routes.SETTINGS) {
             com.kitsune.feature.settings.SettingsScreen(
                 onBack = { navController.popBackStack() },

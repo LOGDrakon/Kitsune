@@ -7,7 +7,7 @@
     <string name="action_back">Retour</string>
 
     <!-- SettingsScreen: top bar & language -->
-    <string name="settings_title">Paramètres</string>
+    <string name="settings_title">Réglages</string>
     <string name="language_label">Langue</string>
     <string name="language_selected_checkmark">✓</string>
 
@@ -35,7 +35,7 @@
 
     <!-- SettingsScreen: user profile section -->
     <string name="profile_section_title">Profil utilisateur</string>
-    <string name="profile_section_description">Utilisé pour que les personas s\'adressent correctement à vous.</string>
+    <string name="profile_section_description">Utilisé pour que les personnages s\'adressent correctement à vous.</string>
     <string name="profile_section_confidentiality_notice">Ces informations restent sur votre téléphone. Elles sont en revanche transmises à votre fournisseur d’IA à chaque message — c’est ce qui permet aux personnages de vous appeler par votre nom. Laissez vide si vous préférez qu’elles ne quittent jamais votre appareil.</string>
     <string name="profile_first_name_label">Prénom</string>
     <string name="profile_last_name_label">Nom</string>
@@ -140,7 +140,7 @@
     <string name="temperature_label">Créativité</string>
     <string name="temperature_description">Bas rend les réponses plus maîtrisées et cohérentes ; haut les rend plus surprenantes et variées. S\'applique à toutes les conversations.</string>
     <string name="never_write_label">À ne jamais écrire</string>
-    <string name="never_write_description">Ce que tu ne veux jamais lire, quelle que soit l\'histoire. Envoyé à l\'IA à chaque message, et prioritaire sur tous les autres réglages.</string>
+    <string name="never_write_description">Ce que vous ne voulez jamais lire, quelle que soit l’histoire. Envoyé à l’IA à chaque message, et prioritaire sur tous les autres réglages.</string>
     <string name="never_write_placeholder">ex. aucun mal fait aux animaux, ne jamais faire pleurer mon personnage</string>
     <!-- Tone library (2026-08-24) -->
     <string name="ai_section_title">Intelligence artificielle</string>

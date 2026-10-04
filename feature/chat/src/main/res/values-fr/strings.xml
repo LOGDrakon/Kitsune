@@ -47,13 +47,13 @@
     <string name="chat_send_content_description">Envoyer</string>
     <string name="chat_ensemble_subtitle_singular">Scène de groupe · %1$d personnage</string>
     <string name="chat_ensemble_subtitle_plural">Scène de groupe · %1$d personnages</string>
-    <string name="chat_persona_main_subtitle">Persona principal</string>
+    <string name="chat_persona_main_subtitle">Personnage principal</string>
     <string name="chat_empty_scene_message">Scène vide — écrivez le premier message vous-même, ou laissez l\'IA improviser une ouverture avec %1$s.</string>
     <string name="chat_generate_opening_scene_button">Générer une scène d\'ouverture</string>
     <string name="chat_reveal_hint">▲ Faites glisser vers le haut (ou touchez ici) pour voir les messages précédents</string>
     <string name="content_desc_scroll_to_bottom">Aller en bas</string>
     <string name="chat_background_picker_title">Fond d\'écran de la conversation</string>
-    <string name="chat_background_picker_description">Choisissez une image de cette conversation, d\'un persona (ou de l\'univers), ou depuis le stockage de l\'appareil.</string>
+    <string name="chat_background_picker_description">Choisissez une image de cette conversation, d\'un personnage (ou de l\'univers), ou depuis le stockage de l\'appareil.</string>
     <string name="chat_background_picker_storage_option">Stockage</string>
     <string name="chat_add_cast_dialog_title">Ajouter un personnage à la scène</string>
     <string name="chat_add_cast_framing_question">Comment ce personnage rejoint-il la scène ?</string>
@@ -62,14 +62,14 @@
     <string name="chat_framing_retroactive_description">Le personnage était déjà là — on n\'en parlait juste pas encore. Aucune scène d\'arrivée n\'est jouée.</string>
     <string name="chat_framing_arrival_description">L\'IA improvise une courte scène où le personnage fait son entrée.</string>
     <string name="chat_existing_universe_characters_label">Personnages existants de l\'univers</string>
-    <string name="chat_candidate_type_persona">Persona</string>
+    <string name="chat_candidate_type_persona">Personnage</string>
     <string name="chat_candidate_type_npc">PNJ</string>
     <string name="chat_create_new_npc_label">Créer un nouveau PNJ</string>
-    <string name="chat_create_new_persona_label">Créer un nouveau persona</string>
-    <string name="chat_create_new_persona_description">Ouvre l\'écran de création de persona habituel (avec vérification d\'âge) ; une fois enregistré, il rejoint silencieusement cette scène.</string>
-    <string name="chat_new_persona_button">Nouveau persona</string>
-    <string name="chat_convert_npc_section_label">Convertir un PNJ de la scène en persona jouable</string>
-    <string name="chat_convert_to_persona_label">Convertir en persona</string>
+    <string name="chat_create_new_persona_label">Créer un nouveau personnage</string>
+    <string name="chat_create_new_persona_description">Ouvre l\'écran de création de personnage habituel (avec vérification d\'âge) ; une fois enregistré, il rejoint silencieusement cette scène.</string>
+    <string name="chat_new_persona_button">Nouveau personnage</string>
+    <string name="chat_convert_npc_section_label">Convertir un PNJ de la scène en personnage jouable</string>
+    <string name="chat_convert_to_persona_label">Convertir en personnage</string>
     <string name="chat_message_edited_suffix"> · modifié</string>
     <string name="chat_regenerate_action">Régénérer</string>
     <string name="chat_add_to_gallery_action">Ajouter à la galerie</string>
@@ -147,7 +147,7 @@
     <string name="image_gen_visual_style_label">Style visuel (optionnel)</string>
     <string name="image_gen_aspect_ratio_label">Format d\'image</string>
     <string name="image_gen_use_avatar_reference_label">Utiliser l\'avatar comme référence visuelle</string>
-    <string name="image_gen_avatar_reference_hint">Aide le modèle à garder une apparence cohérente avec l\'avatar actuel du persona.</string>
+    <string name="image_gen_avatar_reference_hint">Aide le modèle à garder une apparence cohérente avec l\'avatar actuel du personnage.</string>
     <string name="image_gen_generate_anyway_button">Générer quand même (version suggestive)</string>
     <string name="image_gen_soften_hint">Rhabille et adoucit légèrement la scène pour respecter le filtre de contenu du modèle, en gardant l\'esprit de la scène.</string>
     <string name="image_gen_generate_button">Générer</string>
@@ -156,7 +156,7 @@
     <string name="image_gen_sfw_fallback_notice">ℹ️ Version suggestive générée après un refus du filtre de contenu — l\'image peut différer de la scène exacte.</string>
     <string name="image_gen_regenerate_button">Régénérer (même description, résultat différent)</string>
     <string name="image_gen_saved_confirmation">Enregistré ✓</string>
-    <string name="image_gen_persona_gallery_button">Galerie du persona</string>
+    <string name="image_gen_persona_gallery_button">Galerie du personnage</string>
     <string name="image_gen_send_to_chat_button">Envoyer dans le chat</string>
 
     <!-- imagegen/ImageGenerationViewModel.kt -->
@@ -165,7 +165,7 @@
     <string name="chat_list_empty_hint">Appuyez sur + pour en démarrer une.</string>
 
     <!-- list/ChatsOverviewScreen.kt -->
-    <string name="chat_overview_empty_hint">Direction l\'onglet Personas pour en démarrer une.</string>
+    <string name="chat_overview_empty_hint">Direction l\'onglet Personnages pour en démarrer une.</string>
     <string name="chat_overview_ensemble_chat_fallback_title">Chat d\'ensemble</string>
 
     <!-- lorebriefing/ChatLoreBriefingDialog.kt -->
@@ -222,9 +222,9 @@
     <string name="timeline_script_doctor_cost">Utilise un appel à votre modèle d’histoire.</string>
 
     <!-- Carte d'histoire (2026-08-23) -->
-    <string name="story_card_title">Quelle histoire as-tu envie de vivre ?</string>
+    <string name="story_card_title">Quelle histoire avez-vous envie de vivre ?</string>
     <string name="story_card_subtitle">Ce choix guide l\'écriture de l\'IA pendant toute la conversation. Tu pourras le changer plus tard depuis le menu.</string>
-    <string name="story_card_describe_title">Ou décris-la toi-même</string>
+    <string name="story_card_describe_title">Ou décrivez-la vous-même</string>
     <string name="story_card_describe_hint">Cadre l’histoire et écrit sa scène d’ouverture.</string>
     <string name="story_card_describe_placeholder">ex. C\'est ma rivale au travail et aucune des deux ne veut l\'admettre</string>
     <string name="story_card_skip">Passer</string>

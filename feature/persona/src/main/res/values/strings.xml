@@ -14,9 +14,9 @@
     <string name="label_error">Error</string>
 
     <!-- create/PersonaCreationScreen.kt — DescribeStep -->
-    <string name="persona_create_profile_gate_title">Set up your profile first</string>
-    <string name="persona_create_profile_gate_body">Before creating your first persona, tell us a little about you in Settings (first name, age, a short description…) so personas can address you personally in the story. None of this information is ever collected or retained by us or by any service we use (including the AI) — it stays only on your device.</string>
-    <string name="persona_create_profile_gate_action">Set up my profile</string>
+    <string name="persona_create_profile_gate_title">First, who are you?</string>
+    <string name="persona_create_profile_gate_body">Before your first character, tell a little about yourself: first name, pronoun, a short description. Characters can then address you properly. This stays on this phone; it is sent to your AI provider with your messages, like the rest of the story.</string>
+    <string name="persona_create_profile_gate_action">Fill in my profile</string>
     <string name="persona_create_describe_title">Describe your persona in a few words</string>
     <string name="persona_create_description_label">Free description</string>
     <string name="persona_create_visual_style_label">Visual style (optional)</string>

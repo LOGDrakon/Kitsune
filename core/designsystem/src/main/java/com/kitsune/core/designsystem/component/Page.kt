@@ -163,7 +163,7 @@ fun PageTitle(
         verticalAlignment = Alignment.Bottom,
         modifier = modifier
             .fillMaxWidth()
-            .padding(top = spacing.lg, bottom = spacing.xl)
+            .padding(top = spacing.xs, bottom = spacing.xl)
     ) {
         Column(Modifier.weight(1f)) {
             Text(

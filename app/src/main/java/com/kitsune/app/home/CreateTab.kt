@@ -107,7 +107,10 @@ fun CreateTab(
             )
         },
         floatingAction = {
-            KitsuneFab(
+            // Hidden while the list is empty: the empty state carries the same action, and the button
+            // would sit on top of its "Je ne sais pas quoi créer" link.
+            val empty = if (onCast) personas.isEmpty() else universes.isEmpty()
+            if (!empty) KitsuneFab(
                 text = if (onCast) "Personnage" else "Univers",
                 icon = Icons.Filled.Add,
                 onClick = if (onCast) onCreatePersona else onCreateUniverse

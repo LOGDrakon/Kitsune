@@ -2,7 +2,7 @@
 <resources>
     <!-- MarketplaceScreen.kt - Filter chips -->
     <string name="filter_all">Tout</string>
-    <string name="filter_type_personas">Personas</string>
+    <string name="filter_type_personas">Personnages</string>
     <string name="filter_type_universes">Univers</string>
     <string name="filter_sort_popular">Populaire</string>
     <string name="filter_sort_recent">Récents</string>
@@ -14,7 +14,7 @@
     <string name="empty_listings_message">Aucun contenu pour le moment.\nSoyez le premier à publier !</string>
 
     <!-- MarketplaceScreen.kt - Listing card -->
-    <string name="listing_type_persona_badge">Persona</string>
+    <string name="listing_type_persona_badge">Personnage</string>
     <string name="listing_type_universe_badge">Univers</string>
     <string name="listing_by_creator_format">par %1$s</string>
     <string name="anonymous_creator_name">Anonyme</string>
@@ -37,12 +37,12 @@
     <string name="price_free_label">Gratuit</string>
     <string name="genre_label_format">Genre : %1$s</string>
     <string name="gallery_section_title_format">Galerie (%1$d images)</string>
-    <string name="persona_sheet_title">Fiche du persona</string>
+    <string name="persona_sheet_title">Fiche du personnage</string>
     <string name="universe_sheet_title">Fiche de l\'univers</string>
     <string name="factions_section_title_format">Factions (%1$d)</string>
     <string name="locations_section_title_format">Lieux (%1$d)</string>
     <string name="npcs_section_title_format">Personnages (%1$d)</string>
-    <string name="playable_personas_section_title_format">Personas jouables (%1$d)</string>
+    <string name="playable_personas_section_title_format">Personnages jouables (%1$d)</string>
     <string name="label_name">Nom</string>
     <string name="label_description">Description</string>
     <string name="label_personality">Personnalité</string>
@@ -52,7 +52,7 @@
     <string name="label_genre">Genre</string>
     <string name="maturity_tags_format">Maturité : %1$s</string>
     <string name="label_visual_style">Style visuel</string>
-    <string name="download_count_format">%1$d téléchargements</string>
+    <string name="download_count_format">Téléchargements : %1$d</string>
     <string name="rating_reviews_format">%1$s (%2$d avis)</string>
     <string name="type_label_format">Type : %1$s</string>
     <string name="alignment_suffix_format"> | Alignement : %1$s</string>

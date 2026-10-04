@@ -1,5 +1,7 @@
 package com.kitsune.app.navigation
 
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.statusBars
 import com.kitsune.app.R
 import android.content.Context
 import androidx.activity.compose.BackHandler
@@ -154,11 +156,13 @@ fun KitsuneShell(
                 tone = NoticeTone.Warn,
                 action = stringResource(R.string.shell_needs_provider_action),
                 onAction = { navController.navigate(Routes.providers()) },
-                modifier = Modifier.padding(
-                    start = KitsuneTheme.spacing.gutter,
-                    end = KitsuneTheme.spacing.gutter,
-                    top = KitsuneTheme.spacing.md
-                )
+                modifier = Modifier
+                    .statusBarsPadding()
+                    .padding(
+                        start = KitsuneTheme.spacing.gutter,
+                        end = KitsuneTheme.spacing.gutter,
+                        top = KitsuneTheme.spacing.sm
+                    )
             )
         }
         // `consumeWindowInsets`, and it is load-bearing: each tab is a `KitsunePage`, i.e. a Scaffold,
@@ -170,6 +174,9 @@ fun KitsuneShell(
             Modifier
                 .weight(1f)
                 .consumeWindowInsets(WindowInsets.navigationBars)
+                // The notice already sits below the status bar; the tab's own top bar must not add a
+                // second status-bar height under it.
+                .then(if (needsProvider) Modifier.consumeWindowInsets(WindowInsets.statusBars) else Modifier)
         ) {
             // Crossfade rather than a slide: the five tabs are peers, so implying a left/right
             // order between them would be a lie about the information architecture.
