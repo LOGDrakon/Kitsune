@@ -91,7 +91,7 @@ private const val DATA_TRANSPARENCY_URL = "https://github.com/LOGDrakon/Kitsune/
 private const val SOURCE_CODE_URL = "https://github.com/LOGDrakon/Kitsune"
 private const val ISSUES_URL = "https://github.com/LOGDrakon/Kitsune/issues"
 private const val SERVER_SOURCE_URL = "https://github.com/LOGDrakon/Kitsune-Server"
-private const val DONATE_URL = "https://github.com/sponsors/LOGDrakon"
+private const val DONATE_URL = "https://opencollective.com/kitsuneapp"
 
 /**
  * Groups related settings under a titled block.

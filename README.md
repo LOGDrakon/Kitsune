@@ -89,7 +89,8 @@ share menu so you can read them before posting.
 ## Support
 
 Kitsune sells nothing. If you want to help pay for the community marketplace server, you can
-[sponsor the project](https://github.com/sponsors/LOGDrakon).
+donate on [Open Collective](https://opencollective.com/kitsuneapp). The money goes to the project's
+collective, not to a person, and every expense it pays (server, domain) is public.
 
 ## License
 
