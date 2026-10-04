@@ -34,11 +34,11 @@ fun ProposalsScreen(
         condensedTitle = true,
         onBack = onBack,
         floatingAction = {
-            FloatingActionButton(
+            com.kitsune.core.designsystem.component.KitsuneFab(
+                text = stringResource(R.string.proposal_new_short),
+                icon = Icons.Default.Add,
                 onClick = { showCreateDialog = true }
-            ) {
-                Icon(Icons.Default.Add, stringResource(R.string.create_proposal_content_description))
-            }
+            )
         }
     ) { padding ->
         if (proposals.isEmpty()) {

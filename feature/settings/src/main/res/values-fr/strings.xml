@@ -328,4 +328,5 @@
     <string name="settings_page_backup_summary">Exporter toutes vos données dans un fichier chiffré</string>
     <string name="settings_page_about">Aide et à propos</string>
     <string name="settings_page_about_summary">Signaler un problème, code source, soutenir le projet</string>
+    <string name="proposal_new_short">Proposer une idée</string>
 </resources>

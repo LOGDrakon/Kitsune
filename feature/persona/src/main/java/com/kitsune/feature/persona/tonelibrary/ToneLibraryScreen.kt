@@ -112,9 +112,11 @@ fun ToneLibraryScreen(
                     }
                 },
         floatingAction = {
-            FloatingActionButton(onClick = { editing = ToneLibraryEdit.New }) {
-                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.tone_library_add))
-            }
+            com.kitsune.core.designsystem.component.KitsuneFab(
+                text = stringResource(R.string.tone_library_add),
+                icon = Icons.Default.Add,
+                onClick = { editing = ToneLibraryEdit.New }
+            )
         }
     ) { padding ->
         Column(

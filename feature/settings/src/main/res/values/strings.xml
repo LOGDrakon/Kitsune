@@ -328,4 +328,5 @@
     <string name="settings_page_backup_summary">Export all your data to an encrypted file</string>
     <string name="settings_page_about">Help and about</string>
     <string name="settings_page_about_summary">Report a problem, source code, support the project</string>
+    <string name="proposal_new_short">Suggest an idea</string>
 </resources>

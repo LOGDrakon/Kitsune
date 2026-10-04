@@ -59,9 +59,11 @@ fun ChatListScreen(
         condensedTitle = true,
         onBack = onBack,
         floatingAction = {
-            FloatingActionButton(onClick = viewModel::startNewChat) {
-                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.new_conversation_label))
-            }
+            com.kitsune.core.designsystem.component.KitsuneFab(
+                text = stringResource(R.string.new_conversation_label),
+                icon = Icons.Default.Add,
+                onClick = viewModel::startNewChat
+            )
         }
     ) { padding ->
         if (chatsWithMessages.isEmpty()) {
