@@ -475,13 +475,15 @@ fun ChatScreen(
     }
 
     if (showStorySettings) {
+        val globalModel by viewModel.globalChatModelLabel.collectAsStateWithLifecycle()
+        LaunchedEffect(Unit) { viewModel.refreshGlobalChatModelLabel() }
         chat?.let { current ->
             val presets = remember(persona?.id, persona?.maturityTags) { viewModel.offeredPresets() }
             StorySettingsSheet(
                 chat = current,
                 presets = presets,
                 memoryDepth = viewModel.storyMemoryDepth(current),
-                globalModelLabel = viewModel.globalChatModelLabel(),
+                globalModelLabel = globalModel,
                 onDismiss = { showStorySettings = false },
                 onSwitchPreset = viewModel::switchStoryPreset,
                 onSetModel = viewModel::setStoryModel,

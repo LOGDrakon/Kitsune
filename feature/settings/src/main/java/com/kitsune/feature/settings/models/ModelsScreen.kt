@@ -76,6 +76,7 @@ fun ModelsScreen(
 ) {
     val slots by viewModel.slots.collectAsStateWithLifecycle()
     val catalog by viewModel.catalog.collectAsStateWithLifecycle()
+    val automatic by viewModel.automatic.collectAsStateWithLifecycle()
     var picking by remember { mutableStateOf<SlotSpec?>(null) }
     var actionsFor by remember { mutableStateOf<SlotSpec?>(null) }
 
@@ -121,6 +122,8 @@ fun ModelsScreen(
                     KitsuneRow(
                         title = stringResource(spec.title),
                         subtitle = when {
+                            ref.isBlank() && automatic[spec.key] != null ->
+                                stringResource(R.string.models_automatic, viewModel.label(automatic.getValue(spec.key)))
                             ref.isBlank() -> stringResource(R.string.models_not_set)
                             slot?.inherited == true -> stringResource(R.string.models_inherited, label)
                             else -> label

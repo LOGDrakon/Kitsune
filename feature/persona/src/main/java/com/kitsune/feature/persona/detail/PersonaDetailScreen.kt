@@ -1,5 +1,6 @@
 ﻿package com.kitsune.feature.persona.detail
 
+import androidx.compose.material.icons.filled.Edit
 import com.kitsune.core.designsystem.component.KitsunePage
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -104,6 +105,7 @@ fun PersonaDetailScreen(
     var showCreateSceneDialog by remember { mutableStateOf(false) }
     var editingToneCard by remember { mutableStateOf<ToneCardEdit?>(null) }
     var showDeleteConfirm by remember { mutableStateOf(false) }
+    var editingSheet by remember { mutableStateOf(false) }
     var showAvatarChooser by remember { mutableStateOf(false) }
     var isPublic by remember { mutableStateOf(false) }
     var isPublishing by remember { mutableStateOf(false) }
@@ -320,6 +322,22 @@ if (showDeleteConfirm) {
                         onAddTag = viewModel::addTag,
                         onRemoveTag = viewModel::removeTag
                     )
+                    com.kitsune.core.designsystem.component.KitsuneSecondaryButton(
+                        text = stringResource(R.string.persona_edit_action),
+                        icon = Icons.Default.Edit,
+                        onClick = { editingSheet = true },
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                    )
+                    if (editingSheet) {
+                        PersonaSheetEditor(
+                            persona = state.persona,
+                            onDismiss = { editingSheet = false },
+                            onSave = { draft ->
+                                viewModel.updateSheet(draft)
+                                editingSheet = false
+                            }
+                        )
+                    }
 
                     HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 

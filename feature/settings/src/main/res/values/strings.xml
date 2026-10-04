@@ -329,4 +329,5 @@
     <string name="settings_page_about">Help and about</string>
     <string name="settings_page_about_summary">Report a problem, source code, support the project</string>
     <string name="proposal_new_short">Suggest an idea</string>
+    <string name="models_automatic">Automatic: %1$s</string>
 </resources>

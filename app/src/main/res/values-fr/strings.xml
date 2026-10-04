@@ -11,7 +11,7 @@
     <string name="inspiration_wizard_loading_question">Recherche d\'une question…</string>
     <string name="inspiration_wizard_synthesizing">Mise en forme de votre idée…</string>
     <string name="inspiration_wizard_progress_format">Question %1$d/%2$d</string>
-    <string name="inspiration_wizard_answer_label">Ta réponse</string>
+    <string name="inspiration_wizard_answer_label">Votre réponse</string>
     <string name="inspiration_wizard_answer_placeholder">Répondez librement, ou passez si rien ne vous vient…</string>
     <string name="inspiration_wizard_skip_button">Je n\'ai pas d\'idée</string>
     <string name="inspiration_wizard_next_button">Suivant</string>
@@ -47,8 +47,8 @@
     <string name="inspiration_wizard_mode_interview_body">Quatre questions courtes sur ce dont vous avez envie. Idéal si vous savez à peu près ce que vous voulez.</string>
     <string name="inspiration_wizard_mode_explore_title">Explorer des propositions</string>
     <string name="inspiration_wizard_mode_explore_body">Décrivez vaguement, puis choisissez l’idée qui vous plaît le plus. Chaque tour affine. Idéal si vous n’avez encore aucune idée.</string>
-    <string name="inspiration_wizard_brief_title">Tu cherches quoi, en gros ?</string>
-    <string name="inspiration_wizard_brief_hint">Quelques mots suffisent. Tu affineras en choisissant, pas en écrivant.</string>
+    <string name="inspiration_wizard_brief_title">Que cherchez-vous, en gros ?</string>
+    <string name="inspiration_wizard_brief_hint">Quelques mots suffisent. Vous affinerez en choisissant, pas en écrivant.</string>
     <string name="inspiration_wizard_brief_placeholder">ex. quelqu\'un qui m\'agace mais que je ne peux pas éviter</string>
     <string name="inspiration_wizard_brief_submit">Montre-moi des idées</string>
     <string name="inspiration_wizard_loading_sketches">Recherche d\'idées…</string>

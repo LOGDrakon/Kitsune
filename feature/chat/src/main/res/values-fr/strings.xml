@@ -43,7 +43,7 @@
     <string name="chat_next_reply_suggestions_button">💡</string>
     <string name="chat_next_reply_suggestions_loading">Réflexion en cours…</string>
     <string name="chat_input_placeholder_editing">Modifier le message…</string>
-    <string name="chat_input_placeholder_default">Écrire un message… *action* (aside)</string>
+    <string name="chat_input_placeholder_default">Écrire un message… *action* (aparté)</string>
     <string name="chat_send_content_description">Envoyer</string>
     <string name="chat_ensemble_subtitle_singular">Scène de groupe · %1$d personnage</string>
     <string name="chat_ensemble_subtitle_plural">Scène de groupe · %1$d personnages</string>
@@ -223,7 +223,7 @@
 
     <!-- Carte d'histoire (2026-08-23) -->
     <string name="story_card_title">Quelle histoire avez-vous envie de vivre ?</string>
-    <string name="story_card_subtitle">Ce choix guide l\'écriture de l\'IA pendant toute la conversation. Tu pourras le changer plus tard depuis le menu.</string>
+    <string name="story_card_subtitle">Ce choix guide l’écriture de l’IA pendant toute la conversation. Vous pourrez le changer plus tard dans les réglages de l’histoire.</string>
     <string name="story_card_describe_title">Ou décrivez-la vous-même</string>
     <string name="story_card_describe_hint">Cadre l’histoire et écrit sa scène d’ouverture.</string>
     <string name="story_card_describe_placeholder">ex. C\'est ma rivale au travail et aucune des deux ne veut l\'admettre</string>
@@ -260,7 +260,7 @@
     <string name="story_card_authored_badge">Écrit pour ce personnage</string>
     <!-- Story shelf (2026-08-25) -->
     <string name="shelf_untitled_story">Histoire sans titre</string>
-    <string name="shelf_empty_title">Ton étagère est vide</string>
+    <string name="shelf_empty_title">Votre étagère est vide</string>
     <string name="shelf_empty_body">Crée un personnage et lance une histoire. Elle apparaîtra ici, avec sa couverture et ses chapitres.</string>
     <string name="shelf_chapter_count">%1$d chapitre(s)</string>
     <string name="shelf_not_started">Pas encore commencée</string>

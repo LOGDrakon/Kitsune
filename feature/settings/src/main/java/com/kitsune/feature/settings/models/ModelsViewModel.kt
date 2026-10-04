@@ -31,8 +31,22 @@ const val IMAGE_FALLBACK_SLOT = "image_fallback"
 class ModelsViewModel @Inject constructor(
     private val networkPreferences: NetworkPreferences,
     private val modelCatalogRepository: ModelCatalogRepository,
-    private val providerStore: ProviderStore
+    private val providerStore: ProviderStore,
+    private val llmModelResolver: com.kitsune.core.network.preferences.LlmModelResolver
 ) : ViewModel() {
+
+    private val _automatic = MutableStateFlow<Map<String, String>>(emptyMap())
+    /** For slots with nothing chosen: the model the app will actually use, by slot key. */
+    val automatic: StateFlow<Map<String, String>> = _automatic.asStateFlow()
+
+    private fun refreshAutomatic() {
+        viewModelScope.launch {
+            _automatic.value = LlmOperation.entries
+                .filter { _slots.value[it.name]?.ref.isNullOrBlank() || _slots.value[it.name]?.inherited == true }
+                .associate { it.name to llmModelResolver.resolve(it) }
+                .filterValues { it.isNotBlank() }
+        }
+    }
 
     private val _slots = MutableStateFlow(loadSlots())
     val slots: StateFlow<Map<String, ModelSlot>> = _slots.asStateFlow()
@@ -46,6 +60,7 @@ class ModelsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             modelCatalogRepository.getModels().onSuccess { models -> _catalog.value = models.associateBy { it.id } }
+            refreshAutomatic()
         }
     }
 
@@ -56,6 +71,7 @@ class ModelsViewModel @Inject constructor(
             networkPreferences.setModelForOperation(LlmOperation.valueOf(slotKey), ref)
         }
         _slots.value = loadSlots()
+        refreshAutomatic()
     }
 
     fun reset(slotKey: String) {
@@ -65,6 +81,7 @@ class ModelsViewModel @Inject constructor(
             networkPreferences.clearModelForOperation(LlmOperation.valueOf(slotKey))
         }
         _slots.value = loadSlots()
+        refreshAutomatic()
     }
 
     /** "provider · model" for a ref, falling back to the bare id when the catalog has not loaded. */

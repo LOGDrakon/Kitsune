@@ -257,4 +257,14 @@
     <string name="tone_pack_published">Pack published.</string>
     <string name="tone_pack_in_review">Pack sent: it will appear once a moderator has checked it.</string>
     <string name="tone_pack_failed">Publishing failed: %1$s</string>
+    <string name="persona_edit_action">Edit the sheet</string>
+    <string name="persona_edit_title">Edit the sheet</string>
+    <string name="persona_edit_name">Name</string>
+    <string name="persona_edit_age">Age</string>
+    <string name="persona_edit_age_error">Characters are 18 or older.</string>
+    <string name="persona_edit_description">Description</string>
+    <string name="persona_edit_personality">Personality</string>
+    <string name="persona_edit_scenario">Scenario (the starting situation)</string>
+    <string name="persona_edit_first_message">First message</string>
+    <string name="persona_edit_dialogues">Example dialogues (how they talk)</string>
 </resources>

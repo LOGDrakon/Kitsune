@@ -183,7 +183,7 @@
     <string name="persona_interiority_secret_hint">Ce qu\'il garde pour lui</string>
     <!-- Tone cards (2026-08-24) -->
     <string name="tone_cards_section_title">Tons de récit</string>
-    <string name="tone_cards_section_description">Façons de raconter enregistrées pour ce personnage. Elles sont proposées au démarrage d’une conversation, et voyagent avec le personnage quand vous l’exportez ou le publies.</string>
+    <string name="tone_cards_section_description">Façons de raconter enregistrées pour ce personnage. Elles sont proposées au démarrage d’une conversation, et voyagent avec le personnage quand vous l’exportez ou le publiez.</string>
     <string name="tone_cards_add">Nouveau ton</string>
     <string name="tone_cards_empty">Aucun ton enregistré.</string>
     <string name="tone_card_delete_confirm">Supprimer ce ton ?</string>
@@ -257,4 +257,14 @@
     <string name="tone_pack_published">Pack publié.</string>
     <string name="tone_pack_in_review">Pack envoyé : il apparaîtra une fois vérifié par un modérateur.</string>
     <string name="tone_pack_failed">Publication impossible : %1$s</string>
+    <string name="persona_edit_action">Modifier la fiche</string>
+    <string name="persona_edit_title">Modifier la fiche</string>
+    <string name="persona_edit_name">Nom</string>
+    <string name="persona_edit_age">Âge</string>
+    <string name="persona_edit_age_error">Les personnages ont 18 ans ou plus.</string>
+    <string name="persona_edit_description">Description</string>
+    <string name="persona_edit_personality">Personnalité</string>
+    <string name="persona_edit_scenario">Scénario (la situation de départ)</string>
+    <string name="persona_edit_first_message">Premier message</string>
+    <string name="persona_edit_dialogues">Exemples de dialogue (façon de parler)</string>
 </resources>

@@ -281,6 +281,26 @@ class PersonaDetailViewModel @Inject constructor(
         }
     }
 
+    /** Saves the edited core of the sheet. The age floor is enforced again here, not only in the UI. */
+    fun updateSheet(draft: PersonaSheetDraft) {
+        viewModelScope.launch {
+            val state = (_uiState.value as? PersonaDetailUiState.Ready) ?: return@launch
+            if (draft.name.isBlank() || draft.age < 18) return@launch
+            val updated = state.persona.copy(
+                name = draft.name,
+                age = draft.age,
+                shortDescription = draft.shortDescription,
+                personality = draft.personality,
+                scenario = draft.scenario,
+                firstMessage = draft.firstMessage,
+                exampleDialogues = draft.exampleDialogues,
+                updatedAt = System.currentTimeMillis()
+            )
+            personaRepository.upsert(updated)
+            _uiState.value = state.copy(persona = updated)
+        }
+    }
+
     fun deleteGalleryImage(image: GalleryImage) {
         viewModelScope.launch {
             personaImageRepository.delete(image.entity)

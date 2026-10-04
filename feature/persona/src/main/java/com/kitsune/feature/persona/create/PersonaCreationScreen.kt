@@ -49,6 +49,10 @@ fun PersonaCreationScreen(
     viewModel: PersonaCreationViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    androidx.lifecycle.compose.LifecycleResumeEffect(Unit) {
+        viewModel.recheckProfileGate()
+        onPauseOrDispose { }
+    }
     val initialDescription by viewModel.initialDescription.collectAsStateWithLifecycle()
 
     when (val current = state) {

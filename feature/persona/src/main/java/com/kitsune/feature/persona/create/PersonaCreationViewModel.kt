@@ -74,6 +74,15 @@ class PersonaCreationViewModel @Inject constructor(
     private val _initialDescription = MutableStateFlow("")
     val initialDescription: StateFlow<String> = _initialDescription.asStateFlow()
 
+    /** Called when the screen comes back to the foreground: the user may have just filled in the
+     *  profile the gate asked for, in which case creation simply continues. */
+    fun recheckProfileGate() {
+        if (_state.value !is PersonaCreationUiState.RequiresProfileSetup) return
+        viewModelScope.launch {
+            if (!userProfileStore.get().isBlank) _state.value = PersonaCreationUiState.DescribeInput
+        }
+    }
+
     init {
         viewModelScope.launch {
             // Gate on the user's very first persona only (not every creation) — count-based, not a

@@ -1737,9 +1737,16 @@ class ChatViewModel @Inject constructor(
     // ---- Story settings (2026-10-04): this story's own model, memory and length, plus a quick tone
     // switch. Null always means "follow the global setting".
 
-    /** The global story model, as a bare model id, for the "Par défaut : …" label. */
-    fun globalChatModelLabel(): String =
-        com.kitsune.core.network.provider.ModelRef.parse(networkPreferences.getModelForOperation(LlmOperation.CHAT)).second
+    private val _globalChatModelLabel = MutableStateFlow("")
+    /** The model the story uses when it has none of its own (chosen or automatic), as a bare id. */
+    val globalChatModelLabel: StateFlow<String> = _globalChatModelLabel.asStateFlow()
+
+    fun refreshGlobalChatModelLabel() {
+        viewModelScope.launch {
+            _globalChatModelLabel.value = com.kitsune.core.network.provider.ModelRef
+                .parse(llmModelResolver.resolve(LlmOperation.CHAT)).second
+        }
+    }
 
     fun setStoryModel(ref: String?) = updateExperienceMode { it.copy(chatModelRef = ref?.takeIf { r -> r.isNotBlank() }) }
 
