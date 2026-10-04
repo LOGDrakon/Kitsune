@@ -91,6 +91,7 @@ fun PersonaDetailScreen(
     onBack: () -> Unit,
     onOpenChat: (chatId: String) -> Unit,
     onOpenImageGeneration: (personaId: String) -> Unit,
+    onOpenExport: (personaId: String, personaName: String) -> Unit = { _, _ -> },
     viewModel: PersonaDetailViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -288,6 +289,13 @@ if (showDeleteConfirm) {
                                 }
                             }
                         )
+                    }
+                    // Export as a Kitsune file or a character card (Chub / SillyTavern format), and
+                    // import a card. Was unreachable after the v2 redesign.
+                    if (readyState != null) {
+                        IconButton(onClick = { onOpenExport(readyState.persona.id, readyState.persona.name) }) {
+                            Icon(Icons.Default.Share, contentDescription = stringResource(R.string.persona_export_import_title))
+                        }
                     }
                     IconButton(onClick = { showDeleteConfirm = true }) {
                         Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.action_delete))

@@ -12,10 +12,12 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.kitsune.app.inspiration.InspirationWizardScreen
+import com.kitsune.feature.settings.generation.GenerationScreen
 import com.kitsune.feature.settings.models.ModelsScreen
 import com.kitsune.feature.settings.providers.ProvidersScreen
 import com.kitsune.core.common.inspiration.InspirationDraftHolder
@@ -42,6 +44,7 @@ import com.kitsune.feature.onboarding.RecoverAccountScreen
 import com.kitsune.feature.onboarding.UnderageScreen
 import com.kitsune.feature.persona.create.PersonaCreationScreen
 import com.kitsune.feature.persona.detail.PersonaDetailScreen
+import com.kitsune.feature.persona.exportimport.PersonaExportImportScreen
 import com.kitsune.feature.persona.imagegen.PersonaImageGenerationScreen
 import com.kitsune.feature.persona.tonelibrary.ToneLibraryScreen
 import com.kitsune.feature.settings.messages.MessagesScreen
@@ -263,7 +266,22 @@ fun KitsuneNavHost(
                 onOpenChat = { chatId -> navController.navigate(Routes.chat(chatId)) },
                 onOpenImageGeneration = { personaId ->
                     navController.navigate(Routes.personaImageGeneration(personaId))
-                }
+                },
+                onOpenExport = { personaId, name -> navController.navigate(Routes.personaExport(personaId, name)) }
+            )
+        }
+        screen(
+            Routes.PERSONA_EXPORT_PATTERN,
+            listOf(
+                navArgument("personaId") { type = NavType.StringType },
+                navArgument("name") { type = NavType.StringType; defaultValue = "" }
+            )
+        ) { entry ->
+            PersonaExportImportScreen(
+                personaId = entry.arguments?.getString("personaId").orEmpty(),
+                personaName = entry.arguments?.getString("name").orEmpty(),
+                onBack = { navController.popBackStack() },
+                viewModel = hiltViewModel()
             )
         }
         screen(
@@ -399,11 +417,15 @@ fun KitsuneNavHost(
                 onBack = { navController.popBackStack() },
                 onAccountDeleted = { navController.navigate(Routes.LOCK) { popUpTo(0) } },
                 onOpenProviders = { navController.navigate(Routes.providers()) },
-                onOpenModels = { navController.navigate(Routes.models()) }
+                onOpenModels = { navController.navigate(Routes.models()) },
+                onOpenGeneration = { navController.navigate(Routes.generation()) }
             )
         }
         screen(Routes.PROVIDERS) {
             ProvidersScreen(onBack = { navController.popBackStack() })
+        }
+        screen(Routes.GENERATION) {
+            GenerationScreen(onBack = { navController.popBackStack() })
         }
         screen(Routes.MODELS) {
             ModelsScreen(

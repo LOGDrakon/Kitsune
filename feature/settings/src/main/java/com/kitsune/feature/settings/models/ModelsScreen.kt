@@ -43,7 +43,6 @@ private data class SlotSpec(val key: String, @StringRes val title: Int, @StringR
 private val GROUPS: List<Pair<Int, List<SlotSpec>>> = listOf(
     R.string.models_group_chat to listOf(
         SlotSpec(LlmOperation.CHAT.name, R.string.models_op_chat, R.string.models_op_chat_hint, ModelCapabilityFilter.CHAT),
-        SlotSpec(LlmOperation.CHAT_PRO.name, R.string.models_op_chat_pro, R.string.models_op_chat_pro_hint, ModelCapabilityFilter.CHAT),
         SlotSpec(LlmOperation.NEXT_REPLY_SUGGESTIONS.name, R.string.models_op_suggestions, R.string.models_op_suggestions_hint, ModelCapabilityFilter.CHAT)
     ),
     R.string.models_group_memory to listOf(

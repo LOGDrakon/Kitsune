@@ -155,7 +155,6 @@ fun ChatScreen(
     val messages by viewModel.messages.collectAsStateWithLifecycle()
     val isSending by viewModel.isSending.collectAsStateWithLifecycle()
     val error by viewModel.error.collectAsStateWithLifecycle()
-    val isProMode by viewModel.isProMode.collectAsStateWithLifecycle()
     val input by viewModel.inputText.collectAsStateWithLifecycle()
     val avatarBytes by viewModel.avatarBytes.collectAsStateWithLifecycle()
     val backgroundBytes by viewModel.backgroundBytes.collectAsStateWithLifecycle()
@@ -618,8 +617,6 @@ fun ChatScreen(
                     stringResource(R.string.chat_persona_main_subtitle)
                 },
                 avatarBytes = avatarBytes,
-                isPro = isProMode,
-                onTogglePro = viewModel::setProMode,
                 onBack = onBack,
                 onOpenTools = { showToolsSheet = true }
             )

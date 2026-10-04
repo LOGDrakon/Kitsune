@@ -77,7 +77,7 @@ class PersonaCreationViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             // Gate on the user's very first persona only (not every creation) — count-based, not a
-            // set-once sentinel like KEY_FIRST_CHAT_ID, so it re-applies if the first persona is
+            // set-once sentinel, so it re-applies if the first persona is
             // later deleted and the profile is still blank. Demande explicite : les personas ne
             // doivent pas être créés avant que l'utilisateur ait renseigné sa propre fiche.
             val isFirstPersona = personaRepository.observeAll().first().isEmpty()

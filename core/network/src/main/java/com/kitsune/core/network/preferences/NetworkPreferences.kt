@@ -29,20 +29,9 @@ class NetworkPreferences @Inject constructor(
         secureStorage.putString(SecureStorage.KEY_DEFAULT_CHAT_MODEL_ID, modelId.trim())
     }
 
-    /** Pro mode's model — a stronger model the user picks for the turns that matter. Falls back to
-     * the chat model until one is chosen. */
-    fun getDefaultChatProModelId(): String =
-        secureStorage.getString(SecureStorage.KEY_DEFAULT_CHAT_PRO_MODEL_ID)?.takeIf { it.isNotBlank() }
-            ?: getDefaultChatModelId()
-
-    fun setDefaultChatProModelId(modelId: String) {
-        secureStorage.putString(SecureStorage.KEY_DEFAULT_CHAT_PRO_MODEL_ID, modelId.trim())
-    }
-
     /** Whether an operation has a selection of its own (as opposed to inheriting a default). */
     fun hasOwnModel(operation: LlmOperation): Boolean = when (operation) {
         LlmOperation.CHAT -> secureStorage.getString(SecureStorage.KEY_DEFAULT_CHAT_MODEL_ID).isNullOrBlank().not()
-        LlmOperation.CHAT_PRO -> secureStorage.getString(SecureStorage.KEY_DEFAULT_CHAT_PRO_MODEL_ID).isNullOrBlank().not()
         else -> secureStorage.getString(operation.storageKey).isNullOrBlank().not()
     }
 
@@ -54,7 +43,6 @@ class NetworkPreferences @Inject constructor(
      */
     fun getModelForOperation(operation: LlmOperation): String = when (operation) {
         LlmOperation.CHAT -> getDefaultChatModelId()
-        LlmOperation.CHAT_PRO -> getDefaultChatProModelId()
         LlmOperation.IMAGE_GENERATION -> getDefaultImageModelId()
         LlmOperation.EMBEDDING -> stored(operation) ?: suggested { it.suggestedEmbeddingModel } ?: ""
         else -> stored(operation) ?: getDefaultChatModelId()
@@ -64,7 +52,6 @@ class NetworkPreferences @Inject constructor(
         when (operation) {
             LlmOperation.CHAT -> setDefaultChatModelId(modelId)
             LlmOperation.IMAGE_GENERATION -> setDefaultImageModelId(modelId)
-            LlmOperation.CHAT_PRO -> setDefaultChatProModelId(modelId)
             else -> secureStorage.putString(operation.storageKey, modelId.trim())
         }
     }
@@ -73,17 +60,9 @@ class NetworkPreferences @Inject constructor(
     fun clearModelForOperation(operation: LlmOperation) {
         when (operation) {
             LlmOperation.CHAT -> secureStorage.remove(SecureStorage.KEY_DEFAULT_CHAT_MODEL_ID)
-            LlmOperation.CHAT_PRO -> secureStorage.remove(SecureStorage.KEY_DEFAULT_CHAT_PRO_MODEL_ID)
             LlmOperation.IMAGE_GENERATION -> secureStorage.remove(SecureStorage.KEY_DEFAULT_IMAGE_MODEL_ID)
             else -> secureStorage.remove(operation.storageKey)
         }
-    }
-
-    /** Whether the user has toggled Pro chat mode on (stronger model, longer replies, more memory). */
-    fun isProModeEnabled(): Boolean = secureStorage.getInt(SecureStorage.KEY_CHAT_MODE_PRO_ENABLED, 0) == 1
-
-    fun setProModeEnabled(enabled: Boolean) {
-        secureStorage.putInt(SecureStorage.KEY_CHAT_MODE_PRO_ENABLED, if (enabled) 1 else 0)
     }
 
     fun getDefaultImageModelId(): String =

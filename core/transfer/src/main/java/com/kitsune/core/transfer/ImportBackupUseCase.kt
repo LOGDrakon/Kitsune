@@ -57,7 +57,6 @@ class ImportBackupUseCase @Inject constructor(
             secureStorage.importTransferablePrefs(archive.prefs)
 
             // A restored vault already has history: it must never get the "first time" treatment.
-            secureStorage.putString(SecureStorage.KEY_FIRST_CHAT_ID, "restored-backup-no-first-chat")
             context.getSharedPreferences("kitsune_prefs", Context.MODE_PRIVATE)
                 .edit().putBoolean("welcome_shown", true).apply()
         }

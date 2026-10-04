@@ -70,16 +70,16 @@ class UpdateChatSummaryUseCase @Inject constructor(
     private val storyChapterRepository: StoryChapterRepository,
     private val embeddingCache: EmbeddingCache
 ) {
-    suspend operator fun invoke(chatId: String, isPro: Boolean = false) {
+    suspend operator fun invoke(chatId: String) {
         val chat = chatRepository.getById(chatId) ?: return
 
         // BUG-104: the reserved window must match what the prompt actually sends verbatim
         // (SummarizationConfig.reservedWindow), and the trigger threshold must move with it —
         // window + batch, not a flat backlog count. A flat gate against a variable window is what
-        // produced the double-counting (10 messages both verbatim and summarized in Standard, 30
-        // in Pro), and naively fixing only the dropLast would leave Pro with an empty batch and no
-        // memory pipeline at all.
-        val window = SummarizationConfig.reservedWindow(isPro)
+        // produced the double-counting (10 messages both verbatim and summarized), and naively
+        // fixing only the dropLast would leave a large window with an empty batch and no memory
+        // pipeline at all.
+        val window = SummarizationConfig.reservedWindow()
         val isFirstFold = chat.summary.isBlank() && chat.summarizedThroughCreatedAt == 0L
         val minBatch = if (isFirstFold) SummarizationConfig.FIRST_BATCH_MIN
                        else SummarizationConfig.SUMMARIZE_BATCH_MIN
@@ -136,7 +136,7 @@ class UpdateChatSummaryUseCase @Inject constructor(
             var allDerivedSucceeded = true
 
             // Level 3: Lore extraction
-            runCatching { extractLoreEntriesUseCase(chatId, derivedBatch, isPro) }
+            runCatching { extractLoreEntriesUseCase(chatId, derivedBatch) }
                 .onFailure { e ->
                     allDerivedSucceeded = false
                     Log.e(TAG, "invoke: lore extraction failed for chatId=$chatId, batch ending ${derivedBatch.last().createdAt} — will be retried", e)

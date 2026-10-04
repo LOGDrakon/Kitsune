@@ -20,7 +20,8 @@ import com.kitsune.core.data.local.entities.VoiceMode
  * `RoleplayTextFormatter`).
  */
 data class StyleSettings(
-    val isPro: Boolean,
+    /** The demanding craft rules ([ENHANCED_CRAFT_DIRECTIVES]) — a user setting, once Pro-only. */
+    val enhancedCraft: Boolean,
     val storyPaceMode: StoryPaceMode,
     val toneMode: ToneMode,
     val involvementMode: InvolvementMode,
@@ -57,12 +58,12 @@ data class StyleSettings(
     companion object {
         fun from(
             chat: ChatEntity,
-            isPro: Boolean,
+            enhancedCraft: Boolean,
             stylePackPrompt: String = "",
             globalCustomStyle: String = "",
             neverWrite: String = ""
         ) = StyleSettings(
-            isPro = isPro,
+            enhancedCraft = enhancedCraft,
             storyPaceMode = chat.storyPaceMode,
             toneMode = chat.toneMode,
             involvementMode = chat.involvementMode,
@@ -309,13 +310,13 @@ const val BASE_CRAFT = """Default prose register — follow this unless a direct
 - Prefer the most characterful available response over the safest one."""
 
 /**
- * The Pro-mode craft requirements, as hard constraints.
+ * The optional craft requirements (Réglages → Mémoire et longueur), as hard constraints.
  *
  * Replaces a block that stacked adjectives ("more crafted, vivid and alive", "denser with voice,
  * atmosphere and intent"). A model cannot verify whether it has been "vivid"; it can verify that it
  * did not open on a recap, that it varied sentence length, and that it avoided a named phrase.
  */
-const val PRO_CRAFT_DIRECTIVES = """Pro mode — craft requirements. These are hard constraints, not suggestions:
+const val ENHANCED_CRAFT_DIRECTIVES = """Craft requirements. These are hard constraints, not suggestions:
 - Open on a concrete image, action or line of dialogue. Never open by restating or summarising what the user just did.
 - Include at least one specific sensory detail that could only belong to this scene — not one that would fit any scene.
 - Vary sentence length deliberately inside the reply: at least one sentence under 8 words, and at least one over 25.
@@ -389,9 +390,9 @@ fun buildStyleContract(settings: StyleSettings): String {
             appendLine("### The user's global writing style, applied to every conversation")
             appendLine(globalStyle)
         }
-        if (settings.isPro) {
+        if (settings.enhancedCraft) {
             appendLine()
-            appendLine(PRO_CRAFT_DIRECTIVES)
+            appendLine(ENHANCED_CRAFT_DIRECTIVES)
         }
     }.trimEnd()
 }
@@ -402,8 +403,8 @@ private fun changedLines(old: StyleSettings, new: StyleSettings): List<String> =
         if (before?.label == after?.label) return
         add("$label: ${before?.label ?: "none"} -> ${after?.label ?: "none"}")
     }
-    if (old.isPro != new.isPro) {
-        add("Writing mode: ${if (old.isPro) "Pro" else "Standard"} -> ${if (new.isPro) "Pro" else "Standard"}")
+    if (old.enhancedCraft != new.enhancedCraft) {
+        add("Craft requirements: ${if (old.enhancedCraft) "on" else "off"} -> ${if (new.enhancedCraft) "on" else "off"}")
     }
     compare("Story structure", specFor(old.storyPaceMode), specFor(new.storyPaceMode))
     compare("Tone", specFor(old.toneMode), specFor(new.toneMode))

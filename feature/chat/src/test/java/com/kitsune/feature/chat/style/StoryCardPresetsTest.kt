@@ -22,7 +22,7 @@ class StoryCardPresetsTest {
 
     private fun contractFor(preset: StoryPreset): String = buildStyleContract(
         StyleSettings(
-            isPro = false,
+            enhancedCraft = false,
             storyPaceMode = preset.storyPaceMode,
             toneMode = preset.toneMode,
             involvementMode = preset.involvementMode,

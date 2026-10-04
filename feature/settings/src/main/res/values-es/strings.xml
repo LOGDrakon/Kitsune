@@ -21,8 +21,6 @@
 
     <!-- SettingsScreen: aviso de cuenta baneada -->
     <string name="account_banned_notice_title">Cuenta baneada</string>
-    <string name="account_banned_notice_body">Sigues teniendo acceso a tus chats existentes y a los ajustes, pero ya no puedes generar contenido nuevo (mensajes, personajes, universos, imágenes).</string>
-    <string name="account_banned_notice_body_with_reason">Sigues teniendo acceso a tus chats existentes y a los ajustes, pero ya no puedes generar contenido nuevo (mensajes, personajes, universos, imágenes).\n\nMotivo: %1$s</string>
 
     <!-- SettingsScreen: encabezados de sección para el diseño en tarjetas (IDEAS.md 2026-07-03) -->
     <string name="account_section_title">Cuenta</string>

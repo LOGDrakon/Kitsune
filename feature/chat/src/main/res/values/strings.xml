@@ -299,7 +299,5 @@
     <string name="chat_tools_section_scene">Scene</string>
     <string name="chat_tools_section_read">Read</string>
     <string name="chat_tools_section_help">Help</string>
-    <string name="chat_mode_standard">Standard</string>
-    <string name="chat_mode_pro">Pro</string>
     <string name="image_gen_hd_quality_title">HD quality</string>
 </resources>

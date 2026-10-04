@@ -91,8 +91,7 @@ class BuildTurnMemoryUseCase @Inject constructor(
     suspend operator fun invoke(
         chatId: String,
         query: String,
-        rawWindow: List<MessageEntity>,
-        isPro: Boolean = false
+        rawWindow: List<MessageEntity>
     ): TurnMemory {
         val chat = chatRepository.getById(chatId)
         // Lore now has three scopes, merged here rather than copied once (2026-08-25):
@@ -134,7 +133,7 @@ class BuildTurnMemoryUseCase @Inject constructor(
             fragments = fragments,
             queryEmbedding = queryEmbedding,
             rawWindowText = rawWindow.joinToString("\n") { it.content },
-            budget = SummarizationConfig.maxLoreEntries(isPro)
+            budget = SummarizationConfig.maxLoreEntries()
         )
 
         // Les fils sont écartés du roster classé (poids de type bas dans RankLoreEntriesUseCase) et
@@ -175,7 +174,7 @@ class BuildTurnMemoryUseCase @Inject constructor(
             chapters = chapters,
             storyTimeAnchor = chat?.storyTimeAnchor.orEmpty(),
             loreEntries = rankedLore,
-            chronology = buildStoryChronologyUseCase(chatId, SummarizationConfig.chronologyMaxEntries(isPro)),
+            chronology = buildStoryChronologyUseCase(chatId, SummarizationConfig.chronologyMaxEntries()),
             relevantMemories = relevantMemories,
             openThreads = openThreads
         )

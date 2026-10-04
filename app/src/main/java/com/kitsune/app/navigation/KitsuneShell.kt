@@ -216,7 +216,8 @@ fun KitsuneShell(
                         showBack = false,
                         onAccountDeleted = { navController.navigate(Routes.LOCK) { popUpTo(0) } },
                         onOpenProviders = { navController.navigate(Routes.providers()) },
-                        onOpenModels = { navController.navigate(Routes.models()) }
+                        onOpenModels = { navController.navigate(Routes.models()) },
+                        onOpenGeneration = { navController.navigate(Routes.generation()) }
                     )
                 }
             }

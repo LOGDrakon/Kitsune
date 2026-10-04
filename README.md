@@ -15,6 +15,10 @@ characters and whole fictional universes, then write stories with them.
 
 The interface is available in French, English and 13 other languages.
 
+What the project will and will not do — no engagement tricks, simple-by-default settings, private
+fiction left alone, a marketplace that does not need an army of moderators — is written down in
+[PRINCIPLES.md](PRINCIPLES.md).
+
 ## Features
 
 **Writing**
@@ -24,6 +28,8 @@ The interface is available in French, English and 13 other languages.
   a rewind, a chronology of key moments, novel mode with PDF export.
 - Writing-style packs (cinematic, stage play, light novel, visual novel), story presets, a "never write"
   list, a safe word.
+- Memory and reply length you choose yourself: three presets for small, standard and large-context
+  models, or the exact values in the advanced settings.
 - Character and universe generation, an inspiration wizard, sheet translation, and
   [Character Card V2](https://github.com/malfoyslastname/character-card-spec-v2) import and export
   (the format used by SillyTavern and most character sites).
@@ -82,7 +88,8 @@ Hilt. See [`ARCHITECTURE.md`](ARCHITECTURE.md) and [`DESIGN_SYSTEM.md`](DESIGN_S
 
 ## Contributing
 
-Issues, ideas and pull requests are welcome. Bug reports can be generated from the app
+Issues, ideas and pull requests are welcome; please read [PRINCIPLES.md](PRINCIPLES.md) first, it ends
+with the questions every new feature has to answer. Bug reports can be generated from the app
 (**Settings → Support**): they are anonymised (names redacted, no key or identifier) and open in the
 share menu so you can read them before posting.
 

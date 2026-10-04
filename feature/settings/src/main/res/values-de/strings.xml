@@ -21,8 +21,6 @@
 
     <!-- SettingsScreen: Hinweis bei gesperrtem Konto -->
     <string name="account_banned_notice_title">Konto gesperrt</string>
-    <string name="account_banned_notice_body">Sie haben weiterhin Zugriff auf Ihre bestehenden Chats und Einstellungen, können aber keine neuen Inhalte mehr erstellen (Nachrichten, Personas, Universen, Bilder).</string>
-    <string name="account_banned_notice_body_with_reason">Sie haben weiterhin Zugriff auf Ihre bestehenden Chats und Einstellungen, können aber keine neuen Inhalte mehr erstellen (Nachrichten, Personas, Universen, Bilder).\n\nGrund: %1$s</string>
 
     <!-- SettingsScreen: Abschnittsüberschriften für das Karten-Layout (IDEAS.md 2026-07-03) -->
     <string name="account_section_title">Konto</string>

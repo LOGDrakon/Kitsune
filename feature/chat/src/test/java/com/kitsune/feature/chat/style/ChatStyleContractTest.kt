@@ -33,7 +33,7 @@ class ChatStyleContractTest {
     }
 
     private fun settings(
-        isPro: Boolean = false,
+        enhancedCraft: Boolean = false,
         storyPace: StoryPaceMode = StoryPaceMode.DEFAULT,
         tone: ToneMode = ToneMode.DEFAULT,
         involvement: InvolvementMode = InvolvementMode.DEFAULT,
@@ -48,7 +48,7 @@ class ChatStyleContractTest {
         globalStyle: String = "",
         neverWrite: String = ""
     ) = StyleSettings(
-        isPro, storyPace, tone, involvement, rhythm, universe, intensity, custom,
+        enhancedCraft, storyPace, tone, involvement, rhythm, universe, intensity, custom,
         replyLength, balance, voice, stylePack, globalStyle, neverWrite
     )
 
@@ -65,9 +65,9 @@ class ChatStyleContractTest {
     }
 
     @Test
-    fun `pro mode alone produces a contract`() {
-        val contract = requireNotNull(buildStyleContract(settings(isPro = true)))
-        assertTrue(contract.contains("Pro mode — craft requirements"))
+    fun `craft requirements alone produce a contract`() {
+        val contract = requireNotNull(buildStyleContract(settings(enhancedCraft = true)))
+        assertTrue(contract.contains("Craft requirements. These are hard constraints"))
     }
 
     @Test
@@ -80,7 +80,7 @@ class ChatStyleContractTest {
 
     @Test
     fun `the contract always tells the model not to imitate the transcript`() {
-        val contract = requireNotNull(buildStyleContract(settings(isPro = true)))
+        val contract = requireNotNull(buildStyleContract(settings(enhancedCraft = true)))
         assertTrue(
             "without this clause the transcript's 40 counter-examples win over the instruction",
             contract.contains("do not copy") && contract.contains("length, rhythm or register")
@@ -88,9 +88,9 @@ class ChatStyleContractTest {
     }
 
     @Test
-    fun `pro and standard contracts differ`() {
+    fun `contracts with and without craft requirements differ`() {
         val base = settings(tone = ToneMode.COMEDY)
-        assertTrue(buildStyleContract(base) != buildStyleContract(base.copy(isPro = true)))
+        assertTrue(buildStyleContract(base) != buildStyleContract(base.copy(enhancedCraft = true)))
     }
 
     // --- Contract: every category is carried ---
@@ -180,10 +180,10 @@ class ChatStyleContractTest {
         val pivot = requireNotNull(
             buildStylePivot(
                 settings(),
-                settings(isPro = true, tone = ToneMode.COMEDY, rhythm = NarrativeRhythmMode.FAST_PACED)
+                settings(enhancedCraft = true, tone = ToneMode.COMEDY, rhythm = NarrativeRhythmMode.FAST_PACED)
             )
         )
-        assertTrue(pivot.contains("Writing mode: Standard -> Pro"))
+        assertTrue(pivot.contains("Craft requirements: off -> on"))
         assertTrue(pivot.contains("Tone: none -> Comedy"))
         assertTrue(pivot.contains("Pacing: none -> Fast-paced"))
         assertEquals("one marker, not one per changed setting", 1, pivot.split("[STYLE CHANGE").size - 1)
@@ -365,7 +365,7 @@ class ChatStyleContractTest {
             ReplyLengthMode.entries.forEach { add(buildStyleContract(settings(replyLength = it))) }
             NarrationBalanceMode.entries.forEach { add(buildStyleContract(settings(balance = it))) }
             VoiceMode.entries.forEach { add(buildStyleContract(settings(voice = it))) }
-            add(buildStyleContract(settings(isPro = true)))
+            add(buildStyleContract(settings(enhancedCraft = true)))
             // The default register now travels in the contract too, so it sits in the moderation
             // window every turn exactly like the mode directives do.
             add(buildStyleContract(settings()))
@@ -391,7 +391,7 @@ class ChatStyleContractTest {
             buildStylePivot(
                 settings(),
                 settings(
-                    isPro = true,
+                    enhancedCraft = true,
                     storyPace = StoryPaceMode.SLICE_OF_LIFE,
                     tone = ToneMode.DARK_PSYCHOLOGICAL,
                     involvement = InvolvementMode.IMMERSIVE_RP,
@@ -429,7 +429,7 @@ class ChatStyleContractTest {
 
         assertEquals(
             StyleSettings(
-                isPro = true,
+                enhancedCraft = true,
                 storyPaceMode = StoryPaceMode.EPISODIC,
                 toneMode = ToneMode.SOFT_ROMANTIC,
                 involvementMode = InvolvementMode.READER,
@@ -438,7 +438,7 @@ class ChatStyleContractTest {
                 intensityMode = IntensityMode.SOFT_SUGGESTIVE,
                 customDirective = "Stay cold."
             ),
-            StyleSettings.from(chat, isPro = true)
+            StyleSettings.from(chat, enhancedCraft = true)
         )
     }
 }

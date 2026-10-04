@@ -74,6 +74,7 @@ import com.kitsune.core.moderation.safeword.SafeWordManager
 import com.kitsune.core.network.dto.ChatMessageDto
 import com.kitsune.core.network.preferences.LlmModelResolver
 import com.kitsune.core.network.preferences.LlmOperation
+import com.kitsune.core.network.preferences.GenerationPreferences
 import com.kitsune.core.network.preferences.NetworkPreferences
 import com.kitsune.core.network.repository.ChatCompletionRepository
 import com.kitsune.core.network.repository.ChatCompletionResult
@@ -142,19 +143,12 @@ private const val SAFETY_DIRECTIVE =
 
 private const val STYLE_PACK_BUNDLE_ID = "style_pack_bundle"
 
-/** Pro mode leans into more creative, less predictable output — a temperature bump on top of the
- * user's own setting, capped so it stays coherent rather than degrading into incoherent text. */
-private const val PRO_TEMPERATURE_BONUS = 0.15
-private const val PRO_TEMPERATURE_MAX = 1.3
-
 /** "Régénérer"/edit-and-resend both exist specifically so the user can get a DIFFERENT reply from
  * the same point in the story — a real user report showed the same request sometimes still comes
  * back byte-identical even after editing the message, most likely upstream (provider-side) low-
  * entropy decoding or caching for that exact prompt, something this app can't control directly.
  * Bumping temperature specifically for these two flows is a cheap, effective mitigation regardless
- * of the exact upstream cause. Capped like [PRO_TEMPERATURE_MAX] for the same reason (stay coherent
- * rather than degrade into noise), and the two bonuses stack additively when both apply (Pro mode +
- * regenerate), still bounded by the same ceiling. */
+ * of the exact upstream cause. Capped so it stays coherent rather than degrading into noise. */
 private const val REGENERATE_TEMPERATURE_BONUS = 0.2
 private const val REGENERATE_TEMPERATURE_MAX = 1.4
 
@@ -229,6 +223,7 @@ class ChatViewModel @Inject constructor(
     private val messageRepository: MessageRepository,
     private val chatCompletionRepository: ChatCompletionRepository,
     private val networkPreferences: NetworkPreferences,
+    private val generationPreferences: GenerationPreferences,
     private val llmModelResolver: LlmModelResolver,
     private val safeWordManager: SafeWordManager,
     private val updateChatSummaryUseCase: UpdateChatSummaryUseCase,
@@ -271,23 +266,6 @@ class ChatViewModel @Inject constructor(
     private val _bugReportSending = MutableStateFlow(false)
     val bugReportSending: StateFlow<Boolean> = _bugReportSending.asStateFlow()
 
-    /** Standard vs Pro chat mode — Pro uses the model the user picked for it (Réglages → Modèles),
-     * a longer reply ceiling and a larger memory window. Global preference, not per-conversation. */
-    private val _isProMode = MutableStateFlow(networkPreferences.isProModeEnabled())
-    val isProMode: StateFlow<Boolean> = _isProMode.asStateFlow()
-
-    fun setProMode(enabled: Boolean) {
-        if (enabled == _isProMode.value) return
-        val before = _chat.value?.let { StyleSettings.from(it, _isProMode.value) }
-        networkPreferences.setProModeEnabled(enabled)
-        _isProMode.value = enabled
-        // Pro is a global preference, so the pivot marker only lands in the chat the user was
-        // actually looking at when they flipped it — which is the one where they expect to see the
-        // difference. Every other conversation is covered by the trailing style contract, which
-        // states the current mode on every turn regardless of where it was changed.
-        before?.let { commitStyleChanges(it) }
-    }
-
     /**
      * The base temperature for this conversation, before any bonus.
      *
@@ -301,10 +279,7 @@ class ChatViewModel @Inject constructor(
         return preset?.sampling?.temperature ?: networkPreferences.getDefaultTemperature()
     }
 
-    private fun effectiveTemperature(): Double {
-        val base = baseTemperature()
-        return if (_isProMode.value) (base + PRO_TEMPERATURE_BONUS).coerceAtMost(PRO_TEMPERATURE_MAX) else base
-    }
+    private fun effectiveTemperature(): Double = baseTemperature()
 
     /** See [REGENERATE_TEMPERATURE_BONUS] — used by [regenerateLastResponse] and
      *  [updateEditedMessage], both existing specifically to get a different reply than last time. */
@@ -485,7 +460,7 @@ class ChatViewModel @Inject constructor(
     private val _editingMessage = MutableStateFlow<MessageEntity?>(null)
     val editingMessage: StateFlow<MessageEntity?> = _editingMessage.asStateFlow()
 
-    private fun rawWindowSize(): Int = SummarizationConfig.rawWindowSize(isPro = _isProMode.value)
+    private fun rawWindowSize(): Int = SummarizationConfig.rawWindowSize()
 
     init {
         viewModelScope.launch {
@@ -1089,7 +1064,7 @@ class ChatViewModel @Inject constructor(
             )
 
             val rawWindow = messageRepository.getRecent(chatId, rawWindowSize())
-            val memory = buildTurnMemoryUseCase(chatId, trimmed, rawWindow, _isProMode.value)
+            val memory = buildTurnMemoryUseCase(chatId, trimmed, rawWindow)
             val history = buildApiHistory(rawWindow) + listOfNotNull(styleContractTurn(memory))
 
             chatCompletionRepository.complete(
@@ -1107,7 +1082,7 @@ class ChatViewModel @Inject constructor(
 
             _isSending.value = false
 
-            launch { updateChatSummaryUseCase(chatId, _isProMode.value) }
+            launch { updateChatSummaryUseCase(chatId) }
             launch { indexMessageChunkUseCase(chatId) }
         }
     }
@@ -1246,7 +1221,7 @@ class ChatViewModel @Inject constructor(
             _isSending.value = true
 
             val rawWindow = messageRepository.getRecent(chatId, rawWindowSize())
-            val memory = buildTurnMemoryUseCase(chatId, lastAssistant.content, rawWindow, _isProMode.value)
+            val memory = buildTurnMemoryUseCase(chatId, lastAssistant.content, rawWindow)
             val history = buildApiHistory(rawWindow) +
                 ChatTurn(role = ChatMessageDto.ROLE_USER, content = CONTINUE_INSTRUCTION) +
                 listOfNotNull(styleContractTurn(memory))
@@ -1280,7 +1255,7 @@ class ChatViewModel @Inject constructor(
     ) {
         val persona = _persona.value
         val rawWindow = messageRepository.getRecent(chatId, rawWindowSize())
-        val memory = buildTurnMemoryUseCase(chatId, lastUserContent, rawWindow, _isProMode.value)
+        val memory = buildTurnMemoryUseCase(chatId, lastUserContent, rawWindow)
         val history = buildApiHistory(rawWindow) + listOfNotNull(styleContractTurn(memory))
 
         chatCompletionRepository.complete(
@@ -1396,7 +1371,7 @@ class ChatViewModel @Inject constructor(
 
             val rawWindow = messageRepository.getRecent(chatId, rawWindowSize())
             // Contract goes last, after the director instruction — closest to the generation point.
-            val memory = buildTurnMemoryUseCase(chatId, instruction, rawWindow, _isProMode.value)
+            val memory = buildTurnMemoryUseCase(chatId, instruction, rawWindow)
             val history = buildApiHistory(rawWindow)
                 .plus(ChatTurn(role = ChatMessageDto.ROLE_USER, content = instruction))
                 .plus(listOfNotNull(styleContractTurn(memory)))
@@ -1654,7 +1629,7 @@ class ChatViewModel @Inject constructor(
     }
 
     private suspend fun resolveChatModel(): String =
-        llmModelResolver.resolve(if (_isProMode.value) LlmOperation.CHAT_PRO else LlmOperation.CHAT)
+        llmModelResolver.resolve(LlmOperation.CHAT)
 
     /** Internal send method that accepts the text directly, used for retry after model change.
      *  Unlike [sendMessage], does NOT re-insert the user message — it was already persisted by
@@ -1671,7 +1646,7 @@ class ChatViewModel @Inject constructor(
 
         viewModelScope.launch {
             val rawWindow = messageRepository.getRecent(chatId, rawWindowSize())
-            val memory = buildTurnMemoryUseCase(chatId, text, rawWindow, _isProMode.value)
+            val memory = buildTurnMemoryUseCase(chatId, text, rawWindow)
             val history = buildApiHistory(rawWindow) + listOfNotNull(styleContractTurn(memory))
 
             chatCompletionRepository.complete(
@@ -1688,7 +1663,7 @@ class ChatViewModel @Inject constructor(
             }
 
             _isSending.value = false
-            launch { updateChatSummaryUseCase(chatId, _isProMode.value) }
+            launch { updateChatSummaryUseCase(chatId) }
             launch { indexMessageChunkUseCase(chatId) }
         }
     }
@@ -1758,7 +1733,7 @@ class ChatViewModel @Inject constructor(
     private var styleSettingsOnDialogOpen: StyleSettings? = null
 
     fun onExperienceModeDialogOpened() {
-        styleSettingsOnDialogOpen = _chat.value?.let { StyleSettings.from(it, _isProMode.value) }
+        styleSettingsOnDialogOpen = _chat.value?.let { StyleSettings.from(it, generationPreferences.isEnhancedCraftEnabled()) }
     }
 
     fun onExperienceModeDialogClosed() {
@@ -1775,7 +1750,7 @@ class ChatViewModel @Inject constructor(
     private fun commitStyleChanges(before: StyleSettings) {
         viewModelScope.launch {
             val current = _chat.value ?: chatRepository.getById(chatId) ?: return@launch
-            val pivot = buildStylePivot(before, StyleSettings.from(current, _isProMode.value)) ?: return@launch
+            val pivot = buildStylePivot(before, StyleSettings.from(current, generationPreferences.isEnhancedCraftEnabled())) ?: return@launch
             insertStyleDirective(chatId, pivot)
         }
     }
@@ -1847,7 +1822,7 @@ private suspend fun insertSystemMessage(chatId: String, content: String) {
         )
         // BUG-012 (BUGS.md): every caller of this shared helper needs this — 3 of its 4 call
         // sites (sendMessage, injectDirectorBeat, sendMessageWithText) forgot to bump the chat's
-        // updatedAt themselves, so ChatListViewModel/ChatsOverviewViewModel's Room Flow (which
+        // updatedAt themselves, so ChatListViewModel's Room Flow (which
         // only re-emits on writes to the `chats` table, never on writes to `messages`) never saw
         // a new "last message" after an ordinary send. Doing it here once removes the chance of
         // any future caller forgetting it again.
@@ -1914,7 +1889,7 @@ private suspend fun insertSystemMessage(chatId: String, content: String) {
      *  the app-wide custom style, and the taste profile's hard-avoid list. */
     private fun currentStyleSettings(chat: ChatEntity): StyleSettings = StyleSettings.from(
         chat = chat,
-        isPro = _isProMode.value,
+        enhancedCraft = generationPreferences.isEnhancedCraftEnabled(),
         stylePackPrompt = stylePackPrompt.orEmpty(),
         globalCustomStyle = secureStorage.getString(SecureStorage.KEY_CUSTOM_STYLE_PROMPT).orEmpty(),
         neverWrite = storyTasteStore.get().neverWrite
@@ -1957,11 +1932,10 @@ private suspend fun insertSystemMessage(chatId: String, content: String) {
         )
     }
 
-    /** Pro replies are asked to be longer and more developed, so they get a real budget to do it
-     * in — see [ChatCompletionRepository.PRO_MAX_TOKENS]. */
+    /** The reply budget: the user's ceiling (Settings → Mémoire et longueur), tightened when the chat
+     * asks for a particular length. */
     private fun chatMaxTokens(): Int {
-        val ceiling = if (_isProMode.value) ChatCompletionRepository.PRO_MAX_TOKENS
-        else ChatCompletionRepository.DEFAULT_MAX_TOKENS
+        val ceiling = generationPreferences.maxReplyTokens()
         // A word count in the prompt asks; a budget enforces. Until now the ceiling was a flat 4096
         // (6144 Pro) — so high that "keep it to 120 words" was the only thing standing between the
         // user and a page of prose, and nothing at all backed it up. The targets are generous
@@ -2005,7 +1979,7 @@ private suspend fun insertSystemMessage(chatId: String, content: String) {
         // with instructions the app itself had already given. In the contract a pack can replace them
         // outright. Cost is unchanged: same text, same every-turn frequency, different position.
         //
-        // Pro-mode craft directives and the experience-mode directives left for the same destination
+        // The optional craft directives and the experience-mode directives left for the same destination
         // earlier, for the related reason that at index 0 they lost against 40-60 transcript messages
         // demonstrating the previous style. Deliberately not duplicated in both places.
         appendLine("## Core dramatic intent")
@@ -2113,7 +2087,7 @@ private suspend fun insertSystemMessage(chatId: String, content: String) {
             appendLine()
             appendLine("## Known Entities (characters, places, factions, events, items)")
             appendLine("Persistent entity sheets for this story, ordered by how relevant they are to the current moment. Treat them as authoritative continuity: never contradict a fact stated here, and never reintroduce an entity listed here as if the user were meeting it for the first time.")
-            val detailedCount = SummarizationConfig.detailedLoreEntries(isPro = _isProMode.value)
+            val detailedCount = SummarizationConfig.detailedLoreEntries()
             loreEntries.forEachIndexed { index, entry ->
                 appendLine("- **${entry.name}** (${entry.entryType}): ${entry.summary}")
                 // The full `content` paragraph only for the best-ranked few — it is several times

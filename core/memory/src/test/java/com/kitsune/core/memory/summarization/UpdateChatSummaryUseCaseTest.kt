@@ -61,25 +61,18 @@ class UpdateChatSummaryUseCaseTest {
         embeddingCache = embeddingCache
     )
 
-    /** [MemorySettingsHolder] is a mutable global pushed from the backend at startup; reset it so a
-     *  test that overrides the window can't leak into the next one. */
+    /** [MemorySettingsHolder] is a mutable global set from the user's settings; reset it so a test
+     *  that overrides the window can't leak into the next one. */
     @Before
     fun resetMemorySettings() {
-        MemorySettingsHolder.apply(
-            maxContextTokens = null,
-            rawWindowSize = 40,
-            rawWindowSizePro = 60,
-            loreEntries = 12,
-            loreEntriesPro = 20,
-            samplingEnabled = true
-        )
+        MemorySettingsHolder.apply(rawWindowSize = 40, loreEntries = 12, detailedExtraction = false)
     }
 
-    private fun window(isPro: Boolean = false) = SummarizationConfig.reservedWindow(isPro)
+    private fun window() = SummarizationConfig.reservedWindow()
 
     /** Smallest backlog that triggers a fold, for a chat that already has a summary. */
-    private fun triggeringBacklogSize(isPro: Boolean = false) =
-        window(isPro) + SummarizationConfig.SUMMARIZE_BATCH_MIN
+    private fun triggeringBacklogSize() =
+        window() + SummarizationConfig.SUMMARIZE_BATCH_MIN
 
     private fun chat(summarizedThrough: Long = 0L, summary: String = "") = ChatEntity(
         id = CHAT_ID,
@@ -107,7 +100,7 @@ class UpdateChatSummaryUseCaseTest {
         Result.success(ChatCompletionResult(content = content, usage = null, modelUsed = "gpt-5-mini"))
 
     private fun stubDownstreamUseCases() {
-        coJustRun { extractLoreEntriesUseCase(any(), any(), any()) }
+        coJustRun { extractLoreEntriesUseCase(any(), any()) }
         coJustRun { indexMemoryFragmentUseCase(any(), any(), any(), any()) }
         coJustRun { syncCastFromLoreUseCase(any()) }
         coEvery { memoryFragmentRepository.getByChat(any()) } returns emptyList()
@@ -129,7 +122,7 @@ class UpdateChatSummaryUseCaseTest {
         useCase(CHAT_ID)
 
         coVerify(exactly = 0) { chatCompletionRepository.complete(any(), any(), any(), any(), any(), any(), any(), any(), any()) }
-        coVerify(exactly = 0) { extractLoreEntriesUseCase(any(), any(), any()) }
+        coVerify(exactly = 0) { extractLoreEntriesUseCase(any(), any()) }
         coVerify(exactly = 0) { indexMemoryFragmentUseCase(any(), any(), any(), any()) }
     }
 
@@ -166,18 +159,19 @@ class UpdateChatSummaryUseCaseTest {
     }
 
     @Test
-    fun `pro chats still trigger and still produce a non-empty batch`() = runTest {
+    fun `a large raw window still triggers and still produces a non-empty batch`() = runTest {
         // Regression guard for the trap in the BUG-104 fix: naively swapping the constant for
-        // rawWindowSize(isPro) while leaving a flat gate yields an empty batch in Pro, i.e. a
-        // permanently dead memory pipeline for every Pro chat.
-        val backlog = (1..triggeringBacklogSize(isPro = true)).map(::message)
+        // rawWindowSize() while leaving a flat gate yields an empty batch as soon as the user picks
+        // a large window, i.e. a permanently dead memory pipeline.
+        MemorySettingsHolder.apply(rawWindowSize = 60, loreEntries = 20, detailedExtraction = true)
+        val backlog = (1..triggeringBacklogSize()).map(::message)
         stubHappyPath(backlog)
 
-        useCase(CHAT_ID, isPro = true)
+        useCase(CHAT_ID)
 
-        val expectedBatch = backlog.dropLast(window(isPro = true))
-        assertTrue("Pro batch must not be empty", expectedBatch.isNotEmpty())
-        coVerify(exactly = 1) { extractLoreEntriesUseCase(CHAT_ID, expectedBatch, true) }
+        val expectedBatch = backlog.dropLast(window())
+        assertTrue("batch must not be empty", expectedBatch.isNotEmpty())
+        coVerify(exactly = 1) { extractLoreEntriesUseCase(CHAT_ID, expectedBatch) }
         coVerify(exactly = 1) { chatCompletionRepository.complete(any(), any(), any(), any(), any(), any(), any(), any(), any()) }
     }
 
@@ -193,7 +187,7 @@ class UpdateChatSummaryUseCaseTest {
         useCase(CHAT_ID)
 
         coVerify(exactly = 1) { chatCompletionRepository.complete(any(), any(), any(), any(), any(), any(), any(), any(), any()) }
-        coVerify(exactly = 1) { extractLoreEntriesUseCase(CHAT_ID, backlog.dropLast(window()), false) }
+        coVerify(exactly = 1) { extractLoreEntriesUseCase(CHAT_ID, backlog.dropLast(window())) }
     }
 
     @Test
@@ -277,7 +271,7 @@ class UpdateChatSummaryUseCaseTest {
     fun `does not advance the derived cursor when a derived step failed`() = runTest {
         val backlog = (1..triggeringBacklogSize()).map(::message)
         stubHappyPath(backlog)
-        coEvery { extractLoreEntriesUseCase(any(), any(), any()) } throws IllegalStateException("boom")
+        coEvery { extractLoreEntriesUseCase(any(), any()) } throws IllegalStateException("boom")
 
         useCase(CHAT_ID)
 
@@ -312,7 +306,7 @@ class UpdateChatSummaryUseCaseTest {
         // Already at the retry ceiling: replaying four API calls forever is worse than moving on.
         coEvery { chatRepository.getById(CHAT_ID) } returns
             chat(summary = "seeded summary").copy(derivedRetryCount = 2)
-        coEvery { extractLoreEntriesUseCase(any(), any(), any()) } throws IllegalStateException("boom")
+        coEvery { extractLoreEntriesUseCase(any(), any()) } throws IllegalStateException("boom")
 
         useCase(CHAT_ID)
 
@@ -332,7 +326,7 @@ class UpdateChatSummaryUseCaseTest {
         useCase(CHAT_ID)
 
         val expectedBatch = backlog.dropLast(window())
-        coVerify(exactly = 1) { extractLoreEntriesUseCase(CHAT_ID, expectedBatch, false) }
+        coVerify(exactly = 1) { extractLoreEntriesUseCase(CHAT_ID, expectedBatch) }
         coVerify(exactly = 1) {
             indexMemoryFragmentUseCase(CHAT_ID, MemoryFragmentSource.SUMMARY_BATCH, any(), any())
         }
@@ -360,7 +354,7 @@ class UpdateChatSummaryUseCaseTest {
     fun `still updates the summary even when lore extraction fails`() = runTest {
         val backlog = (1..triggeringBacklogSize()).map(::message)
         stubHappyPath(backlog)
-        coEvery { extractLoreEntriesUseCase(any(), any(), any()) } throws IllegalStateException("boom")
+        coEvery { extractLoreEntriesUseCase(any(), any()) } throws IllegalStateException("boom")
 
         useCase(CHAT_ID)
 

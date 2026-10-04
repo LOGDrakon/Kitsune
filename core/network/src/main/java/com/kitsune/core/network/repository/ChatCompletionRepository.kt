@@ -44,19 +44,6 @@ interface ChatCompletionRepository {
         const val DEFAULT_MAX_TOKENS = 4096
 
         /**
-         * Output ceiling for a Pro-mode chat turn. Pro's craft directives ask for a longer, more
-         * developed reply, but until now both modes shared [DEFAULT_MAX_TOKENS] — the instruction
-         * had literally no extra room to execute in, which is a large part of why Pro replies did
-         * not read as noticeably different.
-         *
-         * Raising it is close to cost-neutral rather than a straight increase: this path runs with
-         * `allowContinuation = true`, so a reply that hits the ceiling already triggers a
-         * continuation request that **resends the entire prompt**. A ceiling the reply fits under
-         * trades those duplicated prompt tokens for the completion tokens it was going to spend
-         * anyway.
-         */
-        const val PRO_MAX_TOKENS = 6144
-        /**
          * Persona/NPC/faction/location — single JSON object. For personas this now also carries
          * the 4-field visual sheet in the same call (10 fields total), so it needs as much room as
          * a normal chat reply — a tighter cap here just means small models truncate mid-object and

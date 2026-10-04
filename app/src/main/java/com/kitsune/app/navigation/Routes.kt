@@ -62,6 +62,7 @@ object Routes {
     const val PERSONA_CREATE_PATTERN =
         "persona_create?universeId={universeId}&chatId={chatId}&fromNpcId={fromNpcId}&draftJobId={draftJobId}"
     const val PERSONA_DETAIL_PATTERN = "persona_detail/{personaId}"
+    const val PERSONA_EXPORT_PATTERN = "persona_export/{personaId}?name={name}"
     const val PERSONA_IMAGE_GENERATION_PATTERN = "persona_image_generation/{personaId}"
     const val UNIVERSE_CREATE = "universe_create"
     const val UNIVERSE_CREATE_PATTERN = "universe_create?draftJobId={draftJobId}"
@@ -86,6 +87,7 @@ object Routes {
     //
     const val PROVIDERS = "providers"
     const val MODELS = "models"
+    const val GENERATION = "generation"
 
     const val MY_BADGES = "my_badges"
     const val MY_FOLLOWS = "my_follows"
@@ -112,6 +114,7 @@ object Routes {
         "persona_create?universeId=$universeId&chatId=$chatId&fromNpcId=$npcId"
     fun personaDraftReview(jobId: String) = "persona_create?draftJobId=$jobId"
     fun personaDetail(personaId: String) = "persona_detail/$personaId"
+    fun personaExport(personaId: String, name: String) = "persona_export/$personaId?name=${android.net.Uri.encode(name)}"
     fun personaImageGeneration(personaId: String) = "persona_image_generation/$personaId"
     fun inspirationWizard(target: String) = "inspiration_wizard/$target"
     fun chatList(personaId: String) = "chats/$personaId"
@@ -127,6 +130,7 @@ object Routes {
     fun universeChatCreate(universeId: String) = "universe_chat_create/$universeId"
     fun providers() = "providers"
     fun models() = "models"
+    fun generation() = GENERATION
     fun marketplaceDetail(listingId: String) = "marketplace_detail/$listingId"
     fun creatorListings(creatorId: String) = "creator-listings/$creatorId"
     fun proposals() = "proposals"

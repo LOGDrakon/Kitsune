@@ -145,6 +145,7 @@ fun SettingsScreen(
     onAccountDeleted: () -> Unit = {},
     onOpenProviders: () -> Unit = {},
     onOpenModels: () -> Unit = {},
+    onOpenGeneration: () -> Unit = {},
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val activity = LocalContext.current as FragmentActivity
@@ -400,6 +401,12 @@ fun SettingsScreen(
                     subtitle = stringResource(R.string.ai_models_row_hint),
                     card = false,
                     onClick = onOpenModels
+                )
+                KitsuneRow(
+                    title = stringResource(R.string.ai_generation_row),
+                    subtitle = stringResource(R.string.ai_generation_row_hint),
+                    card = false,
+                    onClick = onOpenGeneration
                 )
             }
 

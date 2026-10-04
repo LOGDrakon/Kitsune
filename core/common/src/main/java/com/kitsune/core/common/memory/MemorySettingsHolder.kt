@@ -1,38 +1,31 @@
 package com.kitsune.core.common.memory
 
-/** Admin-configured, direct (non-tiered) memory pipeline sizes — pushed from the backend
- * (`GET /config/models`) and applied once at app startup (`KitsuneApp.kt`). See
- * `SummarizationConfig` for how these are consumed. */
+/** The memory pipeline sizes in force, read without a DI hop by `SummarizationConfig`.
+ *
+ * They are the user's choice (Settings → Mémoire et longueur), written here by
+ * `GenerationPreferences` when it is created and every time the user changes them. The defaults below
+ * are the "Équilibrée" preset, so code that runs before the preferences exist still gets sane values. */
 object MemorySettingsHolder {
-    @Volatile var maxContextTokens: Int? = null
+    /** Messages sent verbatim to the model each turn — also the window kept out of the summary. */
     @Volatile var rawWindowSize: Int = 40
-    @Volatile var rawWindowSizePro: Int = 60
+
+    /** Lore sheets carried in the prompt roster. */
     @Volatile var loreEntries: Int = 12
-    @Volatile var loreEntriesPro: Int = 20
+
+    /** Asks the lore extraction pass for finer sub-beats and denser sheets. On with the larger
+     * memory presets, where there is room in the prompt to use them. */
+    @Volatile var detailedExtraction: Boolean = false
 
     /**
      * Whether the app may send `top_p` / `frequency_penalty` / `presence_penalty` (2026-08-23).
-     *
-     * Lives here rather than in `NetworkPreferences` for the same reason the memory budgets do: it is
-     * an admin-pushed operational value, not a user preference, and it has to be readable from the
-     * completion path without a DI hop. Turning it off falls every chat back to temperature alone —
-     * exactly how the app behaved before the feature shipped.
+     * Turning it off falls every chat back to temperature alone. Not exposed in the UI: it stays as an
+     * escape hatch for a provider that rejects those parameters.
      */
     @Volatile var samplingEnabled: Boolean = true
 
-    fun apply(
-        maxContextTokens: Int?,
-        rawWindowSize: Int,
-        rawWindowSizePro: Int,
-        loreEntries: Int,
-        loreEntriesPro: Int,
-        samplingEnabled: Boolean
-    ) {
-        this.maxContextTokens = maxContextTokens
+    fun apply(rawWindowSize: Int, loreEntries: Int, detailedExtraction: Boolean) {
         this.rawWindowSize = rawWindowSize
-        this.rawWindowSizePro = rawWindowSizePro
         this.loreEntries = loreEntries
-        this.loreEntriesPro = loreEntriesPro
-        this.samplingEnabled = samplingEnabled
+        this.detailedExtraction = detailedExtraction
     }
 }

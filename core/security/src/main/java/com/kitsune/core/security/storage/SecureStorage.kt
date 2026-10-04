@@ -62,8 +62,7 @@ class SecureStorage @Inject constructor(
      * for bundling into an encrypted backup (see `ExportBackupUseCase`) — everything a user
      * would think of as "my settings" (profile, safe word, model/chat prefs, personalization),
      * deliberately excluding vault/PIN-internal keys (device-specific by design), age verification
-     * (re-done per device on purpose), and the first-chat-mini-arc marker (handled separately by
-     * the restore flow itself, not copied as-is). */
+     * (re-done per device on purpose). */
     fun exportTransferablePrefs(): Map<String, String> {
         val result = mutableMapOf<String, String>()
         TRANSFERABLE_STRING_KEYS.forEach { key -> getString(key)?.let { result[key] = it } }
@@ -106,7 +105,6 @@ class SecureStorage @Inject constructor(
         const val KEY_DEFAULT_CHAT_MODEL_ID = "default_chat_model_id"
         const val KEY_DEFAULT_IMAGE_MODEL_ID = "default_image_model_id"
         const val KEY_DEFAULT_IMAGE_FALLBACK_MODEL_ID = "default_image_fallback_model_id"
-        const val KEY_DEFAULT_CHAT_PRO_MODEL_ID = "default_chat_pro_model_id"
         /** Stored as an integer (temperature × 100) since [SecureStorage] has no float accessor. */
         const val KEY_DEFAULT_TEMPERATURE_X100 = "default_temperature_x100"
         const val KEY_SAFE_WORD = "safe_word"
@@ -123,17 +121,17 @@ class SecureStorage @Inject constructor(
         const val KEY_CUSTOM_STYLE_PROMPT = "custom_style_prompt"
         const val KEY_APPLIED_STYLE_PACK = "applied_style_pack"
         const val KEY_APPLIED_TIMELINE_THEME = "applied_timeline_theme"
-        const val KEY_CHAT_MODE_PRO_ENABLED = "chat_mode_pro_enabled"
+        /** Memory and reply length (Settings → Mémoire et longueur, see `GenerationPreferences`). */
+        const val KEY_MEMORY_DEPTH = "memory_depth"
+        const val KEY_MEMORY_RAW_WINDOW = "memory_raw_window"
+        const val KEY_MEMORY_LORE_ENTRIES = "memory_lore_entries"
+        const val KEY_MAX_REPLY_TOKENS = "max_reply_tokens"
+        const val KEY_ENHANCED_CRAFT = "enhanced_craft_enabled"
         /** The user's AI providers, API keys included (see `ProviderStore`). Travels inside an
          * encrypted backup on purpose: restoring onto a new phone should not mean hunting for keys. */
         const val KEY_AI_PROVIDERS = "ai_providers_v1"
         const val KEY_MARKETPLACE_ENABLED = "marketplace_enabled"
         const val KEY_MARKETPLACE_SERVER_URL = "marketplace_server_url"
-        /** The very first chat ever opened in the app, set once and never changed — used to detect
-         * "is this still the user's first-ever conversation" so it can be shaped into a guaranteed
-         * mini story arc (see ChatViewModel.buildSystemPrompt). */
-        const val KEY_FIRST_CHAT_ID = "first_chat_id"
-
         /** String-valued keys eligible for account-transfer — see [exportTransferablePrefs]. */
         private val TRANSFERABLE_STRING_KEYS = listOf(
             KEY_AI_PROVIDERS, KEY_MARKETPLACE_SERVER_URL,
@@ -142,18 +140,18 @@ class SecureStorage @Inject constructor(
             "op_translation_model_id", "op_inspiration_model_id", "op_next_reply_suggestions_model_id",
             KEY_APP_LANGUAGE_SELECTED, KEY_DEFAULT_CHAT_MODEL_ID, KEY_DEFAULT_IMAGE_MODEL_ID,
             KEY_DEFAULT_IMAGE_FALLBACK_MODEL_ID,
-            KEY_DEFAULT_CHAT_PRO_MODEL_ID, KEY_SAFE_WORD, KEY_USER_FIRST_NAME, KEY_USER_LAST_NAME,
+            KEY_SAFE_WORD, KEY_USER_FIRST_NAME, KEY_USER_LAST_NAME,
             KEY_USER_PRONOUN, KEY_USER_AGE, KEY_USER_PHYSICAL_DESCRIPTION, KEY_USER_SEXUAL_ORIENTATION,
             KEY_CUSTOM_STYLE_PROMPT, KEY_APPLIED_STYLE_PACK, KEY_APPLIED_TIMELINE_THEME,
-            KEY_TASTE_DEFAULT_PRESET, KEY_TASTE_NEVER_WRITE
+            KEY_TASTE_DEFAULT_PRESET, KEY_TASTE_NEVER_WRITE, KEY_MEMORY_DEPTH
         )
 
         /** Int-valued (including boolean-as-0/1) keys eligible for account-transfer — see
          * [exportTransferablePrefs]. */
         private val TRANSFERABLE_INT_KEYS = listOf(
             KEY_DISCREET_MODE_ENABLED, KEY_AUTO_LOCK_TIMEOUT_SECONDS, KEY_FLAG_SECURE_ENABLED,
-            KEY_DEFAULT_TEMPERATURE_X100, KEY_AUTO_RECAP_ENABLED, KEY_CHAT_MODE_PRO_ENABLED,
-            KEY_MARKETPLACE_ENABLED
+            KEY_DEFAULT_TEMPERATURE_X100, KEY_AUTO_RECAP_ENABLED, KEY_MARKETPLACE_ENABLED,
+            KEY_MEMORY_RAW_WINDOW, KEY_MEMORY_LORE_ENTRIES, KEY_MAX_REPLY_TOKENS, KEY_ENHANCED_CRAFT
         )
     }
 }

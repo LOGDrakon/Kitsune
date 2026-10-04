@@ -22,8 +22,8 @@
     <!-- SettingsScreen : bandeau compte banni (l'accès à l'app/aux paramètres reste normal, seule
          la génération de contenu est bloquée — voir BUGS.md) -->
     <string name="account_banned_notice_title">Compte banni</string>
-    <string name="account_banned_notice_body">Vous avez toujours accès à vos conversations existantes et à vos paramètres, mais vous ne pouvez plus générer de nouveau contenu (messages, personas, univers, images).</string>
-    <string name="account_banned_notice_body_with_reason">Vous avez toujours accès à vos conversations existantes et à vos paramètres, mais vous ne pouvez plus générer de nouveau contenu (messages, personas, univers, images).\n\nRaison : %1$s</string>
+    <string name="account_banned_notice_body">Vous gardez l’accès à vos histoires et à vos réglages, et vous pouvez continuer à écrire : un bannissement ne concerne que la marketplace (publier, noter, proposer).</string>
+    <string name="account_banned_notice_body_with_reason">Vous gardez l’accès à vos histoires et à vos réglages, et vous pouvez continuer à écrire : un bannissement ne concerne que la marketplace (publier, noter, proposer). Motif : %1$s</string>
 
     <!-- SettingsScreen : en-têtes de section pour la disposition en cartes (IDEAS.md 2026-07-03) -->
     <string name="account_section_title">Compte</string>
@@ -223,8 +223,6 @@
     <string name="models_group_images">Images</string>
     <string name="models_op_chat">Histoire</string>
     <string name="models_op_chat_hint">Écrit chaque réponse.</string>
-    <string name="models_op_chat_pro">Mode Pro</string>
-    <string name="models_op_chat_pro_hint">Utilisé quand Pro est activé : réponses plus longues, plus de mémoire.</string>
     <string name="models_op_suggestions">Suggestions de réponse</string>
     <string name="models_op_suggestions_hint">« Que pourrais-je répondre ? »</string>
     <string name="models_op_summary">Résumés</string>
@@ -280,4 +278,29 @@
     <string name="about_donate">Soutenir le projet</string>
     <string name="about_donate_description">Kitsune ne vend rien. Les dons aident à payer le serveur de la marketplace.</string>
     <string name="action_ok">OK</string>
+    <string name="ai_generation_row">Mémoire et longueur</string>
+    <string name="ai_generation_row_hint">Ce dont l’histoire se souvient, et jusqu’où une réponse peut aller</string>
+    <string name="generation_title">Mémoire et longueur</string>
+    <string name="generation_intro">Plus l’histoire se souvient, plus chaque réponse envoie de texte à votre modèle : c’est plus cohérent sur la durée, mais plus lent et plus cher chez votre fournisseur. Choisissez selon votre modèle.</string>
+    <string name="generation_memory_section">Mémoire</string>
+    <string name="generation_depth_light">Légère</string>
+    <string name="generation_depth_balanced">Équilibrée</string>
+    <string name="generation_depth_extended">Étendue</string>
+    <string name="generation_depth_custom">Personnalisée</string>
+    <string name="generation_depth_light_hint">24 derniers messages et 8 fiches de lore. Pour les petits modèles ou les modèles locaux (8 à 16k de contexte), ou pour garder chaque réponse bon marché.</string>
+    <string name="generation_depth_balanced_hint">40 derniers messages et 12 fiches de lore. Convient à tout modèle de 32k de contexte ou plus.</string>
+    <string name="generation_depth_extended_hint">60 derniers messages, 20 fiches de lore et une extraction plus détaillée. Pour les modèles à grand contexte (64k et plus).</string>
+    <string name="generation_depth_custom_hint">Vos propres valeurs, réglées dans les réglages avancés ci-dessous.</string>
+    <string name="generation_model_context">Votre modèle d’histoire accepte environ %1$dk tokens de contexte.</string>
+    <string name="generation_writing_section">Écriture</string>
+    <string name="generation_craft_label">Exigences d’écriture renforcées</string>
+    <string name="generation_craft_hint">Ouverture concrète, aucune formule toute faite, une fin qui fait avancer la scène. Réponses plus travaillées et plus longues ; certains modèles en font trop.</string>
+    <string name="generation_advanced">Réglages avancés</string>
+    <string name="generation_advanced_hint">Les chiffres derrière les préréglages. En modifier un passe en « Personnalisée ».</string>
+    <string name="generation_raw_window_label">Messages envoyés tels quels : %1$d</string>
+    <string name="generation_raw_window_hint">Les derniers messages que le modèle relit mot pour mot. Les plus anciens passent par le résumé et le lore.</string>
+    <string name="generation_lore_label">Fiches de lore dans le contexte : %1$d</string>
+    <string name="generation_lore_hint">Personnages, lieux et événements suivis automatiquement ; les plus pertinents pour le message en cours sont envoyés.</string>
+    <string name="generation_max_tokens_label">Longueur maximale d’une réponse (tokens)</string>
+    <string name="generation_max_tokens_hint">Un plafond, pas une cible : la longueur choisie dans la carte d’histoire reste prioritaire. Vérifiez que votre modèle accepte cette sortie.</string>
 </resources>

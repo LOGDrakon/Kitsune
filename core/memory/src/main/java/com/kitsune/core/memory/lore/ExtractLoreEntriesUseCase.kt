@@ -1,5 +1,6 @@
 package com.kitsune.core.memory.lore
 
+import com.kitsune.core.common.memory.MemorySettingsHolder
 import com.kitsune.core.data.local.entities.ChatEntity
 import com.kitsune.core.data.local.entities.LoreEntryEntity
 import com.kitsune.core.data.local.entities.LoreEntryType
@@ -72,12 +73,11 @@ introduced — this is a common and expected result, not a failure. Write every 
 language as the messages below.
 """
 
-/** Pro-mode chats get a stricter, more granular extraction pass: lower the bar for what counts as
- * "worth extracting" (more EVENT entries for meaningful sub-beats, not only major turning points)
- * and ask for denser, more precise "content" paragraphs — part of the premium tier's larger,
- * more detailed lore roster (see SummarizationConfig's Pro bonuses). */
-private const val PRO_SYSTEM_PROMPT_ADDENDUM = """
-This is a premium, higher-fidelity extraction pass — be more thorough and more precise than usual:
+/** A stricter, more granular extraction pass — more EVENT entries for meaningful sub-beats, denser
+ * "content" paragraphs. Added when the user picked a large memory
+ * (`MemorySettingsHolder.detailedExtraction`): the roster then has room for the finer sheets. */
+private const val DETAILED_EXTRACTION_ADDENDUM = """
+This is a higher-fidelity extraction pass — be more thorough and more precise than usual:
 - Lower the bar for EVENT entries: capture meaningful sub-beats and turning points within the scene
   (a revelation, a decision, a shift in a relationship, a small but consequential action), not only
   the single biggest event of the batch.
@@ -116,12 +116,12 @@ class ExtractLoreEntriesUseCase @Inject constructor(
     private val llmModelResolver: LlmModelResolver,
     private val indexMemoryFragmentUseCase: IndexMemoryFragmentUseCase
 ) {
-    suspend operator fun invoke(chatId: String, messages: List<MessageEntity>, isPro: Boolean = false) {
+    suspend operator fun invoke(chatId: String, messages: List<MessageEntity>) {
         if (messages.isEmpty()) return
 
         val chat = chatRepository.getById(chatId)
         val existing = loreEntryRepository.getByChat(chatId)
-        val json = runCatching { extractEntries(chat, messages, existing, isPro) }.getOrNull() ?: return
+        val json = runCatching { extractEntries(chat, messages, existing) }.getOrNull() ?: return
 
         // Sortable counterpart to the free-text occurredAt: the batch's own end timestamp, which is
         // exactly what the caller writes to summarizedThroughCreatedAt. Lets BuildStoryChronologyUseCase
@@ -142,8 +142,7 @@ class ExtractLoreEntriesUseCase @Inject constructor(
     private suspend fun extractEntries(
         chat: ChatEntity?,
         messages: List<MessageEntity>,
-        existing: List<LoreEntryEntity>,
-        isPro: Boolean
+        existing: List<LoreEntryEntity>
     ): JsonObject {
         val userPrompt = buildString {
             if (existing.isNotEmpty()) {
@@ -165,7 +164,11 @@ class ExtractLoreEntriesUseCase @Inject constructor(
             messages.storyContentOnly().forEach { appendLine("${speakerLabel(it)}: ${it.content}") }
         }
 
-        val systemPrompt = if (isPro) SYSTEM_PROMPT.trim() + "\n" + PRO_SYSTEM_PROMPT_ADDENDUM.trim() else SYSTEM_PROMPT.trim()
+        val systemPrompt = if (MemorySettingsHolder.detailedExtraction) {
+            SYSTEM_PROMPT.trim() + "\n" + DETAILED_EXTRACTION_ADDENDUM.trim()
+        } else {
+            SYSTEM_PROMPT.trim()
+        }
 
         val result = chatCompletionRepository.complete(
                 modelId = llmModelResolver.resolve(LlmOperation.LORE),

@@ -57,9 +57,8 @@ import com.kitsune.core.designsystem.discreetBlur
  *
  * Two things changed from v1, both about getting out of the way of the prose:
  *
- * 1. **The Standard/Pro switch moved into this bar**, as one compact pill. v1 gave it a whole 34dp row
- *    of its own under the app bar, permanently, on every conversation — a strip of chrome between the
- *    title and the story that existed to host one control the user touches rarely.
+ * 1. **No mode switch.** v1 gave a Standard/Pro switch a whole row under the app bar; the fork has
+ *    no paid tier, and memory/length are a setting (Réglages → Mémoire et longueur), not a toggle.
  * 2. **One overflow affordance**, opening a bottom sheet rather than a 15-item dropdown pinned to the
  *    top-right corner (see `ChatScreen`'s tools sheet).
  */
@@ -69,8 +68,6 @@ internal fun ChatTopBar(
     title: String,
     subtitle: String,
     avatarBytes: ByteArray?,
-    isPro: Boolean,
-    onTogglePro: (Boolean) -> Unit,
     onBack: () -> Unit,
     onOpenTools: () -> Unit,
     modifier: Modifier = Modifier
@@ -128,11 +125,6 @@ internal fun ChatTopBar(
                     overflow = TextOverflow.Ellipsis
                 )
             }
-            ChatModePill(
-                isPro = isPro,
-                onToggle = onTogglePro
-            )
-            Spacer(Modifier.width(KitsuneTheme.spacing.xs))
             KitsuneIconButton(
                 icon = Icons.Filled.MoreVert,
                 contentDescription = stringResource(R.string.content_desc_more_options),
@@ -143,55 +135,6 @@ internal fun ChatTopBar(
     }
     // Deliberately no divider under the bar: the message list scrolls against the same ground, so a
     // rule there would read as a seam in the page rather than as structure.
-}
-
-/**
- * The Standard/Pro switch, as one pill that shows the *current* mode and toggles on tap.
- *
- * A two-segment control was the wrong shape for this: both labels were permanently visible and equally
- * weighted, so the bar was always advertising an upsell. A single pill states what is on now, and
- * carries the accent only while Pro is active — the same "accent means one live thing" rule as the rest of
- * the app.
- */
-@Composable
-private fun ChatModePill(
-    isPro: Boolean,
-    onToggle: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val colors = KitsuneTheme.colors
-    val container by animateColorAsState(
-        targetValue = if (isPro) colors.accentContainer else Color.Transparent,
-        label = "modePillBg"
-    )
-    val content by animateColorAsState(
-        targetValue = if (isPro) colors.accent else colors.textSecondary,
-        label = "modePillFg"
-    )
-    Surface(
-        onClick = { onToggle(!isPro) },
-        shape = KitsuneTheme.shape.pill,
-        color = container,
-        modifier = modifier
-            .height(28.dp)
-            .border(
-                width = 1.dp,
-                color = if (isPro) colors.accent else colors.outline,
-                shape = KitsuneTheme.shape.pill
-            )
-    ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.padding(horizontal = KitsuneTheme.spacing.md)
-        ) {
-            Text(
-                text = stringResource(if (isPro) R.string.chat_mode_pro else R.string.chat_mode_standard),
-                style = MaterialTheme.typography.labelSmall,
-                color = content,
-                maxLines = 1
-            )
-        }
-    }
 }
 
 /**

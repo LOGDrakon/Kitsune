@@ -22,8 +22,8 @@
     <!-- SettingsScreen: banned-account notice (a banned account keeps normal app/settings access,
          only content generation is blocked — see BUGS.md) -->
     <string name="account_banned_notice_title">Account banned</string>
-    <string name="account_banned_notice_body">You can still access your existing chats and settings, but you can no longer generate new content (messages, personas, universes, images).</string>
-    <string name="account_banned_notice_body_with_reason">You can still access your existing chats and settings, but you can no longer generate new content (messages, personas, universes, images).\n\nReason: %1$s</string>
+    <string name="account_banned_notice_body">You can still access your stories and settings, and keep writing: a ban only affects the marketplace (publishing, reviews, proposals).</string>
+    <string name="account_banned_notice_body_with_reason">You can still access your stories and settings, and keep writing: a ban only affects the marketplace (publishing, reviews, proposals). Reason: %1$s</string>
 
     <!-- SettingsScreen: section headers for the card-based layout (IDEAS.md 2026-07-03) -->
     <string name="account_section_title">Account</string>
@@ -223,8 +223,6 @@
     <string name="models_group_images">Images</string>
     <string name="models_op_chat">Story</string>
     <string name="models_op_chat_hint">Writes every reply.</string>
-    <string name="models_op_chat_pro">Pro mode</string>
-    <string name="models_op_chat_pro_hint">Used while Pro is on: longer replies, more memory.</string>
     <string name="models_op_suggestions">Reply suggestions</string>
     <string name="models_op_suggestions_hint">“What could I say next?”</string>
     <string name="models_op_summary">Summaries</string>
@@ -280,4 +278,29 @@
     <string name="about_donate">Support the project</string>
     <string name="about_donate_description">Kitsune sells nothing. Donations help pay for the marketplace server.</string>
     <string name="action_ok">OK</string>
+    <string name="ai_generation_row">Memory and length</string>
+    <string name="ai_generation_row_hint">What the story remembers, and how far a reply can go</string>
+    <string name="generation_title">Memory and length</string>
+    <string name="generation_intro">The more the story remembers, the more text each reply sends to your model: more consistent over time, but slower and more expensive at your provider. Choose according to your model.</string>
+    <string name="generation_memory_section">Memory</string>
+    <string name="generation_depth_light">Light</string>
+    <string name="generation_depth_balanced">Balanced</string>
+    <string name="generation_depth_extended">Extended</string>
+    <string name="generation_depth_custom">Custom</string>
+    <string name="generation_depth_light_hint">Last 24 messages and 8 lore sheets. For small or local models (8 to 16k of context), or to keep every reply cheap.</string>
+    <string name="generation_depth_balanced_hint">Last 40 messages and 12 lore sheets. Fits any model with 32k of context or more.</string>
+    <string name="generation_depth_extended_hint">Last 60 messages, 20 lore sheets and a more detailed extraction. For large-context models (64k and up).</string>
+    <string name="generation_depth_custom_hint">Your own values, set in the advanced settings below.</string>
+    <string name="generation_model_context">Your story model accepts about %1$dk tokens of context.</string>
+    <string name="generation_writing_section">Writing</string>
+    <string name="generation_craft_label">Stricter writing requirements</string>
+    <string name="generation_craft_hint">Concrete opening, no stock phrases, an ending that moves the scene. More crafted and longer replies; some models overdo it.</string>
+    <string name="generation_advanced">Advanced settings</string>
+    <string name="generation_advanced_hint">The numbers behind the presets. Changing one switches to Custom.</string>
+    <string name="generation_raw_window_label">Messages sent verbatim: %1$d</string>
+    <string name="generation_raw_window_hint">The latest messages the model rereads word for word. Older ones go through the summary and the lore.</string>
+    <string name="generation_lore_label">Lore sheets in context: %1$d</string>
+    <string name="generation_lore_hint">Characters, places and events tracked automatically; the most relevant to the current message are sent.</string>
+    <string name="generation_max_tokens_label">Maximum reply length (tokens)</string>
+    <string name="generation_max_tokens_hint">A ceiling, not a target: the length chosen in the story card still wins. Check that your model accepts this much output.</string>
 </resources>
