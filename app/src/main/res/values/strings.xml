@@ -61,4 +61,11 @@
     <string name="inspiration_wizard_sketch_last_round">Last round — pick the one you want to build.</string>
     <string name="shell_needs_provider">Add your AI provider’s API key to start writing stories.</string>
     <string name="shell_needs_provider_action">Add</string>
+    <string name="break_reminder_title">Time for a break?</string>
+    <plurals name="break_reminder_body_hours">
+        <item quantity="one">You have been writing for %1$d hour. The story will wait: maybe a good moment to stretch, drink some water or look away from the screen.</item>
+        <item quantity="other">You have been writing for %1$d hours. The story will wait: maybe a good moment to stretch, drink some water or look away from the screen.</item>
+    </plurals>
+    <string name="break_reminder_body_minutes">You have been writing for %1$d minutes. The story will wait.</string>
+    <string name="break_reminder_continue">Continue</string>
 </resources>

@@ -14,6 +14,7 @@ import com.kitsune.core.backend.UserMessageManager
 import com.kitsune.core.data.repository.GenerationJobRepository
 import com.kitsune.core.security.locale.AppLanguageManager
 import com.kitsune.core.security.lock.AutoLockManager
+import com.kitsune.core.security.wellbeing.BreakReminder
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -55,6 +56,9 @@ class KitsuneApp : Application(), Configuration.Provider {
     @Inject
     lateinit var appLanguageManager: AppLanguageManager
 
+    @Inject
+    lateinit var breakReminder: BreakReminder
+
     private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     override fun onCreate() {
@@ -77,10 +81,12 @@ class KitsuneApp : Application(), Configuration.Provider {
         ProcessLifecycleOwner.get().lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onStop(owner: LifecycleOwner) {
                 autoLockManager.onAppBackgrounded()
+                breakReminder.onAppBackgrounded()
             }
 
             override fun onStart(owner: LifecycleOwner) {
                 autoLockManager.onAppForegrounded()
+                breakReminder.onAppForegrounded()
             }
         })
     }

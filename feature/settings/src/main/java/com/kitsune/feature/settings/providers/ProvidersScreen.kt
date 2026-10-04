@@ -275,167 +275,211 @@ private fun OpenRouterRoutingEditor(config: ProviderConfig, viewModel: Providers
         modifier = Modifier.padding(top = KitsuneTheme.spacing.xs)
     )
 
+    // Simple level: four presets. Advanced level: every OpenRouter parameter, opened automatically when
+    // the current routing matches no preset.
+    val preset = OpenRouterRouting.presetOf(routing)
+    var advanced by remember(config.id) { mutableStateOf(preset == null) }
     Spacer(Modifier.height(KitsuneTheme.spacing.md))
-    Text(stringResource(R.string.routing_sort), style = MaterialTheme.typography.titleSmall)
     Row(
-        modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(top = KitsuneTheme.spacing.xs),
+        modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(KitsuneTheme.spacing.sm)
     ) {
         listOf(
-            null to R.string.routing_sort_default,
-            OpenRouterRouting.SORT_PRICE to R.string.routing_sort_price,
-            OpenRouterRouting.SORT_THROUGHPUT to R.string.routing_sort_throughput,
-            OpenRouterRouting.SORT_LATENCY to R.string.routing_sort_latency
-        ).forEach { (value, label) ->
+            OpenRouterRouting.PRESET_FAST to R.string.routing_preset_fast,
+            OpenRouterRouting.PRESET_CHEAP to R.string.routing_preset_cheap,
+            OpenRouterRouting.PRESET_QUALITY to R.string.routing_preset_quality,
+            OpenRouterRouting.PRESET_PRIVATE to R.string.routing_preset_private
+        ).forEach { (key, label) ->
             KitsuneFilterChip(
                 text = stringResource(label),
-                selected = routing.sort == value,
-                onClick = { viewModel.updateRouting { it.copy(sort = value) } }
+                selected = preset == key,
+                onClick = { viewModel.updateRouting { OpenRouterRouting.PRESETS.getValue(key) } }
             )
         }
     }
-
-    Spacer(Modifier.height(KitsuneTheme.spacing.md))
-    Text(stringResource(R.string.routing_quantizations), style = MaterialTheme.typography.titleSmall)
     Text(
-        stringResource(R.string.routing_quantizations_hint),
-        style = MaterialTheme.typography.bodySmall,
-        color = KitsuneTheme.colors.textDim
-    )
-    Row(
-        modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(top = KitsuneTheme.spacing.xs),
-        horizontalArrangement = Arrangement.spacedBy(KitsuneTheme.spacing.sm)
-    ) {
-        OpenRouterRouting.ALL_QUANTIZATIONS.forEach { q ->
-            val selected = q in routing.quantizations
-            KitsuneFilterChip(
-                text = q,
-                selected = selected,
-                onClick = {
-                    viewModel.updateRouting {
-                        it.copy(quantizations = if (selected) it.quantizations - q else it.quantizations + q)
-                    }
-                }
-            )
-        }
-    }
-
-    Spacer(Modifier.height(KitsuneTheme.spacing.md))
-    Row(horizontalArrangement = Arrangement.spacedBy(KitsuneTheme.spacing.sm)) {
-        KitsuneTextField(
-            value = routing.preferredMinThroughput?.let(::formatNumber).orEmpty(),
-            onValueChange = { v -> viewModel.updateRouting { it.copy(preferredMinThroughput = v.replace(',', '.').toDoubleOrNull()) } },
-            label = stringResource(R.string.routing_min_throughput),
-            keyboardType = KeyboardType.Decimal,
-            modifier = Modifier.weight(1f)
-        )
-        KitsuneTextField(
-            value = routing.preferredMaxLatency?.let(::formatNumber).orEmpty(),
-            onValueChange = { v -> viewModel.updateRouting { it.copy(preferredMaxLatency = v.replace(',', '.').toDoubleOrNull()) } },
-            label = stringResource(R.string.routing_max_latency),
-            keyboardType = KeyboardType.Decimal,
-            modifier = Modifier.weight(1f)
-        )
-    }
-    Text(
-        stringResource(R.string.routing_thresholds_hint),
+        stringResource(
+            when (preset) {
+                OpenRouterRouting.PRESET_FAST -> R.string.routing_preset_fast_hint
+                OpenRouterRouting.PRESET_CHEAP -> R.string.routing_preset_cheap_hint
+                OpenRouterRouting.PRESET_QUALITY -> R.string.routing_preset_quality_hint
+                OpenRouterRouting.PRESET_PRIVATE -> R.string.routing_preset_private_hint
+                else -> R.string.routing_preset_custom_hint
+            }
+        ),
         style = MaterialTheme.typography.bodySmall,
         color = KitsuneTheme.colors.textDim,
         modifier = Modifier.padding(top = KitsuneTheme.spacing.xs)
     )
-
-    Spacer(Modifier.height(KitsuneTheme.spacing.md))
-    KitsuneTextField(
-        value = routing.order.joinToString(", "),
-        onValueChange = { v -> viewModel.updateRouting { it.copy(order = slugs(v)) } },
-        label = stringResource(R.string.routing_order),
-        helper = stringResource(R.string.routing_slugs_helper),
-        modifier = Modifier.fillMaxWidth()
-    )
-    Spacer(Modifier.height(KitsuneTheme.spacing.sm))
-    KitsuneTextField(
-        value = routing.only.joinToString(", "),
-        onValueChange = { v -> viewModel.updateRouting { it.copy(only = slugs(v)) } },
-        label = stringResource(R.string.routing_only),
-        modifier = Modifier.fillMaxWidth()
-    )
-    Spacer(Modifier.height(KitsuneTheme.spacing.sm))
-    KitsuneTextField(
-        value = routing.ignore.joinToString(", "),
-        onValueChange = { v -> viewModel.updateRouting { it.copy(ignore = slugs(v)) } },
-        label = stringResource(R.string.routing_ignore),
-        modifier = Modifier.fillMaxWidth()
-    )
-
-    Spacer(Modifier.height(KitsuneTheme.spacing.md))
     ToggleRow(
-        title = stringResource(R.string.routing_deny_data_collection),
-        subtitle = stringResource(R.string.routing_deny_data_collection_hint),
-        checked = routing.denyDataCollection,
-        onChange = { c -> viewModel.updateRouting { it.copy(denyDataCollection = c) } }
+        title = stringResource(R.string.routing_advanced),
+        subtitle = stringResource(R.string.routing_advanced_hint),
+        checked = advanced,
+        onChange = { advanced = it }
     )
-    ToggleRow(
-        title = stringResource(R.string.routing_zdr),
-        subtitle = stringResource(R.string.routing_zdr_hint),
-        checked = routing.zeroDataRetention,
-        onChange = { c -> viewModel.updateRouting { it.copy(zeroDataRetention = c) } }
-    )
-    ToggleRow(
-        title = stringResource(R.string.routing_allow_fallbacks),
-        subtitle = stringResource(R.string.routing_allow_fallbacks_hint),
-        checked = routing.allowFallbacks,
-        onChange = { c -> viewModel.updateRouting { it.copy(allowFallbacks = c) } }
-    )
-    ToggleRow(
-        title = stringResource(R.string.routing_require_parameters),
-        subtitle = stringResource(R.string.routing_require_parameters_hint),
-        checked = routing.requireParameters,
-        onChange = { c -> viewModel.updateRouting { it.copy(requireParameters = c) } }
-    )
-
-    // Endpoint inspector: what restricting quantization or providers would actually leave.
-    Spacer(Modifier.height(KitsuneTheme.spacing.lg))
-    SectionHeader(title = stringResource(R.string.routing_endpoints_title))
-    var modelId by remember(config.id) { mutableStateOf(viewModel.currentChatModelFor(config.id).orEmpty()) }
-    KitsuneTextField(
-        value = modelId,
-        onValueChange = { modelId = it },
-        label = stringResource(R.string.routing_endpoints_model),
-        placeholder = "deepseek/deepseek-v4-flash",
-        modifier = Modifier.fillMaxWidth().padding(top = KitsuneTheme.spacing.xs)
-    )
-    KitsuneSecondaryButton(
-        text = stringResource(R.string.routing_endpoints_load),
-        loading = endpointsState is EndpointsState.Loading,
-        enabled = modelId.isNotBlank() && config.apiKey.isNotBlank(),
-        onClick = { viewModel.loadEndpoints(modelId) },
-        modifier = Modifier.padding(top = KitsuneTheme.spacing.sm)
-    )
-    when (val e = endpointsState) {
-        is EndpointsState.Failure -> KitsuneNotice(
-            text = e.message,
-            icon = Icons.Filled.Warning,
-            tone = NoticeTone.Error,
-            modifier = Modifier.padding(top = KitsuneTheme.spacing.sm)
-        )
-        is EndpointsState.Loaded -> {
-            if (e.endpoints.isEmpty()) {
-                KitsuneNotice(
-                    text = stringResource(R.string.routing_endpoints_none),
-                    icon = Icons.Filled.Info,
-                    modifier = Modifier.padding(top = KitsuneTheme.spacing.sm)
-                )
-            }
-            e.endpoints.forEach { endpoint ->
-                EndpointCard(
-                    endpoint = endpoint,
-                    routing = routing,
-                    onPrefer = { slug -> viewModel.updateRouting { it.copy(order = (it.order - slug) + slug, ignore = it.ignore - slug) } },
-                    onExclude = { slug -> viewModel.updateRouting { it.copy(ignore = (it.ignore - slug) + slug, order = it.order - slug, only = it.only - slug) } }
+    if (advanced) {
+        Spacer(Modifier.height(KitsuneTheme.spacing.md))
+        Text(stringResource(R.string.routing_sort), style = MaterialTheme.typography.titleSmall)
+        Row(
+            modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(top = KitsuneTheme.spacing.xs),
+            horizontalArrangement = Arrangement.spacedBy(KitsuneTheme.spacing.sm)
+        ) {
+            listOf(
+                null to R.string.routing_sort_default,
+                OpenRouterRouting.SORT_PRICE to R.string.routing_sort_price,
+                OpenRouterRouting.SORT_THROUGHPUT to R.string.routing_sort_throughput,
+                OpenRouterRouting.SORT_LATENCY to R.string.routing_sort_latency
+            ).forEach { (value, label) ->
+                KitsuneFilterChip(
+                    text = stringResource(label),
+                    selected = routing.sort == value,
+                    onClick = { viewModel.updateRouting { it.copy(sort = value) } }
                 )
             }
         }
-        else -> Unit
+
+        Spacer(Modifier.height(KitsuneTheme.spacing.md))
+        Text(stringResource(R.string.routing_quantizations), style = MaterialTheme.typography.titleSmall)
+        Text(
+            stringResource(R.string.routing_quantizations_hint),
+            style = MaterialTheme.typography.bodySmall,
+            color = KitsuneTheme.colors.textDim
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(top = KitsuneTheme.spacing.xs),
+            horizontalArrangement = Arrangement.spacedBy(KitsuneTheme.spacing.sm)
+        ) {
+            OpenRouterRouting.ALL_QUANTIZATIONS.forEach { q ->
+                val selected = q in routing.quantizations
+                KitsuneFilterChip(
+                    text = q,
+                    selected = selected,
+                    onClick = {
+                        viewModel.updateRouting {
+                            it.copy(quantizations = if (selected) it.quantizations - q else it.quantizations + q)
+                        }
+                    }
+                )
+            }
+        }
+
+        Spacer(Modifier.height(KitsuneTheme.spacing.md))
+        Row(horizontalArrangement = Arrangement.spacedBy(KitsuneTheme.spacing.sm)) {
+            KitsuneTextField(
+                value = routing.preferredMinThroughput?.let(::formatNumber).orEmpty(),
+                onValueChange = { v -> viewModel.updateRouting { it.copy(preferredMinThroughput = v.replace(',', '.').toDoubleOrNull()) } },
+                label = stringResource(R.string.routing_min_throughput),
+                keyboardType = KeyboardType.Decimal,
+                modifier = Modifier.weight(1f)
+            )
+            KitsuneTextField(
+                value = routing.preferredMaxLatency?.let(::formatNumber).orEmpty(),
+                onValueChange = { v -> viewModel.updateRouting { it.copy(preferredMaxLatency = v.replace(',', '.').toDoubleOrNull()) } },
+                label = stringResource(R.string.routing_max_latency),
+                keyboardType = KeyboardType.Decimal,
+                modifier = Modifier.weight(1f)
+            )
+        }
+        Text(
+            stringResource(R.string.routing_thresholds_hint),
+            style = MaterialTheme.typography.bodySmall,
+            color = KitsuneTheme.colors.textDim,
+            modifier = Modifier.padding(top = KitsuneTheme.spacing.xs)
+        )
+
+        Spacer(Modifier.height(KitsuneTheme.spacing.md))
+        KitsuneTextField(
+            value = routing.order.joinToString(", "),
+            onValueChange = { v -> viewModel.updateRouting { it.copy(order = slugs(v)) } },
+            label = stringResource(R.string.routing_order),
+            helper = stringResource(R.string.routing_slugs_helper),
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(Modifier.height(KitsuneTheme.spacing.sm))
+        KitsuneTextField(
+            value = routing.only.joinToString(", "),
+            onValueChange = { v -> viewModel.updateRouting { it.copy(only = slugs(v)) } },
+            label = stringResource(R.string.routing_only),
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(Modifier.height(KitsuneTheme.spacing.sm))
+        KitsuneTextField(
+            value = routing.ignore.joinToString(", "),
+            onValueChange = { v -> viewModel.updateRouting { it.copy(ignore = slugs(v)) } },
+            label = stringResource(R.string.routing_ignore),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(Modifier.height(KitsuneTheme.spacing.md))
+        ToggleRow(
+            title = stringResource(R.string.routing_deny_data_collection),
+            subtitle = stringResource(R.string.routing_deny_data_collection_hint),
+            checked = routing.denyDataCollection,
+            onChange = { c -> viewModel.updateRouting { it.copy(denyDataCollection = c) } }
+        )
+        ToggleRow(
+            title = stringResource(R.string.routing_zdr),
+            subtitle = stringResource(R.string.routing_zdr_hint),
+            checked = routing.zeroDataRetention,
+            onChange = { c -> viewModel.updateRouting { it.copy(zeroDataRetention = c) } }
+        )
+        ToggleRow(
+            title = stringResource(R.string.routing_allow_fallbacks),
+            subtitle = stringResource(R.string.routing_allow_fallbacks_hint),
+            checked = routing.allowFallbacks,
+            onChange = { c -> viewModel.updateRouting { it.copy(allowFallbacks = c) } }
+        )
+        ToggleRow(
+            title = stringResource(R.string.routing_require_parameters),
+            subtitle = stringResource(R.string.routing_require_parameters_hint),
+            checked = routing.requireParameters,
+            onChange = { c -> viewModel.updateRouting { it.copy(requireParameters = c) } }
+        )
+
+        // Endpoint inspector: what restricting quantization or providers would actually leave.
+        Spacer(Modifier.height(KitsuneTheme.spacing.lg))
+        SectionHeader(title = stringResource(R.string.routing_endpoints_title))
+        var modelId by remember(config.id) { mutableStateOf(viewModel.currentChatModelFor(config.id).orEmpty()) }
+        KitsuneTextField(
+            value = modelId,
+            onValueChange = { modelId = it },
+            label = stringResource(R.string.routing_endpoints_model),
+            placeholder = "deepseek/deepseek-v4-flash",
+            modifier = Modifier.fillMaxWidth().padding(top = KitsuneTheme.spacing.xs)
+        )
+        KitsuneSecondaryButton(
+            text = stringResource(R.string.routing_endpoints_load),
+            loading = endpointsState is EndpointsState.Loading,
+            enabled = modelId.isNotBlank() && config.apiKey.isNotBlank(),
+            onClick = { viewModel.loadEndpoints(modelId) },
+            modifier = Modifier.padding(top = KitsuneTheme.spacing.sm)
+        )
+        when (val e = endpointsState) {
+            is EndpointsState.Failure -> KitsuneNotice(
+                text = e.message,
+                icon = Icons.Filled.Warning,
+                tone = NoticeTone.Error,
+                modifier = Modifier.padding(top = KitsuneTheme.spacing.sm)
+            )
+            is EndpointsState.Loaded -> {
+                if (e.endpoints.isEmpty()) {
+                    KitsuneNotice(
+                        text = stringResource(R.string.routing_endpoints_none),
+                        icon = Icons.Filled.Info,
+                        modifier = Modifier.padding(top = KitsuneTheme.spacing.sm)
+                    )
+                }
+                e.endpoints.forEach { endpoint ->
+                    EndpointCard(
+                        endpoint = endpoint,
+                        routing = routing,
+                        onPrefer = { slug -> viewModel.updateRouting { it.copy(order = (it.order - slug) + slug, ignore = it.ignore - slug) } },
+                        onExclude = { slug -> viewModel.updateRouting { it.copy(ignore = (it.ignore - slug) + slug, order = it.order - slug, only = it.only - slug) } }
+                    )
+                }
+            }
+            else -> Unit
+        }
     }
 }
 

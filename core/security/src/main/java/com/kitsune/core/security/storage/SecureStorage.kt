@@ -127,6 +127,8 @@ class SecureStorage @Inject constructor(
         const val KEY_MEMORY_LORE_ENTRIES = "memory_lore_entries"
         const val KEY_MAX_REPLY_TOKENS = "max_reply_tokens"
         const val KEY_ENHANCED_CRAFT = "enhanced_craft_enabled"
+        /** Optional break reminder, minutes of continuous use (0 = off). See `BreakReminder`. */
+        const val KEY_BREAK_REMINDER_MINUTES = "break_reminder_minutes"
         /** The user's AI providers, API keys included (see `ProviderStore`). Travels inside an
          * encrypted backup on purpose: restoring onto a new phone should not mean hunting for keys. */
         const val KEY_AI_PROVIDERS = "ai_providers_v1"
@@ -151,7 +153,8 @@ class SecureStorage @Inject constructor(
         private val TRANSFERABLE_INT_KEYS = listOf(
             KEY_DISCREET_MODE_ENABLED, KEY_AUTO_LOCK_TIMEOUT_SECONDS, KEY_FLAG_SECURE_ENABLED,
             KEY_DEFAULT_TEMPERATURE_X100, KEY_AUTO_RECAP_ENABLED, KEY_MARKETPLACE_ENABLED,
-            KEY_MEMORY_RAW_WINDOW, KEY_MEMORY_LORE_ENTRIES, KEY_MAX_REPLY_TOKENS, KEY_ENHANCED_CRAFT
+            KEY_MEMORY_RAW_WINDOW, KEY_MEMORY_LORE_ENTRIES, KEY_MAX_REPLY_TOKENS, KEY_ENHANCED_CRAFT,
+            KEY_BREAK_REMINDER_MINUTES
         )
     }
 }

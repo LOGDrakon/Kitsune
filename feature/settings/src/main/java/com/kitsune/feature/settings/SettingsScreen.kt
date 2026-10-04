@@ -679,6 +679,21 @@ fun SettingsScreen(
             }
 
             SettingsSectionCard(title = stringResource(R.string.privacy_section_title), icon = Icons.Filled.VisibilityOff) {
+                Text(stringResource(R.string.break_reminder_label))
+                com.kitsune.core.designsystem.component.KitsuneSegmented(
+                    options = com.kitsune.core.security.wellbeing.BreakReminder.CHOICES.map { minutes ->
+                        if (minutes == 0) stringResource(R.string.break_reminder_off) else "${minutes / 60} h"
+                    },
+                    selectedIndex = com.kitsune.core.security.wellbeing.BreakReminder.CHOICES.indexOf(state.breakReminderMinutes).coerceAtLeast(0),
+                    onSelect = { viewModel.setBreakReminderMinutes(com.kitsune.core.security.wellbeing.BreakReminder.CHOICES[it]) },
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+                Text(
+                    stringResource(R.string.break_reminder_description),
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(top = 4.dp, bottom = 12.dp)
+                )
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()

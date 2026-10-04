@@ -41,6 +41,7 @@ import com.kitsune.core.designsystem.AnnouncementDialog
 import com.kitsune.core.designsystem.KitsuneTheme
 import com.kitsune.core.designsystem.UserMessageDialog
 import com.kitsune.core.security.lock.AutoLockManager
+import com.kitsune.core.security.wellbeing.BreakReminder
 import com.kitsune.core.security.storage.SecureStorage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -51,6 +52,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var autoLockManager: AutoLockManager
+
+    @Inject
+    lateinit var breakReminder: BreakReminder
 
     @Inject
     lateinit var secureStorage: SecureStorage
@@ -119,6 +123,23 @@ class MainActivity : AppCompatActivity() {
                             startRoute = resolvedRoute,
                             navController = navController
                         )
+
+                        // Optional break reminder (off unless the user set it): a question, never a lock.
+                        LaunchedEffect(lifecycleOwner) {
+                            lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                                while (true) {
+                                    breakReminder.tick()
+                                    kotlinx.coroutines.delay(60_000L)
+                                }
+                            }
+                        }
+                        val breakDue by breakReminder.due.collectAsStateWithLifecycle()
+                        if (breakDue && !isLocked) {
+                            BreakReminderDialog(
+                                minutes = breakReminder.intervalMinutes(),
+                                onContinue = { breakReminder.snooze() }
+                            )
+                        }
                     }
 
                     val pendingAnnouncements by announcementManager.pendingAnnouncements.collectAsStateWithLifecycle()
@@ -174,4 +195,23 @@ private fun AccountLockedScreen(reason: AccountLockReason) {
             Text(text = body, style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
         }
     }
+}
+
+/** "You have been writing for two hours" — said once, kindly, and dismissed with one tap. */
+@Composable
+private fun BreakReminderDialog(minutes: Int, onContinue: () -> Unit) {
+    val hours = minutes / 60
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = onContinue,
+        title = { Text(stringResource(R.string.break_reminder_title)) },
+        text = {
+            Text(
+                if (hours >= 1) androidx.compose.ui.res.pluralStringResource(R.plurals.break_reminder_body_hours, hours, hours)
+                else stringResource(R.string.break_reminder_body_minutes, minutes)
+            )
+        },
+        confirmButton = {
+            androidx.compose.material3.TextButton(onClick = onContinue) { Text(stringResource(R.string.break_reminder_continue)) }
+        }
+    )
 }

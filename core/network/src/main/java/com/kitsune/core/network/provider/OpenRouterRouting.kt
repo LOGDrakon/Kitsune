@@ -71,6 +71,25 @@ data class OpenRouterRouting(
         const val SORT_LATENCY = "latency"
 
         val ALL_QUANTIZATIONS = listOf("fp32", "bf16", "fp16", "fp8", "fp6", "fp4", "int8", "int4", "unknown")
+
+        /**
+         * The simple level of the routing screen: four plain-language presets. Anything else is
+         * "Personnalisé" and shown with the detailed controls open.
+         */
+        val PRESETS: Map<String, OpenRouterRouting> = linkedMapOf(
+            PRESET_FAST to OpenRouterRouting(),
+            PRESET_CHEAP to OpenRouterRouting(sort = SORT_PRICE),
+            // Excludes the 4-bit and 6-bit quantisations that noticeably degrade long-form writing.
+            PRESET_QUALITY to OpenRouterRouting(quantizations = listOf("fp32", "bf16", "fp16", "fp8", "int8", "unknown")),
+            PRESET_PRIVATE to OpenRouterRouting(denyDataCollection = true, zeroDataRetention = true)
+        )
+        const val PRESET_FAST = "fast"
+        const val PRESET_CHEAP = "cheap"
+        const val PRESET_QUALITY = "quality"
+        const val PRESET_PRIVATE = "private"
+
+        /** The preset [routing] is exactly, or null when it has been customised. */
+        fun presetOf(routing: OpenRouterRouting): String? = PRESETS.entries.firstOrNull { it.value == routing }?.key
     }
 }
 

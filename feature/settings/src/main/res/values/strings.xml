@@ -303,4 +303,18 @@
     <string name="generation_lore_hint">Characters, places and events tracked automatically; the most relevant to the current message are sent.</string>
     <string name="generation_max_tokens_label">Maximum reply length (tokens)</string>
     <string name="generation_max_tokens_hint">A ceiling, not a target: the length chosen in the story card still wins. Check that your model accepts this much output.</string>
+    <string name="routing_preset_fast">Fast</string>
+    <string name="routing_preset_cheap">Cheap</string>
+    <string name="routing_preset_quality">Quality</string>
+    <string name="routing_preset_private">Privacy</string>
+    <string name="routing_preset_fast_hint">Highest-throughput providers first. The default.</string>
+    <string name="routing_preset_cheap_hint">Cheapest providers first. Sometimes slower or less precise.</string>
+    <string name="routing_preset_quality_hint">Excludes 4- and 6-bit precisions, which degrade long-form writing. Fewer providers available.</string>
+    <string name="routing_preset_private_hint">Only providers that keep nothing and do not train on your messages. Fewer models available.</string>
+    <string name="routing_preset_custom_hint">Custom routing: see the advanced settings.</string>
+    <string name="routing_advanced">Advanced settings</string>
+    <string name="routing_advanced_hint">Sorting, precisions, thresholds, preferred or excluded providers, and the per-model provider inspector.</string>
+    <string name="break_reminder_label">Break reminder</string>
+    <string name="break_reminder_off">Off</string>
+    <string name="break_reminder_description">After this much continuous use, a simple question suggests a break. Nothing is recorded or blocked.</string>
 </resources>

@@ -303,4 +303,18 @@
     <string name="generation_lore_hint">Personnages, lieux et événements suivis automatiquement ; les plus pertinents pour le message en cours sont envoyés.</string>
     <string name="generation_max_tokens_label">Longueur maximale d’une réponse (tokens)</string>
     <string name="generation_max_tokens_hint">Un plafond, pas une cible : la longueur choisie dans la carte d’histoire reste prioritaire. Vérifiez que votre modèle accepte cette sortie.</string>
+    <string name="routing_preset_fast">Rapide</string>
+    <string name="routing_preset_cheap">Économique</string>
+    <string name="routing_preset_quality">Qualité</string>
+    <string name="routing_preset_private">Confidentialité</string>
+    <string name="routing_preset_fast_hint">Les fournisseurs au meilleur débit d’abord. Le réglage par défaut.</string>
+    <string name="routing_preset_cheap_hint">Les fournisseurs les moins chers d’abord. Parfois plus lents ou moins précis.</string>
+    <string name="routing_preset_quality_hint">Exclut les précisions 4 et 6 bits, qui dégradent l’écriture longue. Moins de fournisseurs disponibles.</string>
+    <string name="routing_preset_private_hint">Seulement des fournisseurs qui ne gardent rien et n’entraînent pas sur vos messages. Moins de modèles disponibles.</string>
+    <string name="routing_preset_custom_hint">Réglage personnalisé : voir les réglages avancés.</string>
+    <string name="routing_advanced">Réglages avancés</string>
+    <string name="routing_advanced_hint">Tri, précisions, seuils, fournisseurs préférés ou exclus, et l’inspecteur des fournisseurs d’un modèle.</string>
+    <string name="break_reminder_label">Rappel de pause</string>
+    <string name="break_reminder_off">Désactivé</string>
+    <string name="break_reminder_description">Après ce temps d’utilisation continue, une simple question propose une pause. Rien n’est enregistré ni bloqué.</string>
 </resources>

@@ -18,6 +18,8 @@ data class SettingsUiState(
     val userPhysicalDescription: String = "",
     val userSexualOrientation: String = "",
     val autoRecapEnabled: Boolean = true,
+    /** Optional break reminder, minutes (0 = off). */
+    val breakReminderMinutes: Int = 0,
     val customStylePrompt: String = "",
     /** Story taste (2026-08-23) — free text the AI is told never to write, in any conversation. */
     val neverWrite: String = ""

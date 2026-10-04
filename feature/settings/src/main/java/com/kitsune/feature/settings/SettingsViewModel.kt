@@ -87,7 +87,8 @@ class SettingsViewModel @Inject constructor(
     private val exportBackupUseCase: ExportBackupUseCase,
     private val providerStore: ProviderStore,
     private val userMessageManager: UserMessageManager,
-    private val creatorFollowsManager: CreatorFollowsManager
+    private val creatorFollowsManager: CreatorFollowsManager,
+    private val breakReminder: com.kitsune.core.security.wellbeing.BreakReminder
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(loadState())
@@ -282,6 +283,7 @@ class SettingsViewModel @Inject constructor(
             userSexualOrientation = userProfile.sexualOrientation,
             language = appLanguageManager.getSelectedLanguage(),
             autoRecapEnabled = secureStorage.getInt(SecureStorage.KEY_AUTO_RECAP_ENABLED, 1) == 1,
+            breakReminderMinutes = breakReminder.intervalMinutes(),
             customStylePrompt = secureStorage.getString(SecureStorage.KEY_CUSTOM_STYLE_PROMPT) ?: "",
             neverWrite = storyTasteStore.get().neverWrite
         )
@@ -344,6 +346,11 @@ class SettingsViewModel @Inject constructor(
     fun setSafeWord(value: String) {
         if (value.isBlank()) safeWordManager.clearSafeWord() else safeWordManager.setSafeWord(value)
         _state.value = _state.value.copy(safeWord = value)
+    }
+
+    fun setBreakReminderMinutes(minutes: Int) {
+        breakReminder.setIntervalMinutes(minutes)
+        _state.value = _state.value.copy(breakReminderMinutes = minutes)
     }
 
     fun setAutoRecapEnabled(enabled: Boolean) {

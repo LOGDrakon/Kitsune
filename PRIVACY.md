@@ -24,11 +24,13 @@ that collect data or require zero data retention in **Settings → AI providers*
 The marketplace is optional (**Settings → Marketplace**). When it is off, Kitsune contacts no server at
 all. When it is on, nothing is sent until you open the marketplace; then:
 
-- **An anonymous account** is created on the server, identified by a random id and your device's
-  `ANDROID_ID` (an identifier Android derives from the device and the app's signing key; it is used to
-  enforce bans against abusive accounts).
-- **What you publish** — a character or universe sheet and its images, your username, your reviews,
-  reports and idea proposals — is stored on the server and visible to others.
+- **An anonymous account** is created on the server, identified by a random id. The app also sends
+  your device's `ANDROID_ID` (an identifier Android derives from the device and the app's signing key)
+  so that a banned device can be recognised; the official server stores only a keyed hash of it,
+  never the identifier itself.
+- **What you publish** — a character or universe sheet and its images, a pack of story presets, your
+  username, your star ratings (there is no review text), reports and idea proposals — is stored on the
+  server and visible to others (reports are visible to moderators only).
 - **What you browse** — listing searches, downloads, follows.
 
 The server never receives your conversations. Its source code is public:

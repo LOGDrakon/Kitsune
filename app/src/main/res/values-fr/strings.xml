@@ -61,4 +61,11 @@
     <string name="inspiration_wizard_sketch_last_round">Dernier tour — choisis celle que tu veux créer.</string>
     <string name="shell_needs_provider">Ajoutez la clé API de votre fournisseur d’IA pour commencer à écrire des histoires.</string>
     <string name="shell_needs_provider_action">Ajouter</string>
+    <string name="break_reminder_title">Une pause ?</string>
+    <plurals name="break_reminder_body_hours">
+        <item quantity="one">Vous écrivez depuis %1$d heure. L’histoire vous attendra : c’est peut-être le bon moment pour vous étirer, boire un verre d’eau ou regarder ailleurs.</item>
+        <item quantity="other">Vous écrivez depuis %1$d heures. L’histoire vous attendra : c’est peut-être le bon moment pour vous étirer, boire un verre d’eau ou regarder ailleurs.</item>
+    </plurals>
+    <string name="break_reminder_body_minutes">Vous écrivez depuis %1$d minutes. L’histoire vous attendra.</string>
+    <string name="break_reminder_continue">Continuer</string>
 </resources>
