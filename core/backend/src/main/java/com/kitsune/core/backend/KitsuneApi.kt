@@ -82,8 +82,7 @@ interface KitsuneApi {
     @POST("marketplace/follows/mark-seen")
     suspend fun markFollowsSeen(): Response<Unit>
 
-    /** Aggregate creator profile (identity + stats + follower count + per-badge progress) — backs
-     * both "Mes badges" (called with one's own id) and the public creator profile screen. */
+    /** A creator's public numbers (listings, downloads, rating, followers). */
     @GET("marketplace/creators/{userId}/profile")
     suspend fun getCreatorProfile(@Path("userId") userId: String): Response<CreatorProfile>
 

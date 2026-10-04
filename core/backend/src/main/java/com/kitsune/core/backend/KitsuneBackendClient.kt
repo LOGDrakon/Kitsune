@@ -265,8 +265,7 @@ class KitsuneBackendClient @Inject constructor(
         callNoBody("Mise à jour impossible") { markFollowsSeen() }
     }
 
-    /** Aggregate creator profile (badges + progress + stats + follower count). Call with
-     * [getUserId] for the caller's own "Mes badges" screen, or with a tapped creator's id. */
+    /** A creator's public numbers. Call with [getUserId] for the user's own, or a tapped creator's id. */
     suspend fun getCreatorProfile(creatorId: String): Result<CreatorProfile> = runCatching {
         call("Profil du créateur indisponible") { getCreatorProfile(creatorId) }
     }

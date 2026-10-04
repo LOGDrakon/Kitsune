@@ -1,5 +1,9 @@
 package com.kitsune.feature.marketplace
 
+import com.kitsune.core.data.local.entities.toEntity
+import com.kitsune.core.data.local.entities.ToneCardPayload
+import com.kitsune.core.backend.model.MarketplaceStoryPresetData
+import com.kitsune.core.backend.model.MarketplacePresetPackData
 import android.content.Context
 import android.util.Base64
 import androidx.lifecycle.ViewModel
@@ -53,7 +57,7 @@ class MarketplaceViewModel @Inject constructor(
     val translateError: StateFlow<String?> = _translateError.asStateFlow()
 
     private val _creatorProfile = MutableStateFlow<CreatorProfile?>(null)
-    /** Backs [CreatorListingsScreen]'s profile header (avatar, stats, badges) — separate from
+    /** Backs [CreatorListingsScreen]'s profile header (avatar, stats) — separate from
      * [uiState]'s listing grid so the header can render/update independently of pagination. */
     val creatorProfile: StateFlow<CreatorProfile?> = _creatorProfile.asStateFlow()
 
@@ -116,7 +120,7 @@ class MarketplaceViewModel @Inject constructor(
         }
     }
 
-    /** Loads the aggregate creator profile (badges/progress/stats/follower count) shown in
+    /** Loads the aggregate creator profile (stats and follower count) shown in
      * [CreatorListingsScreen]'s header. Silently leaves [creatorProfile] `null` on failure — the
      * screen already falls back to the first-listing-derived title/grid, so a header that never
      * appears is a degraded-but-usable state, not a blocking error. */
@@ -208,7 +212,21 @@ class MarketplaceViewModel @Inject constructor(
         when (download.type) {
             "PERSONA" -> download.personaData?.let { importPersona(listingId, it, download.imageUrls, download.tags) }
             "UNIVERSE" -> download.universeData?.let { importUniverse(listingId, it, download.imageUrls, download.tags) }
+            "PRESET_PACK" -> download.presetData?.let { importPresetPack(it) }
         }
+    }
+
+    /**
+     * Adds a pack's presets to the user's own tone library (profile tone cards, offered on every new
+     * story). A preset already there — same name and directive — is not duplicated, so downloading a
+     * pack twice is harmless.
+     */
+    private suspend fun importPresetPack(pack: MarketplacePresetPackData) {
+        val existing = toneCardRepository.getProfileCards().map { it.name to it.directive }.toSet()
+        val now = System.currentTimeMillis()
+        pack.presets
+            .filter { (it.name to it.directive) !in existing }
+            .forEach { preset -> toneCardRepository.upsert(preset.toPayload().toEntity(createdAt = now)) }
     }
 
     private suspend fun importPersona(listingId: String, data: MarketplacePersonaData, imageUrls: List<String>, tags: List<String> = emptyList()) {
@@ -484,9 +502,13 @@ class MarketplaceViewModel @Inject constructor(
         }
     }
 
-    fun addReview(listingId: String, rating: Int, comment: String) {
+    /** The user's own marketplace id, or null before registration. */
+    val ownUserId: String? get() = backendClient.getUserId()
+
+    /** Rates a downloaded listing; rating again replaces the previous rating. */
+    fun rateListing(listingId: String, rating: Int) {
         viewModelScope.launch {
-            backendClient.addReview(listingId, CreateReviewRequest(rating, comment)).fold(
+            backendClient.addReview(listingId, CreateReviewRequest(rating)).fold(
                 onSuccess = { loadListingDetail(listingId) },
                 onFailure = { }
             )
@@ -546,3 +568,20 @@ sealed class MarketplaceUiState {
     data class Ready(val listings: List<ListingSummary>) : MarketplaceUiState()
     data class Error(val message: String) : MarketplaceUiState()
 }
+
+/** A marketplace story preset as a tone card payload; unknown mode names fall back to the default
+ *  when the payload becomes an entity. */
+private fun MarketplaceStoryPresetData.toPayload() = ToneCardPayload(
+    name = name.take(80),
+    description = description,
+    storyPaceMode = storyPace ?: "DEFAULT",
+    toneMode = tone ?: "DEFAULT",
+    involvementMode = involvement ?: "DEFAULT",
+    narrativeRhythmMode = rhythm ?: "DEFAULT",
+    universeMode = universe ?: "DEFAULT",
+    intensityMode = intensity ?: "DEFAULT",
+    replyLength = replyLength ?: "DEFAULT",
+    narrationBalance = narrationBalance ?: "DEFAULT",
+    voiceMode = voice ?: "DEFAULT",
+    directive = directive
+)

@@ -97,4 +97,10 @@
     <string name="stat_rating_label">Note</string>
     <string name="stat_followers_label">Abonnés</string>
     <string name="creator_profile_loading">Chargement du profil…</string>
+    <string name="rating_prompt">Noter</string>
+    <string name="rating_yours">Votre note — touchez pour la changer</string>
+    <string name="rating_star_content_description">%1$d étoile(s)</string>
+    <string name="listing_type_pack_badge">Pack</string>
+    <string name="preset_pack_section_title">Préréglages (%1$d)</string>
+    <string name="preset_pack_hint">Le téléchargement ajoute ces tons à votre bibliothèque de tons (onglet Créer) ; ils sont ensuite proposés au début de chaque histoire.</string>
 </resources>

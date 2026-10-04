@@ -5,7 +5,7 @@ package com.kitsune.app.navigation
  *
  * v1 had 38 string routes all reachable from the same flat `NavHost`, with no expressed notion of
  * which ones were *destinations the user navigates to* versus *sub-pages of somewhere*. Ten of them
- * (`proposals`, `tone_library`, `messages`, `my_follows`, `my_badges`, `timeline`, `story_memory`,
+ * (`proposals`, `tone_library`, `messages`, `my_follows`, `timeline`, `story_memory`,
  * `chat-tree`, `novel`, `inspiration_wizard`) were only reachable from a menu item buried two levels
  * down, which is most of why the app felt like a pile of features rather than a product.
  *
@@ -89,7 +89,6 @@ object Routes {
     const val MODELS = "models"
     const val GENERATION = "generation"
 
-    const val MY_BADGES = "my_badges"
     const val MY_FOLLOWS = "my_follows"
     const val MESSAGES = "messages"
     const val PROPOSALS = "proposals"
@@ -137,7 +136,6 @@ object Routes {
     fun toneLibrary() = "tone_library"
     fun messages() = "messages"
     fun myFollows() = "my_follows"
-    fun myBadges() = "my_badges"
 }
 
 /**

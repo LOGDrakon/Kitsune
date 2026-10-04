@@ -14,7 +14,7 @@ import javax.inject.Inject
 /**
  * Everything the Profile tab shows, in one place.
  *
- * The profile is the user's marketplace identity: username, creator standing (badges, listings,
+ * The profile is the user's marketplace identity: username, creator standing (listings,
  * followers), follows, moderation messages and idea proposals. Everything else about them lives on
  * this phone and needs no profile.
  *
@@ -35,8 +35,6 @@ class ProfileViewModel @Inject constructor(
         val unreadMessages: Int = 0,
         val loading: Boolean = true
     ) {
-        /** Awarded badges only — progress towards unearned ones belongs on the badges screen. */
-        val badgeCount: Int get() = creatorProfile?.badges?.count { it.awarded } ?: 0
     }
 
     private val _state = MutableStateFlow(State())

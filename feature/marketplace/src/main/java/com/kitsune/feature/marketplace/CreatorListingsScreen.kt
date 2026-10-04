@@ -32,7 +32,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kitsune.core.backend.model.CreatorProfile
-import com.kitsune.core.designsystem.badges.BadgeChip
 import com.kitsune.core.designsystem.badges.CreatorAvatar
 import com.kitsune.core.designsystem.badges.StatChip
 
@@ -40,9 +39,9 @@ import com.kitsune.core.designsystem.badges.StatChip
  * name in [MarketplaceScreen]'s grid/detail screens — reuses [MarketplaceViewModel] (a fresh
  * instance, scoped to this screen's own back-stack entry, not the same one the main browse tab
  * holds) filtered to a single [creatorId] rather than a new, parallel loading/paging
- * implementation. Doubles as the creator's public profile page: a header (avatar, stats, badges,
+ * implementation. Doubles as the creator's public profile page: a header (avatar, stats,
  * follow button) sits above their listing grid, backed by the same aggregate
- * `GET /marketplace/creators/{userId}/profile` endpoint "Mes badges" uses. The title falls back to
+ * `GET /marketplace/creators/{userId}/profile` endpoint. The title falls back to
  * the first loaded listing's `creatorName` while the profile call is still in flight (or if it
  * fails) rather than requiring the name as a nav argument, so this route only ever needs the id. */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -171,19 +170,6 @@ private fun CreatorProfileHeader(
                     StatChip(Icons.Default.Download, p.totalDownloadCount.toString(), stringResource(R.string.stat_downloads_label))
                     StatChip(Icons.Default.Star, String.format("%.1f", p.averageRating), stringResource(R.string.stat_rating_label))
                     StatChip(Icons.Default.Group, p.followerCount.toString(), stringResource(R.string.stat_followers_label))
-                }
-
-                val earnedBadges = p.badges.filter { it.awarded }
-                if (earnedBadges.isNotEmpty()) {
-                    Spacer(Modifier.size(12.dp))
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        earnedBadges.forEach { badge ->
-                            BadgeChip(badge.badgeType, earned = true)
-                        }
-                    }
                 }
             }
         }

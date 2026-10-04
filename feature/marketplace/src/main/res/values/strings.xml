@@ -97,4 +97,10 @@
     <string name="stat_rating_label">Rating</string>
     <string name="stat_followers_label">Followers</string>
     <string name="creator_profile_loading">Loading profile…</string>
+    <string name="rating_prompt">Rate it</string>
+    <string name="rating_yours">Your rating — tap to change it</string>
+    <string name="rating_star_content_description">%1$d star(s)</string>
+    <string name="listing_type_pack_badge">Pack</string>
+    <string name="preset_pack_section_title">Presets (%1$d)</string>
+    <string name="preset_pack_hint">Downloading adds these tones to your tone library (Create tab); they are then offered when you start a story.</string>
 </resources>

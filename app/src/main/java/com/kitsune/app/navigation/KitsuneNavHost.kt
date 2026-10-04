@@ -34,7 +34,6 @@ import com.kitsune.feature.chat.novel.NovelModeScreen
 import com.kitsune.feature.chat.timeline.TimelineScreen
 import com.kitsune.feature.marketplace.CreatorListingsScreen
 import com.kitsune.feature.marketplace.ListingDetailScreen
-import com.kitsune.feature.marketplace.MyBadgesScreen
 import com.kitsune.feature.marketplace.MyFollowsScreen
 import com.kitsune.feature.onboarding.AccountChoiceScreen
 import com.kitsune.feature.onboarding.AgeVerificationScreen
@@ -388,9 +387,6 @@ fun KitsuneNavHost(
         // Profil
         // -------------------------------------------------------------------------------------
 
-        screen(Routes.MY_BADGES) {
-            MyBadgesScreen(onBack = { navController.popBackStack() })
-        }
         screen(Routes.MY_FOLLOWS) {
             MyFollowsScreen(
                 onBack = { navController.popBackStack() },

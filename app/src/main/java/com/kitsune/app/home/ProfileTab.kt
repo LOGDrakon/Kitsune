@@ -15,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.MailOutline
-import androidx.compose.material.icons.filled.MilitaryTech
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material3.Icon
@@ -44,9 +43,8 @@ import com.kitsune.core.designsystem.component.PageTitle
  *
  * Two jobs, in this order:
  *
- * 1. **Who am I here** — the name, and the creator standing that the badge system already tracks
- *    (listings, downloads, followers). v1 computed all of this and showed it only on *other people's*
- *    profiles, or behind a "Mes badges" menu item in Settings.
+ * 1. **Who am I here** — the name, and the creator's plain numbers (listings, downloads, followers).
+ *    No badges or tiers (PRINCIPLES.md §2).
  * 2. **The community** — follows, moderation messages and idea proposals.
  *
  * All of it is marketplace identity, so with the marketplace switched off this tab only says so.
@@ -54,7 +52,6 @@ import com.kitsune.core.designsystem.component.PageTitle
 @Composable
 fun ProfileTab(
     onOpenSettings: () -> Unit,
-    onOpenBadges: () -> Unit,
     onOpenFollows: () -> Unit,
     onOpenMessages: () -> Unit,
     onOpenProposals: () -> Unit,
@@ -161,20 +158,6 @@ fun ProfileTab(
                             trailing = { Chevron() }
                         )
                     }
-                    KitsuneRow(
-                        title = "Mes badges",
-                        meta = state.badgeCount.let {
-                            when (it) {
-                                0 -> "Aucun encore"
-                                1 -> "1 obtenu"
-                                else -> "$it obtenus"
-                            }
-                        },
-                        card = false,
-                        onClick = onOpenBadges,
-                        leading = { RowGlyph(Icons.Filled.MilitaryTech) },
-                        trailing = { Chevron() }
-                    )
                     KitsuneRow(
                         title = "Mes abonnements",
                         meta = state.followedCount.let {

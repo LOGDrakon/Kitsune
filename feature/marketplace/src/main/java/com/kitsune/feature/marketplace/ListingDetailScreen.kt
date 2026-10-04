@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -121,7 +122,13 @@ internal fun ListingCard(
                         .padding(horizontal = 6.dp, vertical = 2.dp)
                 ) {
                     Text(
-                        text = if (listing.type == "PERSONA") stringResource(R.string.listing_type_persona_badge) else stringResource(R.string.listing_type_universe_badge),
+                        text = stringResource(
+                            when (listing.type) {
+                                "PERSONA" -> R.string.listing_type_persona_badge
+                                "PRESET_PACK" -> R.string.listing_type_pack_badge
+                                else -> R.string.listing_type_universe_badge
+                            }
+                        ),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onPrimary,
                         fontWeight = FontWeight.Bold
@@ -311,6 +318,8 @@ fun ListingDetailScreen(
                     },
                     onToggleFollow = { creatorId, currentlyFollowing -> viewModel.toggleFollowCreator(creatorId, currentlyFollowing) },
                     onOpenCreator = onOpenCreator,
+                    onRate = { stars -> viewModel.rateListing(listingId, stars) },
+                    isOwnListing = detail.creatorId == viewModel.ownUserId,
                     modifier = Modifier.padding(padding)
                 )
             } ?: Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
@@ -385,6 +394,8 @@ private fun ListingDetailContent(
     onDownload: () -> Unit,
     onToggleFollow: (creatorId: String, currentlyFollowing: Boolean) -> Unit,
     onOpenCreator: (String) -> Unit = {},
+    onRate: (Int) -> Unit = {},
+    isOwnListing: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val bgImageUrl = listing.previewImageUrl ?: listing.imageUrls.firstOrNull()
@@ -463,6 +474,14 @@ private fun ListingDetailContent(
                 val color = if (outcome == DownloadOutcome.Failed) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
                 Text(message, style = MaterialTheme.typography.bodySmall, color = color)
             }
+
+            // Stars only, once downloaded, never one's own listing (PRINCIPLES.md §6: no review text).
+            val canRate = !isOwnListing && (listing.isOwned ||
+                downloadOutcome == DownloadOutcome.Success || downloadOutcome == DownloadOutcome.AlreadyOwned)
+            if (canRate) {
+                Spacer(Modifier.height(12.dp))
+                RatingRow(current = listing.myRating, onRate = onRate)
+            }
             
             Spacer(Modifier.height(16.dp))
             
@@ -518,6 +537,31 @@ private fun ListingDetailContent(
                 }
             }
             
+            // PRESET PACK section: what each preset does, before the user adds them to their library.
+            listing.presetData?.let { pack ->
+                CollapsibleSection(
+                    title = stringResource(R.string.preset_pack_section_title, pack.presets.size),
+                    expanded = personaExpanded,
+                    onToggle = { personaExpanded = !personaExpanded }
+                ) {
+                    Text(
+                        stringResource(R.string.preset_pack_hint),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    pack.presets.forEach { preset ->
+                        Spacer(Modifier.height(8.dp))
+                        Text(preset.name, style = MaterialTheme.typography.titleSmall)
+                        if (preset.description.isNotBlank()) {
+                            Text(preset.description, style = MaterialTheme.typography.bodySmall)
+                        }
+                        if (preset.directive.isNotBlank()) {
+                            Text(preset.directive, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                        }
+                    }
+                }
+            }
+
             // PERSONA section
             listing.personaData?.let { persona ->
                 CollapsibleSection(
@@ -695,6 +739,30 @@ private fun PersonaSummaryCard(persona: MarketplacePersonaData) {
             Text(persona.name, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
             Text(persona.shortDescription, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Text(stringResource(R.string.persona_summary_age_tags_format, persona.age, persona.maturityTags.joinToString(", ")), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+        }
+    }
+}
+
+/** Five tappable stars. Shows the user's current rating; tapping another star replaces it. */
+@Composable
+private fun RatingRow(current: Int?, onRate: (Int) -> Unit) {
+    var shown by remember(current) { mutableStateOf(current ?: 0) }
+    Column {
+        Text(
+            stringResource(if (current == null) R.string.rating_prompt else R.string.rating_yours),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Row {
+            (1..5).forEach { star ->
+                IconButton(onClick = { shown = star; onRate(star) }) {
+                    Icon(
+                        if (star <= shown) Icons.Default.Star else Icons.Outlined.StarOutline,
+                        contentDescription = stringResource(R.string.rating_star_content_description, star),
+                        tint = if (star <= shown) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.outline
+                    )
+                }
+            }
         }
     }
 }

@@ -202,7 +202,6 @@ fun KitsuneShell(
 
                     HomeTab.Profile -> ProfileTab(
                         onOpenSettings = { tab = HomeTab.Settings.id },
-                        onOpenBadges = { navController.navigate(Routes.myBadges()) },
                         onOpenFollows = { navController.navigate(Routes.myFollows()) },
                         onOpenMessages = { navController.navigate(Routes.messages()) },
                         onOpenProposals = { navController.navigate(Routes.proposals()) },

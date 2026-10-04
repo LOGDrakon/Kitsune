@@ -113,6 +113,7 @@ fun DiscoverTab(
     val type = when (typeSegment) {
         1 -> "PERSONA"
         2 -> "UNIVERSE"
+        3 -> "PRESET_PACK"
         else -> null
     }
 
@@ -159,7 +160,7 @@ fun DiscoverTab(
                         )
                         Spacer(Modifier.height(KitsuneTheme.spacing.md))
                         KitsuneSegmented(
-                            options = listOf("Tout", "Personnages", "Univers"),
+                            options = listOf("Tout", "Personnages", "Univers", "Packs"),
                             selectedIndex = typeSegment,
                             onSelect = { typeSegment = it }
                         )

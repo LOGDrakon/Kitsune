@@ -56,7 +56,7 @@ enum class IntensityMode {
  *
  * The six modes above shape *what* happens; this shapes the single thing a reader notices first.
  * Until now the only word count anywhere in the app was the one buried in the fast-paced pacing
- * directive, and `max_tokens` was a flat 4096 (6144 in Pro) — a ceiling so high it never bound
+ * directive, and `max_tokens` was a flat 4096 — a ceiling so high it never bound
  * anything. This drives **both** the contract line and the real `max_tokens`, so a short reply is
  * short because the budget says so, not only because the prose was asked nicely.
  */

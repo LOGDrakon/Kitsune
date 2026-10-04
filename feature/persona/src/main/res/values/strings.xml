@@ -249,4 +249,12 @@
     <string name="card_export_success">Card exported.</string>
     <string name="card_export_needs_avatar">This persona needs an avatar: a card is an image carrying its data.</string>
     <string name="marketplace_publish_in_review">Sent for review: your first publications are checked by the server’s moderators before they appear.</string>
+    <string name="tone_pack_share">Share as a pack</string>
+    <string name="tone_pack_share_hint">Publishes the selected tones on the marketplace, where anyone can add them to their own library. Up to 20 tones.</string>
+    <string name="tone_pack_title">Pack name</string>
+    <string name="tone_pack_description">What these tones are good for (optional)</string>
+    <string name="tone_pack_publish">Publish</string>
+    <string name="tone_pack_published">Pack published.</string>
+    <string name="tone_pack_in_review">Pack sent: it will appear once a moderator has checked it.</string>
+    <string name="tone_pack_failed">Publishing failed: %1$s</string>
 </resources>

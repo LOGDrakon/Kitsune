@@ -13,6 +13,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -59,7 +62,29 @@ fun ToneLibraryScreen(
     viewModel: ToneLibraryViewModel = hiltViewModel()
 ) {
     val toneCards by viewModel.toneCards.collectAsStateWithLifecycle()
+    val marketplaceEnabled by viewModel.marketplaceEnabled.collectAsStateWithLifecycle()
     var editing by remember { mutableStateOf<ToneLibraryEdit?>(null) }
+    var sharing by remember { mutableStateOf(false) }
+    val context = androidx.compose.ui.platform.LocalContext.current
+
+    if (sharing) {
+        SharePackDialog(
+            cards = toneCards,
+            onDismiss = { sharing = false },
+            onPublish = { title, description, selected ->
+                sharing = false
+                viewModel.publishPack(title, description, selected) { result ->
+                    val message = result.fold(
+                        onSuccess = { live ->
+                            context.getString(if (live) R.string.tone_pack_published else R.string.tone_pack_in_review)
+                        },
+                        onFailure = { context.getString(R.string.tone_pack_failed, it.message ?: "") }
+                    )
+                    android.widget.Toast.makeText(context, message, android.widget.Toast.LENGTH_LONG).show()
+                }
+            }
+        )
+    }
 
     editing?.let { current ->
         val existing = (current as? ToneLibraryEdit.Existing)?.card
@@ -84,6 +109,13 @@ fun ToneLibraryScreen(
                             Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.action_back)
                         )
+                    }
+                },
+                actions = {
+                    if (marketplaceEnabled && toneCards.isNotEmpty()) {
+                        IconButton(onClick = { sharing = true }) {
+                            Icon(Icons.Default.Share, contentDescription = stringResource(R.string.tone_pack_share))
+                        }
                     }
                 }
             )
@@ -189,4 +221,62 @@ private fun ToneLibraryCard(card: ToneCardEntity, onEdit: () -> Unit, onDelete: 
 private sealed interface ToneLibraryEdit {
     data object New : ToneLibraryEdit
     data class Existing(val card: ToneCardEntity) : ToneLibraryEdit
+}
+
+/** Picks which tones go into a pack, and names it. Everything is preselected: the usual case is
+ *  "share my whole library". */
+@Composable
+private fun SharePackDialog(
+    cards: List<ToneCardEntity>,
+    onDismiss: () -> Unit,
+    onPublish: (title: String, description: String, cards: List<ToneCardEntity>) -> Unit
+) {
+    var title by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var selected by remember { mutableStateOf(cards.map { it.id }.toSet()) }
+    val chosen = cards.filter { it.id in selected }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.tone_pack_share)) },
+        text = {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
+                Text(
+                    stringResource(R.string.tone_pack_share_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                OutlinedTextField(
+                    value = title,
+                    onValueChange = { title = it.take(80) },
+                    label = { Text(stringResource(R.string.tone_pack_title)) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth().padding(top = 12.dp)
+                )
+                OutlinedTextField(
+                    value = description,
+                    onValueChange = { description = it.take(500) },
+                    label = { Text(stringResource(R.string.tone_pack_description)) },
+                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                )
+                cards.forEach { card ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth().clickable {
+                            selected = if (card.id in selected) selected - card.id else selected + card.id
+                        }
+                    ) {
+                        Checkbox(checked = card.id in selected, onCheckedChange = null)
+                        Text(card.name, style = MaterialTheme.typography.bodyMedium)
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                enabled = title.isNotBlank() && chosen.isNotEmpty() && chosen.size <= 20,
+                onClick = { onPublish(title, description, chosen) }
+            ) { Text(stringResource(R.string.tone_pack_publish)) }
+        },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } }
+    )
 }

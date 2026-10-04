@@ -12,7 +12,35 @@ data class CreateListingRequest(
     val tags: List<String> = emptyList(),
     val personaData: MarketplacePersonaData? = null,
     val universeData: MarketplaceUniverseData? = null,
+    /** Set when [type] is `PRESET_PACK`. */
+    val presetData: MarketplacePresetPackData? = null,
     val imageBase64List: List<String> = emptyList()
+)
+
+/** A shareable pack of story presets (listing type `PRESET_PACK`). Mode values are the app's enum
+ * names; one this version does not know is ignored on import. */
+@Serializable
+data class MarketplacePresetPackData(
+    val version: Int = 1,
+    val presets: List<MarketplaceStoryPresetData>
+)
+
+@Serializable
+data class MarketplaceStoryPresetData(
+    val name: String,
+    val description: String = "",
+    val storyPace: String? = null,
+    val tone: String? = null,
+    val involvement: String? = null,
+    val rhythm: String? = null,
+    val universe: String? = null,
+    val intensity: String? = null,
+    val replyLength: String? = null,
+    val narrationBalance: String? = null,
+    val voice: String? = null,
+    val directive: String = "",
+    val writingStyle: String = "",
+    val temperature: Double? = null
 )
 
 @Serializable
@@ -53,7 +81,10 @@ data class ListingDetail(
     val createdAt: String,
     val personaData: MarketplacePersonaData? = null,
     val universeData: MarketplaceUniverseData? = null,
+    val presetData: MarketplacePresetPackData? = null,
     val isOwned: Boolean = false,
+    /** The user's own rating (1-5), or null. */
+    val myRating: Int? = null,
     val isFollowingCreator: Boolean = false
 )
 
@@ -62,6 +93,7 @@ data class ListingDownload(
     val type: String,
     val personaData: MarketplacePersonaData? = null,
     val universeData: MarketplaceUniverseData? = null,
+    val presetData: MarketplacePresetPackData? = null,
     val imageUrls: List<String>,
     val tags: List<String> = emptyList()
 )
@@ -152,7 +184,8 @@ data class MarketplaceListResponse(
 )
 
 @Serializable
-data class CreateReviewRequest(val rating: Int, val comment: String = "")
+/** 1 to 5 stars. No review text (PRINCIPLES.md §6). */
+data class CreateReviewRequest(val rating: Int)
 
 @Serializable
 data class ReviewResponse(
@@ -160,7 +193,6 @@ data class ReviewResponse(
     val userId: String,
     val userName: String?,
     val rating: Int,
-    val comment: String,
     val createdAt: String
 )
 
