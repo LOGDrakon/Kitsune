@@ -115,6 +115,7 @@ import com.kitsune.feature.chat.director.DirectorToolsDialog
 import com.kitsune.feature.chat.imagegen.GalleryTarget
 import com.kitsune.feature.chat.lorebriefing.ChatLoreBriefingDialog
 import com.kitsune.feature.chat.storycard.StoryCardSheet
+import com.kitsune.feature.chat.storysettings.StorySettingsSheet
 import com.kitsune.feature.chat.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -172,6 +173,7 @@ fun ChatScreen(
     val nextReplySuggestions by viewModel.nextReplySuggestions.collectAsStateWithLifecycle()
     val isLoadingNextReplySuggestions by viewModel.isLoadingNextReplySuggestions.collectAsStateWithLifecycle()
     var showToolsSheet by remember { mutableStateOf(false) }
+    var showStorySettings by remember { mutableStateOf(false) }
     var showBackgroundPickerDialog by remember { mutableStateOf(false) }
     var showAddCastMemberDialog by remember { mutableStateOf(false) }
     var showDirectorToolsDialog by remember { mutableStateOf(false) }
@@ -472,6 +474,28 @@ fun ChatScreen(
         return
     }
 
+    if (showStorySettings) {
+        chat?.let { current ->
+            val presets = remember(persona?.id, persona?.maturityTags) { viewModel.offeredPresets() }
+            StorySettingsSheet(
+                chat = current,
+                presets = presets,
+                memoryDepth = viewModel.storyMemoryDepth(current),
+                globalModelLabel = viewModel.globalChatModelLabel(),
+                onDismiss = { showStorySettings = false },
+                onSwitchPreset = viewModel::switchStoryPreset,
+                onSetModel = viewModel::setStoryModel,
+                onSetMemory = viewModel::setStoryMemory,
+                onSetMaxTokens = viewModel::setStoryMaxReplyTokens,
+                onOpenDetailedModes = {
+                    showStorySettings = false
+                    viewModel.onExperienceModeDialogOpened()
+                    showExperienceModeDialog = true
+                }
+            )
+        }
+    }
+
     // The story-tools sheet, replacing v1's 15-entry `DropdownMenu`.
     //
     // Two problems with the dropdown, beyond the length. It anchored to the top-right corner of a tall
@@ -530,13 +554,10 @@ fun ChatScreen(
                 )
                 add(
                     SheetAction(
-                        label = stringResource(R.string.experience_modes_menu_label),
+                        label = stringResource(R.string.story_settings_title),
                         icon = Icons.Outlined.Tune,
                         section = sceneSection,
-                        onClick = {
-                            viewModel.onExperienceModeDialogOpened()
-                            showExperienceModeDialog = true
-                        }
+                        onClick = { showStorySettings = true }
                     )
                 )
 

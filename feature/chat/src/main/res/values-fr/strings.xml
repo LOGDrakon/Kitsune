@@ -274,4 +274,20 @@
     <string name="chat_tools_section_read">Lecture</string>
     <string name="chat_tools_section_help">Aide</string>
     <string name="image_gen_hd_quality_title">Qualité HD</string>
+    <string name="story_settings_title">Réglages de l’histoire</string>
+    <string name="story_settings_tone">Ton</string>
+    <string name="story_settings_tone_hint">Change le registre de l’histoire à partir de la prochaine réponse.</string>
+    <string name="story_settings_model">Modèle</string>
+    <string name="story_settings_model_hint">Le modèle qui écrit cette histoire.</string>
+    <string name="story_settings_model_reset">Revenir au modèle par défaut</string>
+    <string name="story_settings_memory">Mémoire</string>
+    <string name="story_settings_memory_light">Légère</string>
+    <string name="story_settings_memory_balanced">Équilibrée</string>
+    <string name="story_settings_memory_extended">Étendue</string>
+    <string name="story_settings_length">Longueur max. d’une réponse</string>
+    <string name="story_settings_default">Défaut</string>
+    <string name="story_settings_default_value">Par défaut : %1$s</string>
+    <string name="story_settings_defaults_hint">« Défaut » suit Réglages → Modèles et Réglages → Mémoire et longueur.</string>
+    <string name="story_settings_detailed">Réglages détaillés</string>
+    <string name="story_settings_detailed_hint">Structure, ton, rythme, implication, maturité, voix… et une consigne libre.</string>
 </resources>

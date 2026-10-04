@@ -183,7 +183,7 @@ private fun PresetCard(preset: StoryPreset, enabled: Boolean, onClick: () -> Uni
     }
 }
 
-private fun presetStrings(id: String): Pair<Int, Int> = when (id) {
+internal fun presetStrings(id: String): Pair<Int, Int> = when (id) {
     StoryCardPresets.SLOW_ROMANCE -> R.string.preset_slow_romance to R.string.preset_slow_romance_body
     StoryCardPresets.DARK_PASSION -> R.string.preset_dark_passion to R.string.preset_dark_passion_body
     StoryCardPresets.ADVENTURE -> R.string.preset_adventure to R.string.preset_adventure_body

@@ -75,6 +75,7 @@ import com.kitsune.core.network.dto.ChatMessageDto
 import com.kitsune.core.network.preferences.LlmModelResolver
 import com.kitsune.core.network.preferences.LlmOperation
 import com.kitsune.core.network.preferences.GenerationPreferences
+import com.kitsune.core.network.preferences.MemoryDepth
 import com.kitsune.core.network.preferences.NetworkPreferences
 import com.kitsune.core.network.repository.ChatCompletionRepository
 import com.kitsune.core.network.repository.ChatCompletionResult
@@ -460,7 +461,7 @@ class ChatViewModel @Inject constructor(
     private val _editingMessage = MutableStateFlow<MessageEntity?>(null)
     val editingMessage: StateFlow<MessageEntity?> = _editingMessage.asStateFlow()
 
-    private fun rawWindowSize(): Int = SummarizationConfig.rawWindowSize()
+    private fun rawWindowSize(): Int = SummarizationConfig.rawWindowSize(_chat.value)
 
     init {
         viewModelScope.launch {
@@ -1628,8 +1629,9 @@ class ChatViewModel @Inject constructor(
         }
     }
 
+    /** The story's own model when it has one and it is still available, else the global one. */
     private suspend fun resolveChatModel(): String =
-        llmModelResolver.resolve(LlmOperation.CHAT)
+        llmModelResolver.resolvePreferred(_chat.value?.chatModelRef, LlmOperation.CHAT)
 
     /** Internal send method that accepts the text directly, used for retry after model change.
      *  Unlike [sendMessage], does NOT re-insert the user message — it was already persisted by
@@ -1731,6 +1733,59 @@ class ChatViewModel @Inject constructor(
      * character typed.
      */
     private var styleSettingsOnDialogOpen: StyleSettings? = null
+
+    // ---- Story settings (2026-10-04): this story's own model, memory and length, plus a quick tone
+    // switch. Null always means "follow the global setting".
+
+    /** The global story model, as a bare model id, for the "Par défaut : …" label. */
+    fun globalChatModelLabel(): String =
+        com.kitsune.core.network.provider.ModelRef.parse(networkPreferences.getModelForOperation(LlmOperation.CHAT)).second
+
+    fun setStoryModel(ref: String?) = updateExperienceMode { it.copy(chatModelRef = ref?.takeIf { r -> r.isNotBlank() }) }
+
+    /** [depth] null = global memory setting. A preset writes its two numbers onto the story. */
+    fun setStoryMemory(depth: MemoryDepth?) = updateExperienceMode {
+        it.copy(memoryRawWindow = depth?.rawWindow, memoryLoreEntries = depth?.loreEntries)
+    }
+
+    fun setStoryMaxReplyTokens(tokens: Int?) = updateExperienceMode { it.copy(maxReplyTokens = tokens) }
+
+    /** The story's memory as one of the presets, or null when it follows the global setting (or
+     *  carries numbers that match no preset — not reachable from the UI). */
+    fun storyMemoryDepth(chat: ChatEntity?): MemoryDepth? = chat?.memoryRawWindow?.let { window ->
+        MemoryDepth.entries.firstOrNull {
+            it != MemoryDepth.CUSTOM && it.rawWindow == window && it.loreEntries == chat.memoryLoreEntries
+        }
+    }
+
+    /**
+     * Switches the tone of a story already under way: the preset's modes and directive replace the
+     * current ones, and the change is announced to the model like any other style change (same pivot
+     * marker as the detailed dialog), so it takes effect on the next reply.
+     */
+    fun switchStoryPreset(preset: StoryPreset) {
+        val before = _chat.value?.let { StyleSettings.from(it, generationPreferences.isEnhancedCraftEnabled()) } ?: return
+        viewModelScope.launch {
+            val current = _chat.value ?: chatRepository.getById(chatId) ?: return@launch
+            val updated = current.copy(
+                storyPresetId = preset.storedPresetId,
+                storyPaceMode = preset.storyPaceMode,
+                toneMode = preset.toneMode,
+                involvementMode = preset.involvementMode,
+                narrativeRhythmMode = preset.narrativeRhythmMode,
+                universeMode = preset.universeMode,
+                intensityMode = preset.intensityMode,
+                replyLength = preset.replyLength,
+                narrationBalance = preset.narrationBalance,
+                voiceMode = preset.voiceMode,
+                customExperienceDirective = preset.directive,
+                updatedAt = System.currentTimeMillis()
+            )
+            chatRepository.upsert(updated)
+            _chat.value = updated
+            commitStyleChanges(before)
+        }
+    }
 
     fun onExperienceModeDialogOpened() {
         styleSettingsOnDialogOpen = _chat.value?.let { StyleSettings.from(it, generationPreferences.isEnhancedCraftEnabled()) }
@@ -1935,7 +1990,7 @@ private suspend fun insertSystemMessage(chatId: String, content: String) {
     /** The reply budget: the user's ceiling (Settings → Mémoire et longueur), tightened when the chat
      * asks for a particular length. */
     private fun chatMaxTokens(): Int {
-        val ceiling = generationPreferences.maxReplyTokens()
+        val ceiling = _chat.value?.maxReplyTokens ?: generationPreferences.maxReplyTokens()
         // A word count in the prompt asks; a budget enforces. Until now the ceiling was a flat 4096
         // (6144 Pro) — so high that "keep it to 120 words" was the only thing standing between the
         // user and a page of prose, and nothing at all backed it up. The targets are generous
@@ -2087,7 +2142,7 @@ private suspend fun insertSystemMessage(chatId: String, content: String) {
             appendLine()
             appendLine("## Known Entities (characters, places, factions, events, items)")
             appendLine("Persistent entity sheets for this story, ordered by how relevant they are to the current moment. Treat them as authoritative continuity: never contradict a fact stated here, and never reintroduce an entity listed here as if the user were meeting it for the first time.")
-            val detailedCount = SummarizationConfig.detailedLoreEntries()
+            val detailedCount = SummarizationConfig.detailedLoreEntries(_chat.value)
             loreEntries.forEachIndexed { index, entry ->
                 appendLine("- **${entry.name}** (${entry.entryType}): ${entry.summary}")
                 // The full `content` paragraph only for the best-ranked few — it is several times

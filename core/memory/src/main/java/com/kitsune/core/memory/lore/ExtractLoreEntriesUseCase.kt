@@ -1,6 +1,6 @@
 package com.kitsune.core.memory.lore
 
-import com.kitsune.core.common.memory.MemorySettingsHolder
+import com.kitsune.core.memory.summarization.SummarizationConfig
 import com.kitsune.core.data.local.entities.ChatEntity
 import com.kitsune.core.data.local.entities.LoreEntryEntity
 import com.kitsune.core.data.local.entities.LoreEntryType
@@ -164,7 +164,7 @@ class ExtractLoreEntriesUseCase @Inject constructor(
             messages.storyContentOnly().forEach { appendLine("${speakerLabel(it)}: ${it.content}") }
         }
 
-        val systemPrompt = if (MemorySettingsHolder.detailedExtraction) {
+        val systemPrompt = if (SummarizationConfig.detailedExtraction(chat)) {
             SYSTEM_PROMPT.trim() + "\n" + DETAILED_EXTRACTION_ADDENDUM.trim()
         } else {
             SYSTEM_PROMPT.trim()

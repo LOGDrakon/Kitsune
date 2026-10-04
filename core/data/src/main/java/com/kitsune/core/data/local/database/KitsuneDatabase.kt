@@ -68,7 +68,7 @@ import com.kitsune.core.data.local.entities.StoryChapterEntity
         MessageAuditLogEntity::class,
         StoryChapterEntity::class
     ],
-    version = 36,
+    version = 37,
     exportSchema = true
 )
 @TypeConverters(Converters::class)

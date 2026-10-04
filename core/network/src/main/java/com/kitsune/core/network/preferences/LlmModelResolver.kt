@@ -34,6 +34,17 @@ class LlmModelResolver @Inject constructor(
             ?: configured
     }
 
+    /**
+     * [ref] if the catalog still offers it for [operation] (a story's own model, say), otherwise the
+     * operation's usual model — so removing a provider never leaves a story pointing at nothing.
+     */
+    suspend fun resolvePreferred(ref: String?, operation: LlmOperation): String {
+        if (ref.isNullOrBlank()) return resolve(operation)
+        val catalog = modelCatalogRepository.getModels(forceRefresh = false).getOrNull()
+        if (catalog.isNullOrEmpty()) return ref
+        return catalog.find { it.id == ref }?.takeIf { isCompatible(operation, it) }?.id ?: resolve(operation)
+    }
+
     /** Chat, image and embedding are mutually exclusive categories, so each operation has exactly
      * one right answer. */
     private fun isCompatible(operation: LlmOperation, model: ModelInfo): Boolean = when (operation) {

@@ -79,7 +79,7 @@ class UpdateChatSummaryUseCase @Inject constructor(
         // produced the double-counting (10 messages both verbatim and summarized), and naively
         // fixing only the dropLast would leave a large window with an empty batch and no memory
         // pipeline at all.
-        val window = SummarizationConfig.reservedWindow()
+        val window = SummarizationConfig.reservedWindow(chat)
         val isFirstFold = chat.summary.isBlank() && chat.summarizedThroughCreatedAt == 0L
         val minBatch = if (isFirstFold) SummarizationConfig.FIRST_BATCH_MIN
                        else SummarizationConfig.SUMMARIZE_BATCH_MIN

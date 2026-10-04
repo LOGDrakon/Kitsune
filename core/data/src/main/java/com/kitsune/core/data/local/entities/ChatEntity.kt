@@ -133,6 +133,15 @@ data class ChatEntity(
      * started counting" — the shelf treats that as no badge rather than as a stale one.
      */
     val lastVisitedAt: Long = 0L,
+    /**
+     * This story's own model and memory/length settings (2026-10-04). Null means "use the global
+     * setting" (Settings → Modèles, Settings → Mémoire et longueur), so a short story can run on a
+     * small local model while a saga uses a large-context one.
+     */
+    val chatModelRef: String? = null,
+    val memoryRawWindow: Int? = null,
+    val memoryLoreEntries: Int? = null,
+    val maxReplyTokens: Int? = null,
     val createdAt: Long,
     val updatedAt: Long
 )

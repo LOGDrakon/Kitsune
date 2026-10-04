@@ -300,4 +300,20 @@
     <string name="chat_tools_section_read">Read</string>
     <string name="chat_tools_section_help">Help</string>
     <string name="image_gen_hd_quality_title">HD quality</string>
+    <string name="story_settings_title">Story settings</string>
+    <string name="story_settings_tone">Tone</string>
+    <string name="story_settings_tone_hint">Changes the story\'s register from the next reply on.</string>
+    <string name="story_settings_model">Model</string>
+    <string name="story_settings_model_hint">The model that writes this story.</string>
+    <string name="story_settings_model_reset">Use the default model</string>
+    <string name="story_settings_memory">Memory</string>
+    <string name="story_settings_memory_light">Light</string>
+    <string name="story_settings_memory_balanced">Balanced</string>
+    <string name="story_settings_memory_extended">Extended</string>
+    <string name="story_settings_length">Maximum reply length</string>
+    <string name="story_settings_default">Default</string>
+    <string name="story_settings_default_value">Default: %1$s</string>
+    <string name="story_settings_defaults_hint">"Default" follows Settings → Models and Settings → Memory and length.</string>
+    <string name="story_settings_detailed">Detailed settings</string>
+    <string name="story_settings_detailed_hint">Structure, tone, pacing, involvement, maturity, voice… and a free directive.</string>
 </resources>

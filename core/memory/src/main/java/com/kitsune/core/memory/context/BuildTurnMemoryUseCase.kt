@@ -133,7 +133,7 @@ class BuildTurnMemoryUseCase @Inject constructor(
             fragments = fragments,
             queryEmbedding = queryEmbedding,
             rawWindowText = rawWindow.joinToString("\n") { it.content },
-            budget = SummarizationConfig.maxLoreEntries()
+            budget = SummarizationConfig.maxLoreEntries(chat)
         )
 
         // Les fils sont écartés du roster classé (poids de type bas dans RankLoreEntriesUseCase) et
@@ -174,7 +174,7 @@ class BuildTurnMemoryUseCase @Inject constructor(
             chapters = chapters,
             storyTimeAnchor = chat?.storyTimeAnchor.orEmpty(),
             loreEntries = rankedLore,
-            chronology = buildStoryChronologyUseCase(chatId, SummarizationConfig.chronologyMaxEntries()),
+            chronology = buildStoryChronologyUseCase(chatId, SummarizationConfig.chronologyMaxEntries(chat)),
             relevantMemories = relevantMemories,
             openThreads = openThreads
         )
