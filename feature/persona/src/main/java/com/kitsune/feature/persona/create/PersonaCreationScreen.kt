@@ -55,6 +55,24 @@ fun PersonaCreationScreen(
     }
     val initialDescription by viewModel.initialDescription.collectAsStateWithLifecycle()
 
+    var writingByHand by remember { mutableStateOf(false) }
+    if (writingByHand) {
+        com.kitsune.feature.persona.detail.PersonaSheetEditor(
+            persona = BLANK_PERSONA,
+            title = stringResource(R.string.persona_create_manual_title),
+            onDismiss = { writingByHand = false },
+            onSave = { draft -> writingByHand = false; viewModel.saveManual(draft, onSaved) }
+        )
+    }
+
+    // The creation flow wears the same page chrome as every other screen: a back affordance and a
+    // title, and content that starts below the status bar (the review step used to slide under it).
+    com.kitsune.core.designsystem.component.KitsunePage(
+        title = stringResource(R.string.persona_create_page_title),
+        condensedTitle = true,
+        onBack = onCancel
+    ) { pagePadding ->
+    androidx.compose.foundation.layout.Box(Modifier.padding(pagePadding)) {
     when (val current = state) {
         is PersonaCreationUiState.RequiresProfileSetup -> RequiresProfileSetupStep(
             onOpenSettings = onOpenSettings,
@@ -63,7 +81,8 @@ fun PersonaCreationScreen(
         is PersonaCreationUiState.DescribeInput -> DescribeStep(
             initialDescription = initialDescription,
             onCancel = onCancel,
-            onGenerate = viewModel::generate
+            onGenerate = viewModel::generate,
+            onWriteByHand = { writingByHand = true }
         )
         is PersonaCreationUiState.Generating -> GeneratingStep(current.count)
         is PersonaCreationUiState.Scheduled -> ScheduledStep(
@@ -91,7 +110,16 @@ fun PersonaCreationScreen(
             onSave = { viewModel.save(onSaved) }
         )
     }
+    }
+    }
 }
+
+/** Starting point of a hand-written character: empty fields, an adult age the user will adjust. */
+private val BLANK_PERSONA = com.kitsune.core.data.local.entities.PersonaEntity(
+    id = "", universeId = null, name = "", shortDescription = "", personality = "", scenario = "",
+    firstMessage = "", exampleDialogues = "", age = 25, maturityTags = emptyList(), visualSheetJson = null,
+    createdAt = 0L, updatedAt = 0L
+)
 
 /** Shown instead of the normal creation flow when this would be the user's very first persona and
  * their own profile (Réglages > Profil et langue) is still blank — see `PersonaCreationViewModel.init`. */
@@ -133,7 +161,8 @@ private fun RequiresProfileSetupStep(
 private fun DescribeStep(
     initialDescription: String = "",
     onCancel: () -> Unit,
-    onGenerate: (String, PersonaTemplate?, Int) -> Unit
+    onGenerate: (String, PersonaTemplate?, Int) -> Unit,
+    onWriteByHand: () -> Unit
 ) {
     var description by remember { mutableStateOf(initialDescription) }
     var selectedTemplate by remember { mutableStateOf<PersonaTemplate?>(null) }
@@ -212,11 +241,15 @@ private fun DescribeStep(
             )
         }
 
-        Row(modifier = Modifier.fillMaxWidth().padding(top = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            TextButton(onClick = onCancel) { Text(stringResource(R.string.action_cancel)) }
-            Button(onClick = { onGenerate(description, selectedTemplate, proposalCount) }, enabled = description.isNotBlank()) {
-                Text(stringResource(R.string.action_generate))
-            }
+        Button(
+            onClick = { onGenerate(description, selectedTemplate, proposalCount) },
+            enabled = description.isNotBlank(),
+            modifier = Modifier.fillMaxWidth().padding(top = 24.dp)
+        ) {
+            Text(stringResource(R.string.action_generate))
+        }
+        TextButton(onClick = onWriteByHand, modifier = Modifier.fillMaxWidth().padding(top = 4.dp)) {
+            Text(stringResource(R.string.persona_create_manual_action))
         }
     }
 }

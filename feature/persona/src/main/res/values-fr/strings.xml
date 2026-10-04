@@ -267,4 +267,7 @@
     <string name="persona_edit_scenario">Scénario (la situation de départ)</string>
     <string name="persona_edit_first_message">Premier message</string>
     <string name="persona_edit_dialogues">Exemples de dialogue (façon de parler)</string>
+    <string name="persona_create_page_title">Nouveau personnage</string>
+    <string name="persona_create_manual_action">Écrire la fiche moi-même</string>
+    <string name="persona_create_manual_title">Votre personnage</string>
 </resources>

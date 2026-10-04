@@ -48,7 +48,8 @@ data class PersonaSheetDraft(
 fun PersonaSheetEditor(
     persona: PersonaEntity,
     onDismiss: () -> Unit,
-    onSave: (PersonaSheetDraft) -> Unit
+    onSave: (PersonaSheetDraft) -> Unit,
+    title: String = stringResource(R.string.persona_edit_title)
 ) {
     var name by rememberSaveable { mutableStateOf(persona.name) }
     var age by rememberSaveable { mutableStateOf(persona.age.toString()) }
@@ -61,7 +62,7 @@ fun PersonaSheetEditor(
     val ageError = ageValue == null || ageValue < 18
     val valid = name.isNotBlank() && !ageError
 
-    KitsuneSheet(onDismiss = onDismiss, title = stringResource(R.string.persona_edit_title)) {
+    KitsuneSheet(onDismiss = onDismiss, title = title) {
         Column(Modifier.verticalScroll(rememberScrollState())) {
             Row {
                 OutlinedTextField(

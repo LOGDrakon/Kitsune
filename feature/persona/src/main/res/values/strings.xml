@@ -267,4 +267,7 @@
     <string name="persona_edit_scenario">Scenario (the starting situation)</string>
     <string name="persona_edit_first_message">First message</string>
     <string name="persona_edit_dialogues">Example dialogues (how they talk)</string>
+    <string name="persona_create_page_title">New character</string>
+    <string name="persona_create_manual_action">Write the sheet myself</string>
+    <string name="persona_create_manual_title">Your character</string>
 </resources>

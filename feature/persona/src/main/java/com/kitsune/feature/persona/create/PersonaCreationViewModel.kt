@@ -246,6 +246,35 @@ class PersonaCreationViewModel @Inject constructor(
     fun updateColorPalette(value: String) = withReview { it.copy(visualSheet = it.visualSheet.copy(colorPalette = value)) }
     fun updateDefaultOutfit(value: String) = withReview { it.copy(visualSheet = it.visualSheet.copy(defaultOutfit = value)) }
 
+    /** A character written entirely by hand, without any generation call. */
+    fun saveManual(draft: com.kitsune.feature.persona.detail.PersonaSheetDraft, onSaved: (personaId: String) -> Unit) {
+        if (draft.name.isBlank() || draft.age < MINIMUM_PERSONA_AGE) return
+        viewModelScope.launch {
+            val id = UUID.randomUUID().toString()
+            val now = System.currentTimeMillis()
+            personaRepository.upsert(
+                PersonaEntity(
+                    id = id,
+                    universeId = universeId,
+                    name = draft.name,
+                    shortDescription = draft.shortDescription,
+                    personality = draft.personality,
+                    scenario = draft.scenario,
+                    firstMessage = draft.firstMessage,
+                    exampleDialogues = draft.exampleDialogues,
+                    age = draft.age,
+                    maturityTags = emptyList(),
+                    visualSheetJson = null,
+                    contentLanguage = appLanguageManager.getSelectedLanguage().languageTag,
+                    createdAt = now,
+                    updatedAt = now
+                )
+            )
+            chatId?.let { chatParticipantRepository.addParticipant(it, ParticipantType.PERSONA, id) }
+            onSaved(id)
+        }
+    }
+
     fun save(onSaved: (personaId: String) -> Unit) {
         val review = _state.value as? PersonaCreationUiState.Review ?: return
         val age = review.age.toIntOrNull()
