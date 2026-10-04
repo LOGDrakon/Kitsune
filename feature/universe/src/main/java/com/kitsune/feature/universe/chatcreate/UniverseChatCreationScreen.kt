@@ -1,5 +1,6 @@
 package com.kitsune.feature.universe.chatcreate
 
+import com.kitsune.core.designsystem.component.KitsunePage
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,17 +44,10 @@ fun UniverseChatCreationScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.universe_chat_create_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onCancel) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.common_cancel))
-                    }
-                }
-            )
-        }
+    KitsunePage(
+        title = stringResource(R.string.universe_chat_create_title),
+        condensedTitle = true,
+        onBack = onCancel
     ) { padding ->
         when (val current = state) {
             is UniverseChatCreationUiState.Loading -> {

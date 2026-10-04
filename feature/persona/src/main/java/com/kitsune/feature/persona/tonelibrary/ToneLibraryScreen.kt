@@ -1,5 +1,6 @@
 package com.kitsune.feature.persona.tonelibrary
 
+import com.kitsune.core.designsystem.component.KitsunePage
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -99,28 +100,18 @@ fun ToneLibraryScreen(
         )
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.tone_library_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.action_back)
-                        )
-                    }
-                },
-                actions = {
+    KitsunePage(
+        title = stringResource(R.string.tone_library_title),
+        condensedTitle = true,
+        onBack = onBack,
+        actions = {
                     if (marketplaceEnabled && toneCards.isNotEmpty()) {
                         IconButton(onClick = { sharing = true }) {
                             Icon(Icons.Default.Share, contentDescription = stringResource(R.string.tone_pack_share))
                         }
                     }
-                }
-            )
-        },
-        floatingActionButton = {
+                },
+        floatingAction = {
             FloatingActionButton(onClick = { editing = ToneLibraryEdit.New }) {
                 Icon(Icons.Default.Add, contentDescription = stringResource(R.string.tone_library_add))
             }

@@ -1,5 +1,6 @@
 package com.kitsune.app.inspiration
 
+import com.kitsune.core.designsystem.component.KitsunePage
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -60,17 +61,10 @@ fun InspirationWizardScreen(
         InspirationTarget.PERSONA -> R.string.inspiration_wizard_title_persona
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(titleRes)) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
-                    }
-                }
-            )
-        }
+    KitsunePage(
+        title = stringResource(titleRes),
+        condensedTitle = true,
+        onBack = onBack
     ) { padding ->
         Column(modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)) {
             when (val current = state) {

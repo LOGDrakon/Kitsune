@@ -1,5 +1,6 @@
 package com.kitsune.feature.marketplace
 
+import com.kitsune.core.designsystem.component.KitsunePage
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,17 +28,10 @@ fun MyFollowsScreen(
     val creators by viewModel.creators.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.my_follows_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.content_desc_back))
-                    }
-                }
-            )
-        }
+    KitsunePage(
+        title = stringResource(R.string.my_follows_title),
+        condensedTitle = true,
+        onBack = onBack
     ) { padding ->
         when {
             isLoading -> Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {

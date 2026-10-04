@@ -1,5 +1,6 @@
 package com.kitsune.feature.persona.imagegen
 
+import com.kitsune.core.designsystem.component.KitsunePage
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -69,17 +70,10 @@ fun PersonaImageGenerationScreen(
         InspirationDraftHolder.consume()?.let { viewModel.updateDescription(it) }
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.persona_image_gen_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
-                    }
-                }
-            )
-        }
+    KitsunePage(
+        title = stringResource(R.string.persona_image_gen_title),
+        condensedTitle = true,
+        onBack = onBack
     ) { padding ->
         when (val current = state) {
             is PersonaImageGenerationUiState.Loading -> {

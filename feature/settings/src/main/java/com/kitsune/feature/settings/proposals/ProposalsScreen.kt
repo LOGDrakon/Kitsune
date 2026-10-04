@@ -1,5 +1,6 @@
 package com.kitsune.feature.settings.proposals
 
+import com.kitsune.core.designsystem.component.KitsunePage
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -28,18 +29,11 @@ fun ProposalsScreen(
     val proposals by viewModel.proposals.collectAsState()
     var showCreateDialog by remember { mutableStateOf(false) }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.improve_kitsune_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.action_back))
-                    }
-                }
-            )
-        },
-        floatingActionButton = {
+    KitsunePage(
+        title = stringResource(R.string.improve_kitsune_title),
+        condensedTitle = true,
+        onBack = onBack,
+        floatingAction = {
             FloatingActionButton(
                 onClick = { showCreateDialog = true }
             ) {

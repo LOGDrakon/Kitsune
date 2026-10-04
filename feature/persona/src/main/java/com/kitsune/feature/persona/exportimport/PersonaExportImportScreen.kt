@@ -1,5 +1,6 @@
 package com.kitsune.feature.persona.exportimport
 
+import com.kitsune.core.designsystem.component.KitsunePage
 import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -53,17 +54,10 @@ fun PersonaExportImportScreen(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? -> uri?.let { viewModel.importCardFromFile(context, it) } }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.persona_export_import_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
-                    }
-                }
-            )
-        }
+    KitsunePage(
+        title = stringResource(R.string.persona_export_import_title),
+        condensedTitle = true,
+        onBack = onBack
     ) { padding ->
         Column(
             modifier = Modifier

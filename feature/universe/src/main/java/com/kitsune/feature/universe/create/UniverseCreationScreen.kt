@@ -1,5 +1,6 @@
 package com.kitsune.feature.universe.create
 
+import com.kitsune.core.designsystem.component.KitsunePage
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -53,17 +54,10 @@ fun UniverseCreationScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.universe_create_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onCancel) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.common_cancel))
-                    }
-                }
-            )
-        }
+    KitsunePage(
+        title = stringResource(R.string.universe_create_title),
+        condensedTitle = true,
+        onBack = onCancel
     ) { padding ->
         when (val current = state) {
             is UniverseCreationUiState.Form -> FormStep(

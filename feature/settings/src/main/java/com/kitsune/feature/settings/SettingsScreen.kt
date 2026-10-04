@@ -1,5 +1,8 @@
 package com.kitsune.feature.settings
 
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Settings
 import com.kitsune.core.designsystem.KitsuneTheme
 import com.kitsune.core.designsystem.component.KitsuneCard
 import com.kitsune.core.designsystem.component.KitsunePage
@@ -178,6 +181,10 @@ fun SettingsScreen(
         if (uri != null && passphrase != null) viewModel.exportBackup(passphrase, uri)
     }
     var showBugReportDialog by remember { mutableStateOf(false) }
+    // Settings is a hub (2026-10-04): the home lists the areas, each area is its own page. One long
+    // scroll of a dozen cards made every setting equally (un)findable.
+    var page by rememberSaveable { mutableStateOf(SettingsPage.HOME) }
+    androidx.activity.compose.BackHandler(enabled = page != SettingsPage.HOME) { page = SettingsPage.HOME }
 
     LaunchedEffect(deleteAccountState) {
         if (deleteAccountState is DeleteAccountState.Success) {
@@ -342,20 +349,25 @@ fun SettingsScreen(
     // KitsunePage, not a Material Scaffold with a titled TopAppBar: Settings is one of the shell's five
     // tabs, so it has to wear the same chrome as the other four — a pinned 22sp bar title here while
     // Histoires and Créer carry a large serif heading in the scroll would look like two different apps.
+    val pageTitle = stringResource(page.titleRes)
     KitsunePage(
-        title = stringResource(R.string.settings_title),
-        onBack = if (showBack) onBack else null
+        title = pageTitle,
+        onBack = when {
+            page != SettingsPage.HOME -> ({ page = SettingsPage.HOME })
+            showBack -> onBack
+            else -> null
+        }
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(remember(page) { androidx.compose.foundation.ScrollState(0) })
                 .padding(horizontal = KitsuneTheme.spacing.gutter)
                 .padding(bottom = KitsuneTheme.spacing.scrollBottom)
         ) {
-            PageTitle(text = stringResource(R.string.settings_title))
-            if (accountLockReason == AccountLockReason.BANNED) {
+            PageTitle(text = pageTitle)
+            if (page == SettingsPage.HOME && accountLockReason == AccountLockReason.BANNED) {
                 Card(
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
                     modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
@@ -380,519 +392,564 @@ fun SettingsScreen(
 
             val uriHandler = LocalUriHandler.current
 
-            SettingsSectionCard(title = stringResource(R.string.ai_section_title), icon = Icons.Filled.AutoAwesome) {
-                if (providers.isEmpty()) {
-                    Text(
-                        stringResource(R.string.ai_section_no_provider),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.padding(bottom = 8.dp)
+            if (page == SettingsPage.HOME) {
+                SettingsSectionCard(title = stringResource(R.string.ai_section_title), icon = Icons.Filled.AutoAwesome) {
+                    if (providers.isEmpty()) {
+                        Text(
+                            stringResource(R.string.ai_section_no_provider),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                    }
+                    KitsuneRow(
+                        title = stringResource(R.string.ai_providers_row),
+                        subtitle = if (providers.isEmpty()) stringResource(R.string.ai_providers_none)
+                            else providers.joinToString(", ") { it.name },
+                        card = false,
+                        onClick = onOpenProviders
+                    )
+                    KitsuneRow(
+                        title = stringResource(R.string.ai_models_row),
+                        subtitle = stringResource(R.string.ai_models_row_hint),
+                        card = false,
+                        onClick = onOpenModels
+                    )
+                    KitsuneRow(
+                        title = stringResource(R.string.ai_generation_row),
+                        subtitle = stringResource(R.string.ai_generation_row_hint),
+                        card = false,
+                        onClick = onOpenGeneration
                     )
                 }
-                KitsuneRow(
-                    title = stringResource(R.string.ai_providers_row),
-                    subtitle = if (providers.isEmpty()) stringResource(R.string.ai_providers_none)
-                        else providers.joinToString(", ") { it.name },
-                    card = false,
-                    onClick = onOpenProviders
-                )
-                KitsuneRow(
-                    title = stringResource(R.string.ai_models_row),
-                    subtitle = stringResource(R.string.ai_models_row_hint),
-                    card = false,
-                    onClick = onOpenModels
-                )
-                KitsuneRow(
-                    title = stringResource(R.string.ai_generation_row),
-                    subtitle = stringResource(R.string.ai_generation_row_hint),
-                    card = false,
-                    onClick = onOpenGeneration
-                )
             }
 
-            SettingsSectionCard(title = stringResource(R.string.account_section_title), icon = Icons.Filled.AccountCircle) {
-                // Propositions, messages, abonnements suivis and badges used to live here. They are
-                // all facets of "who am I in this community", so v2 shows them in the Profil tab and
-                // nowhere else — a thing reachable from two tabs is a thing the user has to search for.
-
-                ListItem(
-                    headlineContent = { Text(stringResource(R.string.language_label)) },
-                    supportingContent = { Text(state.language.nativeName) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { showLanguageDialog = true }
-                )
-
-                // Username (pseudonyme) — a marketplace identity, so only shown while it is on.
-                if (marketplaceEnabled) {
-                val usernameAvailable by viewModel.usernameAvailable.collectAsStateWithLifecycle()
-                val isSettingUsername by viewModel.isSettingUsername.collectAsStateWithLifecycle()
-                var showUsernameDialog by remember { mutableStateOf(false) }
-                var usernameInput by remember { mutableStateOf("") }
-
-                ListItem(
-                    headlineContent = { Text(stringResource(R.string.username_label)) },
-                    supportingContent = { Text(state.username ?: stringResource(R.string.username_not_set)) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { showUsernameDialog = true }
-                )
-
-                if (showUsernameDialog) {
-                    AlertDialog(
-                        onDismissRequest = { showUsernameDialog = false },
-                        title = { Text(stringResource(R.string.username_dialog_title)) },
-                        text = {
-                            Column {
-                                Text(
-                                    stringResource(R.string.username_dialog_description),
-                                    style = MaterialTheme.typography.bodySmall
-                                )
-                                Spacer(modifier = Modifier.height(12.dp))
-                                OutlinedTextField(
-                                    value = usernameInput,
-                                    onValueChange = {
-                                        usernameInput = it.filter { c -> c.isLetterOrDigit() || c == '_' || c == '-' }
-                                        if (it.length >= 3) viewModel.checkUsername(it)
-                                    },
-                                    label = { Text(stringResource(R.string.username_field_label)) },
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                                Spacer(modifier = Modifier.height(8.dp))
-                                when {
-                                    isSettingUsername -> Text(stringResource(R.string.username_saving), style = MaterialTheme.typography.bodySmall)
-                                    usernameInput.length < 3 -> Text(stringResource(R.string.username_min_length_hint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                    usernameAvailable == true -> Text(stringResource(R.string.username_available), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
-                                    usernameAvailable == false -> Text(stringResource(R.string.username_taken), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
-                                    else -> {}
-                                }
-                            }
+            if (page == SettingsPage.HOME) {
+                Spacer(Modifier.height(KitsuneTheme.spacing.lg))
+                SettingsPage.entries.filter { it != SettingsPage.HOME }.forEach { target ->
+                    KitsuneRow(
+                        title = stringResource(target.titleRes),
+                        subtitle = when (target) {
+                            SettingsPage.MARKETPLACE -> stringResource(
+                                if (marketplaceEnabled) R.string.settings_page_marketplace_on else R.string.settings_page_marketplace_off
+                            )
+                            else -> stringResource(target.summaryRes)
                         },
-                        confirmButton = {
-                            TextButton(
-                                onClick = {
-                                    viewModel.setUsername(usernameInput)
-                                    showUsernameDialog = false
-                                },
-                                enabled = usernameInput.length >= 3 && usernameAvailable == true && !isSettingUsername
-                            ) { Text(stringResource(R.string.action_save)) }
+                        leading = {
+                            Icon(target.icon, contentDescription = null, tint = KitsuneTheme.colors.textSecondary)
                         },
-                        dismissButton = {
-                            TextButton(onClick = { showUsernameDialog = false }) { Text(stringResource(R.string.action_cancel)) }
-                        }
+                        trailing = {
+                            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = KitsuneTheme.colors.textFaint)
+                        },
+                        onClick = { page = target },
+                        modifier = Modifier.padding(bottom = KitsuneTheme.spacing.sm)
                     )
                 }
-                }
-                if (marketplaceEnabled && state.backendUserId.isNotBlank()) {
-                    val clipboardManager = androidx.compose.ui.platform.LocalClipboardManager.current
-                    var copied by remember { mutableStateOf(false) }
+            }
+
+            if (page == SettingsPage.PROFILE) {
+                SettingsSectionCard(title = stringResource(R.string.account_section_title), icon = Icons.Filled.AccountCircle) {
+                    // Propositions, messages, abonnements suivis and badges used to live here. They are
+                    // all facets of "who am I in this community", so v2 shows them in the Profil tab and
+                    // nowhere else — a thing reachable from two tabs is a thing the user has to search for.
+
                     ListItem(
-                        headlineContent = { Text(stringResource(R.string.user_id_label)) },
-                        supportingContent = {
-                            Text(
-                                if (copied) stringResource(R.string.copied_confirmation) else state.backendUserId,
-                                color = if (copied) MaterialTheme.colorScheme.primary
-                                    else MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        },
-                        trailingContent = {
-                            IconButton(onClick = {
-                                clipboardManager.setText(androidx.compose.ui.text.AnnotatedString(state.backendUserId))
-                                copied = true
-                            }) {
-                                Icon(Icons.Default.ContentCopy, contentDescription = stringResource(R.string.copy_id_content_description))
-                            }
-                        },
+                        headlineContent = { Text(stringResource(R.string.language_label)) },
+                        supportingContent = { Text(state.language.nativeName) },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable {
-                                clipboardManager.setText(androidx.compose.ui.text.AnnotatedString(state.backendUserId))
-                                copied = true
+                            .clickable { showLanguageDialog = true }
+                    )
+
+                    // Username (pseudonyme) — a marketplace identity, so only shown while it is on.
+                    if (marketplaceEnabled) {
+                    val usernameAvailable by viewModel.usernameAvailable.collectAsStateWithLifecycle()
+                    val isSettingUsername by viewModel.isSettingUsername.collectAsStateWithLifecycle()
+                    var showUsernameDialog by remember { mutableStateOf(false) }
+                    var usernameInput by remember { mutableStateOf("") }
+
+                    ListItem(
+                        headlineContent = { Text(stringResource(R.string.username_label)) },
+                        supportingContent = { Text(state.username ?: stringResource(R.string.username_not_set)) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { showUsernameDialog = true }
+                    )
+
+                    if (showUsernameDialog) {
+                        AlertDialog(
+                            onDismissRequest = { showUsernameDialog = false },
+                            title = { Text(stringResource(R.string.username_dialog_title)) },
+                            text = {
+                                Column {
+                                    Text(
+                                        stringResource(R.string.username_dialog_description),
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                    Spacer(modifier = Modifier.height(12.dp))
+                                    OutlinedTextField(
+                                        value = usernameInput,
+                                        onValueChange = {
+                                            usernameInput = it.filter { c -> c.isLetterOrDigit() || c == '_' || c == '-' }
+                                            if (it.length >= 3) viewModel.checkUsername(it)
+                                        },
+                                        label = { Text(stringResource(R.string.username_field_label)) },
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    when {
+                                        isSettingUsername -> Text(stringResource(R.string.username_saving), style = MaterialTheme.typography.bodySmall)
+                                        usernameInput.length < 3 -> Text(stringResource(R.string.username_min_length_hint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                        usernameAvailable == true -> Text(stringResource(R.string.username_available), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                                        usernameAvailable == false -> Text(stringResource(R.string.username_taken), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
+                                        else -> {}
+                                    }
+                                }
+                            },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        viewModel.setUsername(usernameInput)
+                                        showUsernameDialog = false
+                                    },
+                                    enabled = usernameInput.length >= 3 && usernameAvailable == true && !isSettingUsername
+                                ) { Text(stringResource(R.string.action_save)) }
+                            },
+                            dismissButton = {
+                                TextButton(onClick = { showUsernameDialog = false }) { Text(stringResource(R.string.action_cancel)) }
                             }
+                        )
+                    }
+                    }
+                    if (marketplaceEnabled && state.backendUserId.isNotBlank()) {
+                        val clipboardManager = androidx.compose.ui.platform.LocalClipboardManager.current
+                        var copied by remember { mutableStateOf(false) }
+                        ListItem(
+                            headlineContent = { Text(stringResource(R.string.user_id_label)) },
+                            supportingContent = {
+                                Text(
+                                    if (copied) stringResource(R.string.copied_confirmation) else state.backendUserId,
+                                    color = if (copied) MaterialTheme.colorScheme.primary
+                                        else MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            },
+                            trailingContent = {
+                                IconButton(onClick = {
+                                    clipboardManager.setText(androidx.compose.ui.text.AnnotatedString(state.backendUserId))
+                                    copied = true
+                                }) {
+                                    Icon(Icons.Default.ContentCopy, contentDescription = stringResource(R.string.copy_id_content_description))
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    clipboardManager.setText(androidx.compose.ui.text.AnnotatedString(state.backendUserId))
+                                    copied = true
+                                }
+                        )
+                    }
+
+                    ListItem(
+                        headlineContent = { Text(stringResource(R.string.data_transparency_label)) },
+                        supportingContent = { Text(stringResource(R.string.data_transparency_description)) },
+                        trailingContent = { Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { uriHandler.openUri(DATA_TRANSPARENCY_URL) }
                     )
                 }
-
-                ListItem(
-                    headlineContent = { Text(stringResource(R.string.data_transparency_label)) },
-                    supportingContent = { Text(stringResource(R.string.data_transparency_description)) },
-                    trailingContent = { Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { uriHandler.openUri(DATA_TRANSPARENCY_URL) }
-                )
             }
 
-            SettingsSectionCard(title = stringResource(R.string.profile_section_title), icon = Icons.Filled.Person) {
-                Text(
-                    stringResource(R.string.profile_section_description),
-                    style = MaterialTheme.typography.bodySmall
-                )
-                Card(
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
-                ) {
-                    Row(modifier = Modifier.fillMaxWidth().padding(12.dp)) {
-                        Icon(
-                            Icons.Filled.PrivacyTip,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(top = 2.dp, end = 8.dp)
+            if (page == SettingsPage.PROFILE) {
+                SettingsSectionCard(title = stringResource(R.string.profile_section_title), icon = Icons.Filled.Person) {
+                    Text(
+                        stringResource(R.string.profile_section_description),
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Card(
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth().padding(12.dp)) {
+                            Icon(
+                                Icons.Filled.PrivacyTip,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(top = 2.dp, end = 8.dp)
+                            )
+                            Text(
+                                stringResource(R.string.profile_section_confidentiality_notice),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                    Row(modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
+                        OutlinedTextField(
+                            value = state.userFirstName,
+                            onValueChange = viewModel::setUserFirstName,
+                            label = { Text(stringResource(R.string.profile_first_name_label)) },
+                            modifier = Modifier.weight(1f)
+                        )
+                        OutlinedTextField(
+                            value = state.userLastName,
+                            onValueChange = viewModel::setUserLastName,
+                            label = { Text(stringResource(R.string.profile_last_name_label)) },
+                            modifier = Modifier.weight(1f).padding(start = 8.dp)
+                        )
+                    }
+                    OutlinedTextField(
+                        value = state.userPronoun,
+                        onValueChange = viewModel::setUserPronoun,
+                        label = { Text(stringResource(R.string.profile_pronoun_label)) },
+                        placeholder = { Text(stringResource(R.string.profile_pronoun_placeholder)) },
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                    )
+                    OutlinedTextField(
+                        value = state.userAge,
+                        onValueChange = viewModel::setUserAge,
+                        label = { Text(stringResource(R.string.profile_age_label)) },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                    )
+                    OutlinedTextField(
+                        value = state.userPhysicalDescription,
+                        onValueChange = viewModel::setUserPhysicalDescription,
+                        label = { Text(stringResource(R.string.profile_physical_description_label)) },
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                    )
+                    OutlinedTextField(
+                        value = state.userSexualOrientation,
+                        onValueChange = viewModel::setUserSexualOrientation,
+                        label = { Text(stringResource(R.string.profile_sexual_orientation_label)) },
+                        placeholder = { Text(stringResource(R.string.profile_sexual_orientation_placeholder)) },
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                    )
+                }
+            }
+
+            if (page == SettingsPage.WRITING) {
+                SettingsSectionCard(title = stringResource(R.string.creativity_section_title), icon = Icons.Filled.Palette) {
+                    // The tone library moved to the Créer tab, next to the personas whose voice it sets.
+                    // It is an authoring tool, and filing authoring tools under Settings is how v1 ended up
+                    // with ten screens nobody could find.
+
+                    Text(
+                        stringResource(R.string.custom_style_label),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        stringResource(R.string.custom_style_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                    OutlinedTextField(
+                        value = state.customStylePrompt,
+                        onValueChange = viewModel::setCustomStylePrompt,
+                        label = { Text(stringResource(R.string.custom_style_placeholder)) },
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                        minLines = 2
+                    )
+
+                    Text(
+                        stringResource(R.string.never_write_label),
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                    Text(
+                        stringResource(R.string.never_write_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                    OutlinedTextField(
+                        value = state.neverWrite,
+                        onValueChange = viewModel::setNeverWrite,
+                        label = { Text(stringResource(R.string.never_write_placeholder)) },
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                        minLines = 2
+                    )
+
+                    // The slider that was never drawn (2026-08-23). `SettingsUiState.temperature`,
+                    // `SettingsViewModel.setTemperature` and the stored preference all existed, and
+                    // FEATURES.md listed the control as shipped — but nothing in this file ever rendered
+                    // it, so `setTemperature` had no caller and every chat in the app ran at the same
+                    // fixed 0.9 no matter what the user wanted.
+                    Text(
+                        stringResource(R.string.temperature_label),
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                    Text(
+                        stringResource(R.string.temperature_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+                        Slider(
+                            value = state.temperature,
+                            onValueChange = viewModel::setTemperature,
+                            // Deliberately narrower than the 0.0-2.0 the preference accepts: below ~0.4 a
+                            // roleplay model repeats itself into a loop, and above ~1.4 it loses the
+                            // thread of the scene. Neither end is a setting anyone wants to land on by
+                            // dragging a slider.
+                            valueRange = 0.4f..1.4f,
+                            steps = 9,
+                            modifier = Modifier.weight(1f)
                         )
                         Text(
-                            stringResource(R.string.profile_section_confidentiality_notice),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            String.format(Locale.US, "%.1f", state.temperature),
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(start = 12.dp)
                         )
                     }
                 }
-                Row(modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
-                    OutlinedTextField(
-                        value = state.userFirstName,
-                        onValueChange = viewModel::setUserFirstName,
-                        label = { Text(stringResource(R.string.profile_first_name_label)) },
-                        modifier = Modifier.weight(1f)
-                    )
-                    OutlinedTextField(
-                        value = state.userLastName,
-                        onValueChange = viewModel::setUserLastName,
-                        label = { Text(stringResource(R.string.profile_last_name_label)) },
-                        modifier = Modifier.weight(1f).padding(start = 8.dp)
-                    )
-                }
-                OutlinedTextField(
-                    value = state.userPronoun,
-                    onValueChange = viewModel::setUserPronoun,
-                    label = { Text(stringResource(R.string.profile_pronoun_label)) },
-                    placeholder = { Text(stringResource(R.string.profile_pronoun_placeholder)) },
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
-                )
-                OutlinedTextField(
-                    value = state.userAge,
-                    onValueChange = viewModel::setUserAge,
-                    label = { Text(stringResource(R.string.profile_age_label)) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
-                )
-                OutlinedTextField(
-                    value = state.userPhysicalDescription,
-                    onValueChange = viewModel::setUserPhysicalDescription,
-                    label = { Text(stringResource(R.string.profile_physical_description_label)) },
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
-                )
-                OutlinedTextField(
-                    value = state.userSexualOrientation,
-                    onValueChange = viewModel::setUserSexualOrientation,
-                    label = { Text(stringResource(R.string.profile_sexual_orientation_label)) },
-                    placeholder = { Text(stringResource(R.string.profile_sexual_orientation_placeholder)) },
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
-                )
             }
 
-            SettingsSectionCard(title = stringResource(R.string.creativity_section_title), icon = Icons.Filled.Palette) {
-                // The tone library moved to the Créer tab, next to the personas whose voice it sets.
-                // It is an authoring tool, and filing authoring tools under Settings is how v1 ended up
-                // with ten screens nobody could find.
-
-                Text(
-                    stringResource(R.string.custom_style_label),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Text(
-                    stringResource(R.string.custom_style_description),
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-                OutlinedTextField(
-                    value = state.customStylePrompt,
-                    onValueChange = viewModel::setCustomStylePrompt,
-                    label = { Text(stringResource(R.string.custom_style_placeholder)) },
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                    minLines = 2
-                )
-
-                Text(
-                    stringResource(R.string.never_write_label),
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(top = 16.dp)
-                )
-                Text(
-                    stringResource(R.string.never_write_description),
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-                OutlinedTextField(
-                    value = state.neverWrite,
-                    onValueChange = viewModel::setNeverWrite,
-                    label = { Text(stringResource(R.string.never_write_placeholder)) },
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                    minLines = 2
-                )
-
-                // The slider that was never drawn (2026-08-23). `SettingsUiState.temperature`,
-                // `SettingsViewModel.setTemperature` and the stored preference all existed, and
-                // FEATURES.md listed the control as shipped — but nothing in this file ever rendered
-                // it, so `setTemperature` had no caller and every chat in the app ran at the same
-                // fixed 0.9 no matter what the user wanted.
-                Text(
-                    stringResource(R.string.temperature_label),
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(top = 16.dp)
-                )
-                Text(
-                    stringResource(R.string.temperature_description),
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
-                    Slider(
-                        value = state.temperature,
-                        onValueChange = viewModel::setTemperature,
-                        // Deliberately narrower than the 0.0-2.0 the preference accepts: below ~0.4 a
-                        // roleplay model repeats itself into a loop, and above ~1.4 it loses the
-                        // thread of the scene. Neither end is a setting anyone wants to land on by
-                        // dragging a slider.
-                        valueRange = 0.4f..1.4f,
-                        steps = 9,
-                        modifier = Modifier.weight(1f)
+            if (page == SettingsPage.WRITING) {
+                SettingsSectionCard(title = stringResource(R.string.moderation_section_title), icon = Icons.Filled.Shield) {
+                    OutlinedTextField(
+                        value = state.safeWord,
+                        onValueChange = viewModel::setSafeWord,
+                        label = { Text(stringResource(R.string.safe_word_label)) },
+                        placeholder = { Text(stringResource(R.string.safe_word_placeholder)) },
+                        modifier = Modifier.fillMaxWidth()
                     )
                     Text(
-                        String.format(Locale.US, "%.1f", state.temperature),
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(start = 12.dp)
-                    )
-                }
-            }
-
-            SettingsSectionCard(title = stringResource(R.string.moderation_section_title), icon = Icons.Filled.Shield) {
-                OutlinedTextField(
-                    value = state.safeWord,
-                    onValueChange = viewModel::setSafeWord,
-                    label = { Text(stringResource(R.string.safe_word_label)) },
-                    placeholder = { Text(stringResource(R.string.safe_word_placeholder)) },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Text(
-                    stringResource(R.string.safe_word_description),
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-            }
-
-            SettingsSectionCard(title = stringResource(R.string.privacy_section_title), icon = Icons.Filled.VisibilityOff) {
-                Text(stringResource(R.string.break_reminder_label))
-                com.kitsune.core.designsystem.component.KitsuneSegmented(
-                    options = com.kitsune.core.security.wellbeing.BreakReminder.CHOICES.map { minutes ->
-                        if (minutes == 0) stringResource(R.string.break_reminder_off) else "${minutes / 60} h"
-                    },
-                    selectedIndex = com.kitsune.core.security.wellbeing.BreakReminder.CHOICES.indexOf(state.breakReminderMinutes).coerceAtLeast(0),
-                    onSelect = { viewModel.setBreakReminderMinutes(com.kitsune.core.security.wellbeing.BreakReminder.CHOICES[it]) },
-                    modifier = Modifier.padding(top = 8.dp)
-                )
-                Text(
-                    stringResource(R.string.break_reminder_description),
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 4.dp, bottom = 12.dp)
-                )
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(stringResource(R.string.discreet_mode_label), modifier = Modifier.weight(1f))
-                    Switch(checked = state.discreetModeEnabled, onCheckedChange = viewModel::setDiscreetModeEnabled)
-                }
-                Text(
-                    stringResource(R.string.discreet_mode_description),
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 4.dp, bottom = 8.dp)
-                )
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
-                ) {
-                    Text(stringResource(R.string.auto_recap_label), modifier = Modifier.weight(1f))
-                    Switch(checked = state.autoRecapEnabled, onCheckedChange = viewModel::setAutoRecapEnabled)
-                }
-                Text(
-                    stringResource(R.string.auto_recap_description),
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-            }
-
-            SettingsSectionCard(title = stringResource(R.string.security_section_title), icon = Icons.Filled.Security) {
-                OutlinedTextField(
-                    value = state.autoLockMinutes.toString(),
-                    onValueChange = { it.toIntOrNull()?.let(viewModel::setAutoLockMinutes) },
-                    label = { Text(stringResource(R.string.auto_lock_label)) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
-                ) {
-                    Text(stringResource(R.string.screenshot_protection_label), modifier = Modifier.weight(1f))
-                    Switch(checked = state.flagSecureEnabled, onCheckedChange = viewModel::setFlagSecureEnabled)
-                }
-                Text(
-                    stringResource(R.string.screenshot_protection_description),
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-
-                Text(
-                    stringResource(R.string.vault_lock_title),
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(top = 20.dp)
-                )
-                Text(
-                    stringResource(R.string.vault_lock_description),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-
-                securityActionResult?.let { result ->
-                    Text(
-                        when (result) {
-                            SecurityActionResult.Success -> stringResource(R.string.security_mode_updated)
-                            is SecurityActionResult.Error -> result.message
-                        },
-                        color = if (result is SecurityActionResult.Error) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                        stringResource(R.string.safe_word_description),
                         style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
+            }
+
+            if (page == SettingsPage.PRIVACY) {
+                SettingsSectionCard(title = stringResource(R.string.privacy_section_title), icon = Icons.Filled.VisibilityOff) {
+                    Text(stringResource(R.string.break_reminder_label))
+                    com.kitsune.core.designsystem.component.KitsuneSegmented(
+                        options = com.kitsune.core.security.wellbeing.BreakReminder.CHOICES.map { minutes ->
+                            if (minutes == 0) stringResource(R.string.break_reminder_off) else "${minutes / 60} h"
+                        },
+                        selectedIndex = com.kitsune.core.security.wellbeing.BreakReminder.CHOICES.indexOf(state.breakReminderMinutes).coerceAtLeast(0),
+                        onSelect = { viewModel.setBreakReminderMinutes(com.kitsune.core.security.wellbeing.BreakReminder.CHOICES[it]) },
                         modifier = Modifier.padding(top = 8.dp)
                     )
-                }
-                if (securityMode != VaultSecurityMode.BIOMETRIC_ONLY) {
                     Text(
-                        stringResource(R.string.panic_pin_description),
+                        stringResource(R.string.break_reminder_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(top = 4.dp, bottom = 12.dp)
+                    )
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(R.string.discreet_mode_label), modifier = Modifier.weight(1f))
+                        Switch(checked = state.discreetModeEnabled, onCheckedChange = viewModel::setDiscreetModeEnabled)
+                    }
+                    Text(
+                        stringResource(R.string.discreet_mode_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(top = 4.dp, bottom = 8.dp)
+                    )
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                    ) {
+                        Text(stringResource(R.string.auto_recap_label), modifier = Modifier.weight(1f))
+                        Switch(checked = state.autoRecapEnabled, onCheckedChange = viewModel::setAutoRecapEnabled)
+                    }
+                    Text(
+                        stringResource(R.string.auto_recap_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
+            }
+
+            if (page == SettingsPage.PRIVACY) {
+                SettingsSectionCard(title = stringResource(R.string.security_section_title), icon = Icons.Filled.Security) {
+                    OutlinedTextField(
+                        value = state.autoLockMinutes.toString(),
+                        onValueChange = { it.toIntOrNull()?.let(viewModel::setAutoLockMinutes) },
+                        label = { Text(stringResource(R.string.auto_lock_label)) },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
+                    ) {
+                        Text(stringResource(R.string.screenshot_protection_label), modifier = Modifier.weight(1f))
+                        Switch(checked = state.flagSecureEnabled, onCheckedChange = viewModel::setFlagSecureEnabled)
+                    }
+                    Text(
+                        stringResource(R.string.screenshot_protection_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+
+                    Text(
+                        stringResource(R.string.vault_lock_title),
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(top = 20.dp)
+                    )
+                    Text(
+                        stringResource(R.string.vault_lock_description),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(top = 12.dp)
+                        modifier = Modifier.padding(top = 4.dp)
                     )
-                    Button(
-                        onClick = { activeSecurityDialog = SecurityDialog.PanicPinSetup },
-                        modifier = Modifier.padding(top = 8.dp)
-                    ) {
-                        Text(stringResource(R.string.panic_pin_configure_button))
-                    }
-                    panicPinResult?.let { result ->
+
+                    securityActionResult?.let { result ->
                         Text(
                             when (result) {
-                                SecurityActionResult.Success -> stringResource(R.string.panic_pin_saved)
+                                SecurityActionResult.Success -> stringResource(R.string.security_mode_updated)
                                 is SecurityActionResult.Error -> result.message
                             },
                             color = if (result is SecurityActionResult.Error) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
                             style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier.padding(top = 4.dp)
+                            modifier = Modifier.padding(top = 8.dp)
                         )
                     }
-                }
-            }
-
-            SettingsSectionCard(title = stringResource(R.string.marketplace_section_title), icon = Icons.Filled.Storefront) {
-                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
-                    Text(stringResource(R.string.marketplace_enabled_label), modifier = Modifier.weight(1f))
-                    Switch(checked = marketplaceEnabled, onCheckedChange = viewModel::setMarketplaceEnabled)
-                }
-                Text(
-                    stringResource(R.string.marketplace_enabled_description),
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-                if (marketplaceEnabled) {
-                    var urlInput by remember(marketplaceServerUrl) { mutableStateOf(marketplaceServerUrl) }
-                    var urlError by remember { mutableStateOf(false) }
-                    OutlinedTextField(
-                        value = urlInput,
-                        onValueChange = { urlInput = it; urlError = false },
-                        label = { Text(stringResource(R.string.marketplace_server_label)) },
-                        isError = urlError,
-                        supportingText = {
+                    if (securityMode != VaultSecurityMode.BIOMETRIC_ONLY) {
+                        Text(
+                            stringResource(R.string.panic_pin_description),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(top = 12.dp)
+                        )
+                        Button(
+                            onClick = { activeSecurityDialog = SecurityDialog.PanicPinSetup },
+                            modifier = Modifier.padding(top = 8.dp)
+                        ) {
+                            Text(stringResource(R.string.panic_pin_configure_button))
+                        }
+                        panicPinResult?.let { result ->
                             Text(
-                                if (urlError) stringResource(R.string.marketplace_server_invalid)
-                                else stringResource(R.string.marketplace_server_hint)
+                                when (result) {
+                                    SecurityActionResult.Success -> stringResource(R.string.panic_pin_saved)
+                                    is SecurityActionResult.Error -> result.message
+                                },
+                                color = if (result is SecurityActionResult.Error) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(top = 4.dp)
                             )
-                        },
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
-                        modifier = Modifier.fillMaxWidth().padding(top = 12.dp)
-                    )
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        TextButton(
-                            onClick = { urlError = !viewModel.setMarketplaceServerUrl(urlInput) },
-                            enabled = urlInput.trim().trimEnd('/') != marketplaceServerUrl
-                        ) { Text(stringResource(R.string.action_save)) }
-                        if (!viewModel.isDefaultMarketplaceServer()) {
-                            TextButton(onClick = viewModel::resetMarketplaceServerUrl) {
-                                Text(stringResource(R.string.marketplace_server_reset))
-                            }
                         }
                     }
-                    TextButton(onClick = { showDeleteMarketplaceDialog = true }) {
-                        Text(stringResource(R.string.marketplace_delete_account_button), color = MaterialTheme.colorScheme.error)
+                }
+            }
+
+            if (page == SettingsPage.MARKETPLACE) {
+                SettingsSectionCard(title = stringResource(R.string.marketplace_section_title), icon = Icons.Filled.Storefront) {
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+                        Text(stringResource(R.string.marketplace_enabled_label), modifier = Modifier.weight(1f))
+                        Switch(checked = marketplaceEnabled, onCheckedChange = viewModel::setMarketplaceEnabled)
+                    }
+                    Text(
+                        stringResource(R.string.marketplace_enabled_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                    if (marketplaceEnabled) {
+                        var urlInput by remember(marketplaceServerUrl) { mutableStateOf(marketplaceServerUrl) }
+                        var urlError by remember { mutableStateOf(false) }
+                        OutlinedTextField(
+                            value = urlInput,
+                            onValueChange = { urlInput = it; urlError = false },
+                            label = { Text(stringResource(R.string.marketplace_server_label)) },
+                            isError = urlError,
+                            supportingText = {
+                                Text(
+                                    if (urlError) stringResource(R.string.marketplace_server_invalid)
+                                    else stringResource(R.string.marketplace_server_hint)
+                                )
+                            },
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
+                            modifier = Modifier.fillMaxWidth().padding(top = 12.dp)
+                        )
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            TextButton(
+                                onClick = { urlError = !viewModel.setMarketplaceServerUrl(urlInput) },
+                                enabled = urlInput.trim().trimEnd('/') != marketplaceServerUrl
+                            ) { Text(stringResource(R.string.action_save)) }
+                            if (!viewModel.isDefaultMarketplaceServer()) {
+                                TextButton(onClick = viewModel::resetMarketplaceServerUrl) {
+                                    Text(stringResource(R.string.marketplace_server_reset))
+                                }
+                            }
+                        }
+                        TextButton(onClick = { showDeleteMarketplaceDialog = true }) {
+                            Text(stringResource(R.string.marketplace_delete_account_button), color = MaterialTheme.colorScheme.error)
+                        }
                     }
                 }
             }
 
-            SettingsSectionCard(title = stringResource(R.string.backup_section_title), icon = Icons.Filled.Backup) {
-                Text(
-                    stringResource(R.string.backup_section_description),
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                OutlinedButton(onClick = { showBackupDialog = true }) {
-                    Text(stringResource(R.string.backup_export_button))
+            if (page == SettingsPage.BACKUP) {
+                SettingsSectionCard(title = stringResource(R.string.backup_section_title), icon = Icons.Filled.Backup) {
+                    Text(
+                        stringResource(R.string.backup_section_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    OutlinedButton(onClick = { showBackupDialog = true }) {
+                        Text(stringResource(R.string.backup_export_button))
+                    }
                 }
             }
 
-            SettingsSectionCard(title = stringResource(R.string.support_section_title), icon = Icons.Filled.SupportAgent) {
-                Text(
-                    stringResource(R.string.bug_report_description),
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                Button(onClick = { showBugReportDialog = true }) {
-                    Text(stringResource(R.string.generate_bug_report_button))
+            if (page == SettingsPage.ABOUT) {
+                SettingsSectionCard(title = stringResource(R.string.support_section_title), icon = Icons.Filled.SupportAgent) {
+                    Text(
+                        stringResource(R.string.bug_report_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    Button(onClick = { showBugReportDialog = true }) {
+                        Text(stringResource(R.string.generate_bug_report_button))
+                    }
+                    ListItem(
+                        headlineContent = { Text(stringResource(R.string.about_issues)) },
+                        trailingContent = { Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null) },
+                        modifier = Modifier.fillMaxWidth().clickable { uriHandler.openUri(ISSUES_URL) }
+                    )
+                    ListItem(
+                        headlineContent = { Text(stringResource(R.string.about_source_code)) },
+                        supportingContent = { Text(stringResource(R.string.about_license)) },
+                        trailingContent = { Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null) },
+                        modifier = Modifier.fillMaxWidth().clickable { uriHandler.openUri(SOURCE_CODE_URL) }
+                    )
+                    ListItem(
+                        headlineContent = { Text(stringResource(R.string.about_server_source)) },
+                        trailingContent = { Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null) },
+                        modifier = Modifier.fillMaxWidth().clickable { uriHandler.openUri(SERVER_SOURCE_URL) }
+                    )
+                    ListItem(
+                        headlineContent = { Text(stringResource(R.string.about_donate)) },
+                        supportingContent = { Text(stringResource(R.string.about_donate_description)) },
+                        trailingContent = { Icon(Icons.Filled.Favorite, contentDescription = null) },
+                        modifier = Modifier.fillMaxWidth().clickable { uriHandler.openUri(DONATE_URL) }
+                    )
                 }
-                ListItem(
-                    headlineContent = { Text(stringResource(R.string.about_issues)) },
-                    trailingContent = { Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null) },
-                    modifier = Modifier.fillMaxWidth().clickable { uriHandler.openUri(ISSUES_URL) }
-                )
-                ListItem(
-                    headlineContent = { Text(stringResource(R.string.about_source_code)) },
-                    supportingContent = { Text(stringResource(R.string.about_license)) },
-                    trailingContent = { Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null) },
-                    modifier = Modifier.fillMaxWidth().clickable { uriHandler.openUri(SOURCE_CODE_URL) }
-                )
-                ListItem(
-                    headlineContent = { Text(stringResource(R.string.about_server_source)) },
-                    trailingContent = { Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null) },
-                    modifier = Modifier.fillMaxWidth().clickable { uriHandler.openUri(SERVER_SOURCE_URL) }
-                )
-                ListItem(
-                    headlineContent = { Text(stringResource(R.string.about_donate)) },
-                    supportingContent = { Text(stringResource(R.string.about_donate_description)) },
-                    trailingContent = { Icon(Icons.Filled.Favorite, contentDescription = null) },
-                    modifier = Modifier.fillMaxWidth().clickable { uriHandler.openUri(DONATE_URL) }
-                )
             }
 
-            SettingsSectionCard(title = stringResource(R.string.danger_zone_section_title), icon = Icons.Filled.Warning) {
-                Text(
-                    stringResource(R.string.delete_account_section_description),
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                OutlinedButton(
-                    onClick = { showDeleteAccountDialog = true },
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.error)
-                ) {
-                    Text(stringResource(R.string.delete_account_button))
+            if (page == SettingsPage.PRIVACY) {
+                SettingsSectionCard(title = stringResource(R.string.danger_zone_section_title), icon = Icons.Filled.Warning) {
+                    Text(
+                        stringResource(R.string.delete_account_section_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    OutlinedButton(
+                        onClick = { showDeleteAccountDialog = true },
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.error)
+                    ) {
+                        Text(stringResource(R.string.delete_account_button))
+                    }
                 }
             }
         }
@@ -1125,4 +1182,16 @@ private fun NewPinDialog(
             TextButton(onClick = onDismiss, enabled = !isBusy) { Text(stringResource(R.string.action_cancel)) }
         }
     )
+}
+
+/** The settings hub's pages. HOME holds the AI rows (the first thing a new user must set) and the list
+ *  of areas; every other page holds the cards of one area. */
+private enum class SettingsPage(@androidx.annotation.StringRes val titleRes: Int, @androidx.annotation.StringRes val summaryRes: Int, val icon: ImageVector) {
+    HOME(R.string.settings_title, R.string.settings_title, Icons.Filled.Settings),
+    WRITING(R.string.settings_page_writing, R.string.settings_page_writing_summary, Icons.Filled.Palette),
+    PROFILE(R.string.settings_page_profile, R.string.settings_page_profile_summary, Icons.Filled.Person),
+    PRIVACY(R.string.settings_page_privacy, R.string.settings_page_privacy_summary, Icons.Filled.Security),
+    MARKETPLACE(R.string.marketplace_section_title, R.string.settings_page_marketplace_off, Icons.Filled.Storefront),
+    BACKUP(R.string.backup_section_title, R.string.settings_page_backup_summary, Icons.Filled.Backup),
+    ABOUT(R.string.settings_page_about, R.string.settings_page_about_summary, Icons.Filled.SupportAgent)
 }

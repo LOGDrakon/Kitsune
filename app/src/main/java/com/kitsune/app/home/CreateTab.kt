@@ -197,6 +197,19 @@ fun CreateTab(
                     }
                 }
             }
+
+            // The tone library used to be reachable only through an unlabelled icon in the bar. It is
+            // where the user's own story registers live, and where preset packs are shared from.
+            item("tones-gap") { Box(Modifier.height(KitsuneTheme.spacing.lg)) }
+            item("tones-header") { SectionHeader(title = "Vos façons de raconter") }
+            item("tones-row") {
+                com.kitsune.core.designsystem.component.KitsuneRow(
+                    title = "Bibliothèque de tons",
+                    meta = "Vos registres préférés, proposés au début de chaque histoire · partageables en packs",
+                    leading = { androidx.compose.material3.Icon(Icons.Filled.Tune, contentDescription = null, tint = KitsuneTheme.colors.textSecondary) },
+                    onClick = onOpenToneLibrary
+                )
+            }
         }
     }
 }

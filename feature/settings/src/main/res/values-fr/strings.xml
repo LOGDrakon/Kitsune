@@ -317,4 +317,15 @@
     <string name="break_reminder_label">Rappel de pause</string>
     <string name="break_reminder_off">Désactivé</string>
     <string name="break_reminder_description">Après ce temps d’utilisation continue, une simple question propose une pause. Rien n’est enregistré ni bloqué.</string>
+    <string name="settings_page_writing">Écriture</string>
+    <string name="settings_page_writing_summary">Créativité, style d’écriture, ce que l’IA ne doit jamais écrire, safe word</string>
+    <string name="settings_page_profile">Profil et langue</string>
+    <string name="settings_page_profile_summary">Comment les personnages s’adressent à vous, langue de l’app, pseudonyme</string>
+    <string name="settings_page_privacy">Confidentialité et sécurité</string>
+    <string name="settings_page_privacy_summary">Verrouillage, PIN de panique, mode discret, rappel de pause, effacer mes données</string>
+    <string name="settings_page_marketplace_on">Activée : partager et télécharger des créations</string>
+    <string name="settings_page_marketplace_off">Désactivée : Kitsune ne contacte aucun serveur</string>
+    <string name="settings_page_backup_summary">Exporter toutes vos données dans un fichier chiffré</string>
+    <string name="settings_page_about">Aide et à propos</string>
+    <string name="settings_page_about_summary">Signaler un problème, code source, soutenir le projet</string>
 </resources>

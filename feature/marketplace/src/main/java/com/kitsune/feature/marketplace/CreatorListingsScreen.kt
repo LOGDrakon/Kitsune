@@ -1,5 +1,6 @@
 package com.kitsune.feature.marketplace
 
+import com.kitsune.core.designsystem.component.KitsunePage
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -69,17 +70,10 @@ fun CreatorListingsScreen(
     val isFollowing = (uiState as? MarketplaceUiState.Ready)?.listings
         ?.firstOrNull { it.creatorId == creatorId }?.isFollowingCreator ?: false
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(creatorName ?: stringResource(R.string.creator_listings_title_fallback)) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.content_desc_back))
-                    }
-                }
-            )
-        }
+    KitsunePage(
+        title = creatorName ?: stringResource(R.string.creator_listings_title_fallback),
+        condensedTitle = true,
+        onBack = onBack
     ) { padding ->
         Box(modifier = Modifier.fillMaxSize().padding(padding)) {
             when (val state = uiState) {

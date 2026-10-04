@@ -1,5 +1,6 @@
 package com.kitsune.feature.chat.memory
 
+import com.kitsune.core.designsystem.component.KitsunePage
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,17 +29,10 @@ fun StoryMemoryScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.story_memory_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.content_desc_back))
-                    }
-                }
-            )
-        }
+    KitsunePage(
+        title = stringResource(R.string.story_memory_title),
+        condensedTitle = true,
+        onBack = onBack
     ) { padding ->
         when (val state = uiState) {
             is StoryMemoryUiState.Loading -> {

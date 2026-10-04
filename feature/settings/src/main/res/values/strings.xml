@@ -317,4 +317,15 @@
     <string name="break_reminder_label">Break reminder</string>
     <string name="break_reminder_off">Off</string>
     <string name="break_reminder_description">After this much continuous use, a simple question suggests a break. Nothing is recorded or blocked.</string>
+    <string name="settings_page_writing">Writing</string>
+    <string name="settings_page_writing_summary">Creativity, writing style, what the AI must never write, safe word</string>
+    <string name="settings_page_profile">Profile and language</string>
+    <string name="settings_page_profile_summary">How characters address you, app language, username</string>
+    <string name="settings_page_privacy">Privacy and security</string>
+    <string name="settings_page_privacy_summary">Lock, panic PIN, discreet mode, break reminder, erase my data</string>
+    <string name="settings_page_marketplace_on">On: share and download creations</string>
+    <string name="settings_page_marketplace_off">Off: Kitsune contacts no server</string>
+    <string name="settings_page_backup_summary">Export all your data to an encrypted file</string>
+    <string name="settings_page_about">Help and about</string>
+    <string name="settings_page_about_summary">Report a problem, source code, support the project</string>
 </resources>

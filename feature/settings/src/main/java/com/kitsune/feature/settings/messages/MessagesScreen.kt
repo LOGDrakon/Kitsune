@@ -1,5 +1,6 @@
 package com.kitsune.feature.settings.messages
 
+import com.kitsune.core.designsystem.component.KitsunePage
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -29,17 +30,10 @@ fun MessagesScreen(
     val messages by viewModel.messages.collectAsStateWithLifecycle()
     var expandedId by remember { mutableStateOf<String?>(null) }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.messages_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.action_back))
-                    }
-                }
-            )
-        }
+    KitsunePage(
+        title = stringResource(R.string.messages_title),
+        condensedTitle = true,
+        onBack = onBack
     ) { padding ->
         if (messages.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {

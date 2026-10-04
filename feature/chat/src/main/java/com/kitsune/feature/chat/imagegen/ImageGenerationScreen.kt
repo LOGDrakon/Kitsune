@@ -1,5 +1,6 @@
 package com.kitsune.feature.chat.imagegen
 
+import com.kitsune.core.designsystem.component.KitsunePage
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -73,17 +74,10 @@ fun ImageGenerationScreen(
         InspirationDraftHolder.consume()?.let { viewModel.updateDescription(it) }
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.image_gen_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.content_desc_back))
-                    }
-                }
-            )
-        }
+    KitsunePage(
+        title = stringResource(R.string.image_gen_title),
+        condensedTitle = true,
+        onBack = onBack
     ) { padding ->
         when (val current = state) {
             is ImageGenerationUiState.Loading -> {

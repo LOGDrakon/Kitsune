@@ -1,5 +1,6 @@
 package com.kitsune.feature.chat.branchtree
 
+import com.kitsune.core.designsystem.component.KitsunePage
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -53,17 +54,10 @@ fun ChatBranchTreeScreen(
     val personaNameFallback by viewModel.personaNameFallback.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.chat_branch_tree_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.content_desc_back))
-                    }
-                }
-            )
-        }
+    KitsunePage(
+        title = stringResource(R.string.chat_branch_tree_title),
+        condensedTitle = true,
+        onBack = onBack
     ) { padding ->
         Box(modifier = Modifier.fillMaxSize().padding(padding)) {
             when {

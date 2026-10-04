@@ -1,5 +1,6 @@
 package com.kitsune.feature.chat.list
 
+import com.kitsune.core.designsystem.component.KitsunePage
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -53,18 +54,11 @@ fun ChatListScreen(
         viewModel.openChatEvents.collect { chatId -> onOpenChat(chatId) }
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(persona?.name.orEmpty()) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.content_desc_back))
-                    }
-                }
-            )
-        },
-        floatingActionButton = {
+    KitsunePage(
+        title = persona?.name.orEmpty(),
+        condensedTitle = true,
+        onBack = onBack,
+        floatingAction = {
             FloatingActionButton(onClick = viewModel::startNewChat) {
                 Icon(Icons.Default.Add, contentDescription = stringResource(R.string.new_conversation_label))
             }

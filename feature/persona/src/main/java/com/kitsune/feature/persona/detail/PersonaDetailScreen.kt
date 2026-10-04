@@ -1,5 +1,6 @@
 ﻿package com.kitsune.feature.persona.detail
 
+import com.kitsune.core.designsystem.component.KitsunePage
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -227,19 +228,11 @@ if (showDeleteConfirm) {
         return
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    val state = uiState as? PersonaDetailUiState.Ready
-                    Text(state?.persona?.name ?: "")
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
-                    }
-                },
-                actions = {
+    KitsunePage(
+        title = (uiState as? PersonaDetailUiState.Ready)?.persona?.name ?: "",
+        condensedTitle = true,
+        onBack = onBack,
+        actions = {
                     val readyState = uiState as? PersonaDetailUiState.Ready
                     // Public/Private switch — no avatar required, the server never enforces one.
                     // Hidden entirely for personas downloaded from the marketplace
@@ -301,8 +294,6 @@ if (showDeleteConfirm) {
                         Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.action_delete))
                     }
                 }
-            )
-        }
     ) { padding ->
         when (val state = uiState) {
             is PersonaDetailUiState.Loading -> {

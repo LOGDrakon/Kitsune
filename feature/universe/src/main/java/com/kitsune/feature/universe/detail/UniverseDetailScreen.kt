@@ -1,5 +1,6 @@
 package com.kitsune.feature.universe.detail
 
+import com.kitsune.core.designsystem.component.KitsunePage
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -118,19 +119,11 @@ fun UniverseDetailScreen(
         )
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    val state = uiState as? UniverseDetailUiState.Ready
-                    Text(state?.universe?.name ?: stringResource(R.string.universe_detail_fallback_title))
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.common_back))
-                    }
-                },
-                actions = {
+    KitsunePage(
+        title = (uiState as? UniverseDetailUiState.Ready)?.universe?.name ?: stringResource(R.string.universe_detail_fallback_title),
+        condensedTitle = true,
+        onBack = onBack,
+        actions = {
                     val readyState = uiState as? UniverseDetailUiState.Ready
                     // Hidden entirely for universes downloaded from the marketplace
                     // (sourceListingId set) — republishing someone else's downloaded creation as
@@ -161,8 +154,6 @@ fun UniverseDetailScreen(
                     )
                     }
                 }
-            )
-        }
     ) { padding ->
         when (val state = uiState) {
             is UniverseDetailUiState.Loading -> {
